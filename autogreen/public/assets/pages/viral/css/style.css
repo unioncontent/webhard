@@ -1,0 +1,96 @@
+.text-center td,.text-center th{
+  text-align: center;
+}
+.table-checkbox tr > td,.table-checkbox tr > th{
+  text-align: center;
+}
+.modal-body{
+  padding: 0;
+  padding-right: 15px;
+  overflow-x: auto;
+}
+.nvd-chart{
+  min-width: 900px;
+}
+.btn-modal > i{
+  margin-right: 0px;
+}
+label {
+  margin-bottom: 1px;
+}
+.table > thead > tr > th {
+  vertical-align: top;
+}
+.sweet-alert h2{
+  font-size: 26px;
+}
+
+.viral-card > .user-number{
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.viral-card > .row{
+  border-top: 1px solid #e3e3e3;
+}
+
+.viral-card > .row > .col-sm-6{
+  border-right: 1px solid #e3e3e3;
+  padding-top: 9px;
+  padding-bottom: 7px;
+}
+
+.viral-card > .row > .col-sm-6:last-child{
+  border-right: 0px;
+}
+
+@media (min-width: 992px){
+  .modal-lg {
+    max-width: 1000px;
+    margin-top: 219px;
+  }
+}
+
+@media only screen and (min-width: 320px) {
+  .btn-viral{
+    padding-left: 0px;
+    padding-top: 10px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .btn-viral{
+    min-width: 127px;
+    padding-right: 10px;
+    padding-top: 0px;
+  }
+  .card1 > h5{
+    font-size: 20px;
+    margin-bottom: 4px;
+    margin-top: 0px;
+  }
+  .card1 > ul{
+    height: 60px;
+    padding-top: 19px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  h5.mt{
+    font-size: 25px;
+    margin-top: 16px;
+  }
+  .card1 > h6{
+    color: #a49a9a;
+    font-size: 12px;
+  }
+  .card1 > h5{
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .card1 > ul{
+    height: 93px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}

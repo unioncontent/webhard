@@ -1,0 +1,31 @@
+table td,table th{
+  text-align: center;
+}
+
+.nobr{
+  width: 500px;
+  margin: 0px auto;
+}
+
+.table.table-xs td{
+  padding: .4rem 1rem;
+}
+
+.counter-card-1 [class*="card-"] > i, .counter-card-2 [class*="card-"] > i, .counter-card-3 [class*="card-"] > i {
+    position: absolute;
+    color: #1abc9c;
+    right: 30px;
+    top: 40px;
+    font-size: 35px;
+}
+
+.pCard{
+	margin-bottom: 0px;
+}
+
+.keyword-nowrap{
+  width: 100px;
+  margin:0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

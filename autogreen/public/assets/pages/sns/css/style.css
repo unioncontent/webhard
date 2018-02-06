@@ -1,0 +1,26 @@
+.table td, .table th {
+  vertical-align: inherit;
+  text-align: center;
+}
+.table-fixed{
+  table-layout: fixed;
+}
+.table.table-sm td, .table.table-sm th{
+  padding: .75rem;
+}
+.title-nowrap,.keyword-nowrap{
+  width: 375px;
+  margin:0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.keyword-nowrap{
+  width: 100px;
+}
+.writer-nowrap{
+  width: 127px;
+  margin:0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 

@@ -1,0 +1,24 @@
+.form-radio{
+  padding-top: 4px;
+}
+.alert-prompt{
+  line-height: 14px;
+  font-size: 14px;
+}
+
+@media (min-width:320px) {
+  .col-sm-2{
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 412px){
+  .btn-check{
+    padding-left: 15px;
+  }
+}
+@media (min-width: 1000px){
+  .btn-check{
+    padding-left: 2px;
+  }
+}

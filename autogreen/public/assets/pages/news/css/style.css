@@ -1,0 +1,41 @@
+.border-checkbox-section{
+  height: 20px;
+  margin-top: 3px;
+}
+
+.border-checkbox-section .border-checkbox-group .border-checkbox-label:before{
+  width: 20px;
+  height: 20px;
+}
+
+.border-checkbox-section .border-checkbox-group .border-checkbox-label:after{
+  width: 5px;
+  height: 12px;
+  left: 4px;
+  top: 12px;
+}
+
+.border-checkbox-section .border-checkbox-group .border-checkbox-label{
+  height: 20px;
+  padding-left: 0px;
+  margin-right: 0px;
+}
+
+.btn-warning{
+  min-height: 38px;
+}
+
+@media (min-width:320px) {
+  .checkbox-fade{
+    margin-left: 15px;
+  }
+  .col-sm-2{
+    min-width: 150px;
+  }
+}
+
+@media (min-width:768px) {
+  .checkbox-fade{
+    margin-left: 0px;
+  }
+}

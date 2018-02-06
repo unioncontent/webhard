@@ -1,0 +1,43 @@
+.table td, .table th {
+  vertical-align: inherit;
+  text-align: center;
+}
+
+.b-r-1{
+  border-right: 1px solid #ccc;
+}
+.b-b-1{
+  border-bottom: 1px solid #ccc;
+}
+.press:hover,.news:hover{
+  font-weight: bold;
+}
+
+th .sort{
+  position: relative;
+  left: -10px;
+}
+
+th .sort > i{
+  color: #727070;
+  font-size: 17px;
+}
+
+th .sort > i.on{
+  color: #ffffff;
+}
+
+th .sort > i:first-child{
+  position: relative;
+  right: -12px;
+}
+
+tr.more{
+  display: none;
+}
+
+.detail .card-header{
+  padding: 10px;
+  line-height: 16px;
+  text-align: left;
+}
