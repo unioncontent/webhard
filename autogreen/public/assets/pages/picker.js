@@ -18,17 +18,17 @@ $('#fromDate').daterangepicker({
     ],
   }
 });
-
-$('#fromTime').datetimepicker({
-	locale : 'ko',
-	format: 'HH:00',
-	defaultDate : new Date(),
-	icons : {
-		time : "icofont icofont-clock-time",
-		date : "icofont icofont-ui-calendar",
-		up : "icofont icofont-rounded-up",
-		down : "icofont icofont-rounded-down",
-		next : "icofont icofont-rounded-right",
-		previous : "icofont icofont-rounded-left"
-	}
-});
+//
+// $('#fromTime').datetimepicker({
+// 	locale : 'ko',
+// 	format: 'HH:00',
+// 	defaultDate : new Date(),
+// 	icons : {
+// 		time : "icofont icofont-clock-time",
+// 		date : "icofont icofont-ui-calendar",
+// 		up : "icofont icofont-rounded-up",
+// 		down : "icofont icofont-rounded-down",
+// 		next : "icofont icofont-rounded-right",
+// 		previous : "icofont icofont-rounded-left"
+// 	}
+// });
