@@ -1,4 +1,5 @@
 var express = require('express');
+var expressLayouts = require('express-ejs-layouts');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -7,12 +8,18 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var manual = require('./routes/manual');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// ejs-layouts setting
+app.set('layout', 'layout');
+app.set('layout extractScripts', true);
+app.use(expressLayouts);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -22,7 +29,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', express.static(__dirname + '/www')); // redirect root
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect bootstrap JS
+app.use('/js', express.static(__dirname + '/node_modules/components-jqueryui')); // redirect jquery-ui JS
+app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+app.use('/js', express.static(__dirname + '/node_modules/tether/dist/js')); // redirect JS tether
+app.use('/js', express.static(__dirname + '/node_modules/jquery-slimscroll')); // redirect JS jquery-slimscroll
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect CSS bootstrap-daterangepicker
+
+
 app.use('/', index);
+app.use('/manual', manual);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
