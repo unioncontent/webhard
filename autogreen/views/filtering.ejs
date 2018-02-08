@@ -1,0 +1,83 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>필터링현황</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="icofont icofont-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">필터링현황</a></li>
+        </ul>
+      </div>
+      <div class="page-body">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectCompany">
+            <option>CP사</option>
+          </select>
+          <button class="btn btn-warning alert-confirm f-left p-r-5 p-l-5 m-l-15 m-b-10">
+            <i class="icofont icofont-download-alt"></i>EXCEL
+          </button>
+          <div class="col-sm-3 input-group input-group-button input-group-inverse p-l-0 p-r-0 m-b-10 f-right btn-select">
+            <input onkeyup="if(event.keyCode == 13){$('#searchBtn').trigger('click');};" id="keywordInput" type="text" class="form-control" placeholder="">
+            <span class="input-group-addon" id="basic-addon1">
+              <button id="searchBtn" class=" btn btn-inverse">검색</button>
+            </span>
+          </div>
+          <select id="selectSearchType" name="select" class="col-sm-1 form-control form-control-inverse m-r-10 m-b-10 f-right search-select">
+            <option id="t" value="t">제목</option>
+            <option id="c" value="c">게시글</option>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block table-border-style">
+              <table class="table table-bordered table-sm">
+                <thead>
+                  <tr>
+                    <th width="1%">NO</th>
+                    <th width="5%">CP사</th>
+                    <th width="5%">게시물번호</th>
+                    <th width="5%">콘텐츠ID</th>
+                    <th width="25%">제목</th>
+                    <th width="5%">금액</th>
+                    <th width="10%">등록일</th>
+                    <th width="10%">처리일</th>
+                    <th width="1%">상태</th>
+                    <th width="5%">관리상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th></th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <th></th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>대시보드</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="icofont icofont-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">대시보드</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-inverse">
+              <h3>675,203</h3>
+              <span class="m-t-10">전체데이터</span>
+              <i class="icofont icofont-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-primary">
+              <h3>675,203</h3>
+              <span class="m-t-10">제휴처리</span>
+              <i class="icofont icofont-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-danger">
+              <h3>675,203</h3>
+              <span class="m-t-10">삭제처리</span>
+              <i class="icofont icofont-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-twitter">
+              <h3>675,203</h3>
+              <span class="m-t-10">보류처리</span>
+              <i class="icofont icofont-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>시간대별 처리 현황</h5>
+              <span>최근 24시간 처리 현황 그래프</span>
+              <div class="card-header-right">
+                <i class="icofont icofont-rounded-down"></i>
+              </div>
+            </div>
+            <div class="card-block">
+              <div id="morris-extra-area" style="height: 300px; position: relative;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>CP사별 처리 현황</h5>
+            </div>
+            <div class="card-block table-border-style">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="5%">저작권사</th>
+                      <th>전체데이터</th>
+                      <th>제휴처리</th>
+                      <th>삭제처리</th>
+                      <th>보류처리</th>
+                      <th>합계</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>KBS</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Morris Chart js -->
+<script type="text/javascript" src="/js/raphael.min.js"></script>
+<script type="text/javascript" src="/js/morris.js"></script>
+<!-- Custom js -->
+<script type="text/javascript" src="../assets/pages/dashboard/custom-dashboard.js"></script>

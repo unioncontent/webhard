@@ -1,0 +1,167 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>키워드설정</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="icofont icofont-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
+          <li class="breadcrumb-item"><a href="#!">키워드설정</a></li>
+        </ul>
+      </div>
+      <div class="page-body">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>키워드등록</h5>
+              <span>* 항목은 필수 입력입니다.</span>
+              <div class="card-header-right">
+                  <i class="icofont icofont-rounded-down"></i>
+              </div>
+            </div>
+            <div class="card-block">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 콘텐츠</label>
+                <div class="col-sm-5">
+                  <input name="contentsID" type="hidden" class="form-control">
+                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="콘텐츠명">
+                    <span class="messages"><p class="text-danger error"></p></span>
+                  <span class="messages"><p class="text-danger error"></p></span>
+                </div>
+                <div class="col-sm-1 btn-check">
+                  <button id="contentsBtn" type="button" class="btn btn-inverse alert-prompt">검색</button>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 상태</label>
+                <div class="col-sm-5">
+                  <div class="form-radio">
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio" checked="checked">
+                        <i class="helper"></i>ON
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio">
+                        <i class="helper"></i>OFF
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 관리방법</label>
+                <div class="col-sm-5">
+                  <div class="form-radio">
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio2">
+                        <i class="helper"></i>자동
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio2">
+                        <i class="helper"></i>수동
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 관리현황</label>
+                <div class="col-sm-5">
+                  <div class="form-radio">
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio1">
+                        <i class="helper"></i>삭제
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio1">
+                        <i class="helper"></i>제휴
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" name="radio1">
+                        <i class="helper"></i>보류
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                  <label class="col-sm-2"></label>
+                  <div class="col-sm-10">
+                      <button id="insertBtn" type="submit" class="btn btn-primary m-b-0">등록</button>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card">
+              <div class="card-header">
+                <h5>키워드 리스트 - 1박2일(KBS-2312-1231)</h5>
+            </div>
+            <div class="card-block table-border-style">
+              <div class="table-responsive">
+                <table class="table table-columned table-striped">
+                  <thead>
+                    <!-- <tr>
+                      <th>제목</th>
+                      <th colspan="4">1박2일(KBS-2312-1231)</th>
+                    </tr> -->
+                    <tr>
+                      <th></th>
+                      <th>검색어</th>
+                      <th>제외검색어</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row" class="centerTh">입력</th>
+                      <td>
+                        <input type="text" class="form-control" id="pSearch">
+                        <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" id="dSearch">
+                        <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                      </td>
+                      <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="icofont icofont-plus" style="margin-right:0"></i></button></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="centerTh">1</th>
+                      <td>IEM 평창</td>
+                      <td></td>
+                      <td><button class="remove_keyword btn btn-danger btn-sm"><i class="icofont icofont-garbage" style="margin-right:0"></i></button></td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
