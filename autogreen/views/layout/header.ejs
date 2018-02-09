@@ -23,14 +23,14 @@
           <li class="user-profile header-notification">
             <a href="#!">
                 <img src="../assets/images/user.png" alt="User-Profile-Image">
-                <span>(ID넣기)</span>
+                <span><%=userID%></span>
                 <i class="ti-angle-down"></i>
             </a>
             <ul class="show-notification profile-notification">
               <li>
                 <form id='logoutForm' action="../logoutAction" method="post">
                   <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> -->
-                  <a onclick='$("#logoutForm").submit();'>
+                  <a href="../logout">
                     <i class="ti-layout-sidebar-left"></i> Logout
                   </a>
                 </form>

@@ -43,28 +43,32 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/ionicons.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/jquery.mCustomScrollbar.css">
   </head>
-
-  <body>
-    <div id="pcoded" class="pcoded">
-      <div class="pcoded-overlay-box"></div>
-      <div class="pcoded-container navbar-wrapper">
-        <% include header.ejs %>
-        <div class="pcoded-main-container">
-          <div class="pcoded-wrapper">
-            <!-- left menu start -->
-            <% include side.ejs %>
-            <!-- left menu end -->
-            <div class="pcoded-content">
-              <div class="pcoded-inner-content">
-                <%- body %>
+    <body>
+      <!-- 로딩화면 -->
+      <div class="theme-loader">
+        <div class="ball-scale">
+          <div></div>
+        </div>
+      </div>
+      <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+          <% include header.ejs %>
+          <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+              <!-- left menu start -->
+              <% include side.ejs %>
+              <!-- left menu end -->
+              <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                  <%- body %>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </body>
-
+    </body>
   <!-- Required Jquery -->
   <script type="text/javascript" src="/js/jquery.min.js"></script>
   <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
@@ -83,5 +87,12 @@
   <script src="/assets/js/demo-12.js"></script>
   <script src="/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/assets/js/jquery.mousewheel.min.js"></script>
+  <script>
+    var className = $(location).attr('pathname').replace("/","").split("/")[0]
+    if(className == ""){
+      className = "dashBoard";
+    }
+    $("ul.pcoded-item li."+className).addClass('active pcoded-trigger');
+  </script>
   <%- script %>
 </html>

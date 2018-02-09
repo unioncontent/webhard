@@ -6,12 +6,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  var allList = [];
-  // connection.query('SELECT * from fileis_cnts_all_a', function(err, rows, fields) {
-  //   if(err) throw err;
-  //   allList = rows;
-  // });
-
+  if(!req.user){
+    res.redirect('/login');
+  }
   res.render('period')
 });
 
