@@ -40,7 +40,8 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', express.static(__dirname + '/www')); // redirect root
-app.use('/js', express.static(__dirname + '/node_modules/raphael')); // redirect morris
+app.use('/js', express.static(__dirname + '/node_modules/sweetalert/dist')); // redirect sweetalert
+app.use('/js', express.static(__dirname + '/node_modules/raphael')); // redirect raphael
 app.use('/js', express.static(__dirname + '/node_modules/morris.js')); // redirect morris
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect bootstrap JS
