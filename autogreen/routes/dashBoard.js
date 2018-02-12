@@ -1,28 +1,17 @@
-var express = require('express');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+const express = require('express');
+const passport = require('passport');
+const bcrypt = require('bcrypt-nodejs');
 var mysql = require('mysql');
-var bcrypt = require('bcrypt-nodejs');
+var LocalStrategy = require('passport-local').Strategy;
 var connection = mysql.createConnection(require('../db/db_con.js'));
-var router = express.Router();
 
-connection.connect((err) => {
-    if(err) {
-      console.log(err);
-      return;
-    }
-    console.log( 'mysql connect completed' );
-});
+const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  // res.render('dashBoard',{
-  //   userNAME: req.user.U_name,
-  //   userID: req.user.U_id
-  // });
   res.render('dashBoard');
 });
 
@@ -37,8 +26,8 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   /* db 에서 id를 이용하여 user를 얻어서 done을 호출합니다 */
-  connection.query('SELECT * from user_all_b where U_id=?', [id], function(err, rows) {
-    var user = rows[0];
+  connection.query('SELECT * from user_all_b where U_id=?', [id], function(err, results) {
+    var user = results[0];
     user.U_pw = bcrypt.hashSync(user.U_pw)
     done(err, user);
   });
@@ -48,8 +37,8 @@ passport.use(new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password'
 }, function(username, password, done) {
-  connection.query('SELECT * from user_all_b where U_id=?', [username], function(err, rows) {
-    var user = rows[0];
+  connection.query('SELECT * from user_all_b where U_id=?', [username], function(err, results) {
+    var user = results[0];
     if (err) {
       return done(err);
     }

@@ -1,57 +1,61 @@
-<div class="main-body">
-  <div class="page-wrapper">
-    <div class="page-header">
-      <div class="page-header-title">
+<div class='main-body'>
+  <div class='page-wrapper'>
+    <div class='page-header'>
+      <div class='page-header-title'>
         <h4>거래처리스트</h4>
       </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="/">
-              <i class="icofont icofont-home"></i>
+      <div class='page-header-breadcrumb'>
+        <ul class='breadcrumb-title'>
+          <li class='breadcrumb-item'>
+            <a href='/'>
+              <i class='icofont icofont-home'></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="#!">거래처관리</a></li>
-          <li class="breadcrumb-item"><a href="#!">거래처리스트</a></li>
+          <li class='breadcrumb-item'><a href='#!'>거래처관리</a></li>
+          <li class='breadcrumb-item'><a href='#!'>거래처리스트</a></li>
         </ul>
       </div>
     </div>
-    <div class="page-body">
-      <div class="row">
-        <div class="col-md-12">
-          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectCompany">
+    <div class='page-body'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <select name='select' class='col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left' id='selectCompany'>
             <option>CP사</option>
           </select>
-          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left select-left" id="selectKeyword">
-            <option value="a">전체</option>
-            <option value="P">보류</option>
-            <option value="T">제휴</option>
-            <option value="D">삭제</option>
+          <select name='select' class='col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left select-left' id='selectKeyword'>
+            <option value='a'>전체</option>
+            <option value='P'>보류</option>
+            <option value='T'>제휴</option>
+            <option value='D'>삭제</option>
           </select>
         </div>
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-block table-border-style">
-              <table class="table table-bordered table-sm">
+        <div class='col-md-12'>
+          <div class='card'>
+            <div class='card-block table-border-style'>
+              <table class='table table-bordered table-sm'>
                 <thead>
                   <tr>
-                    <th width="1%">NO</th>
-                    <th width="5%">거래처명</th>
-                    <th width="5%">ID</th>
-                    <th width="5%">PW</th>
-                    <th width="5%">분류</th>
-                    <th width="1%">상태</th>
-                    <th width="10%">등록일</th>
+                    <th width='1%'>NO</th>
+                    <th width='5%'>거래처명</th>
+                    <th width='5%'>ID</th>
+                    <th width='5%'>PW</th>
+                    <th width='5%'>분류</th>
+                    <th width='1%'>상태</th>
+                    <th width='10%'>등록일</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <% uList.forEach(function(item,idx){ %>
                   <tr>
-                    <th></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <th><%= idx+1 %></th>
+                    <td class='user'><%= item.U_name %></td>
+                    <td><%= item.U_id %></td>
+                    <td><%= item.U_pw %></td>
+                    <td><%= (item.U_class == 'O') ? 'OSP' : 'CP' %></td>
+                    <td><%= (item.U_state != '1') ? 'OFF' : 'ON' %></td>
+                    <td><%= moment(item.U_regdate).format('YYYY-MM-DD hh:mm:ss') %></td>
                   </tr>
+                  <% }); %>
                 </tbody>
                 <tfoot>
 
@@ -61,6 +65,108 @@
           </div>
         </div>
       </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='user-Modal' role='dialog'>
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class='modal-title'>거래처 수정</h5>
+              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                <span aria-hidden='true'><i class='icofont icofont-close-line'></i></span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class='card-block'>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>거래처명</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='userName'>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>ID</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='id' readonly>
+                      <span class='messages'><p class='text-danger error'>(수정불가)</p></span>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>PASSWORD</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='pwd'>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>분류</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='class' readonly>
+                      <span class='messages'><p class='text-danger error'>(수정불가)</p></span>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>상태</label>
+                    <div class='col-sm-5'>
+                      <select class='form-control' id='status'>
+                        <option value='1' id='ON'>ON</option>
+                        <option value='0' id='OFF'>OFF</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>등록일</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='date' readonly>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <label class='col-sm-2'></label>
+                    <div class='col-sm-10'>
+                      <button id='updateBtn' type='button' class='submit btn btn-primary m-b-0'>수정</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
     </div>
   </div>
 </div>
+
+<script type='text/javascript'>
+  $(document).on('click','.user',function(event){
+    var ele = event.currentTarget.parentElement.children;
+    $('input[name=userName]').val($(ele[1]).text());
+    $('input[name=id]').val($(ele[2]).text());
+    $('input[name=pwd]').val($(ele[3]).text());
+    $('input[name=class]').val($(ele[4]).text());
+    $('#'+$(ele[5]).text()).prop('selected', true);
+    $('input[name=date]').val($(ele[6]).text());
+    $('#user-Modal').modal('show');
+  });
+
+  $('#updateBtn').on('click',function(){
+    $.ajax({
+      url: './user',
+      type: 'post',
+      data : {
+				'userName': $('input[name=userName]').val(),
+        'pwd': $('input[name=pwd]').val(),
+        'status': $("#status option:selected").val(),
+        'id': $('input[name=id]').val()
+			},
+			datatype : 'json',
+      error:function(request,status,error){
+        // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert(request.responseText);
+      },
+      success:function(data){
+        alert(data);
+        location.reload();
+      }
+    });
+  });
+</script>

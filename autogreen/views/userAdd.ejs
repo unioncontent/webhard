@@ -24,10 +24,12 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 거래처명</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control">
+                  <input id="userName" name="userName" type="text" class="form-control" placeholder="중복체크를 해주세요." readonly>
+                  <input type="hidden" id="nameCheck"/>
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
                 <div class="col-sm-1 btn-check">
-                  <button id="idCheck" type="button" class="btn btn-inverse alert-prompt">
+                  <button id="userCheck" type="button" class="btn btn-inverse alert-prompt">
                     <i class="icofont icofont-user-alt-3"></i>
                     중복체크
                   </button>
@@ -36,57 +38,61 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* ID</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="" placeholder="ID">
+                  <input id="id" name="id" type="text" class="form-control" id="" placeholder="ID">
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* PW</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="password" class="form-control" id="" placeholder="PW">
+                  <input id="pw" name="pw" type="password" class="form-control" id="" placeholder="PW">
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 분류</label>
                 <div class="col-sm-5">
-                  <div class="form-radio">
+                  <div id="class" class="form-radio">
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio2">
+                        <input type="radio" value="C" name="uClass">
                         <i class="helper"></i>CP
                       </label>
                     </div>
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio2">
+                        <input type="radio" value="O" name="uClass">
                         <i class="helper"></i>OSP
                       </label>
                     </div>
                   </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 상태</label>
                 <div class="col-sm-5">
-                  <div class="form-radio">
+                  <div id="status" class="form-radio">
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio1">
+                        <input type="radio" value="1" name="status">
                         <i class="helper"></i>ON
                       </label>
                     </div>
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio1">
+                        <input type="radio" value="0" name="status">
                         <i class="helper"></i>OFF
                       </label>
                     </div>
                   </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="row">
                 <label class="col-sm-2"></label>
                 <div class="col-sm-10">
-                    <button id="insertBtn" type="submit" class="btn btn-primary m-b-0">등록</button>
+                  <button type="submit" class="btn btn-primary m-b-0">등록</button>
                 </div>
               </div>
             </div>
@@ -96,3 +102,6 @@
     </div>
   </div>
 </div>
+<!-- sweet alert js -->
+<script type="text/javascript" src="/js/sweetalert.min.js"></script>
+<script type="text/javascript" src="/assets/pages/user/script.js"></script>
