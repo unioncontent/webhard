@@ -1,29 +1,60 @@
 var express = require('express');
-var mysql = require('mysql');
 var moment = require('moment');
-var connection = mysql.createConnection(require('../db/db_con.js'));
+var User = require('../models/user.js');
 var router = express.Router();
 
-/* GET page. */
+//Difine variable for Pagination
+var totalUser = 0;
+var pageSize = 10;
+var pageCount = 0;
+var start = 0;
+var currentPage = 1;
+var uClass = 'a';
+
+/* 거래처 리스트 page. */
 router.get('/', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  connection.query('SELECT * from user_all_b', function(err, results, fields) {
+
+  if (typeof req.query.class !== 'undefined') {
+    uClass = req.query.class;
+  }
+
+  User.userCount(uClass,function(err,result) {
     if(err) throw err;
-    res.render('user',{
-      moment: moment,
-      uList: results
+    totalUser = result[0].total;
+    pageCount = Math.ceil(totalUser/pageSize);
+
+    if (typeof req.query.page !== 'undefined') {
+      currentPage = req.query.page;
+    }
+    else{
+      currentPage = 1
+    }
+
+    if (parseInt(currentPage)>0) {
+      start = (currentPage - 1) * pageSize;
+    }
+    console.log(pageCount)
+    console.log(typeof pageCount)
+    User.getUserList({uClass: uClass,offset: start, limit: pageSize}, function(err,result){
+      if(err){
+        res.json(err);
+      }else{
+        res.render('user',{
+          moment: moment,
+          uClass: uClass,
+          userData: result,
+          totalUser: totalUser,
+          minusCount: (currentPage - 1) * pageSize,
+          pageCount: pageCount,
+          pageSize: pageSize,
+          currentPage: currentPage
+        });
+      }
     });
   });
-});
-
-/* GET page. */
-router.get('/add', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
-  res.render('userAdd')
 });
 
 router.post('/', function(req, res, next) {
@@ -35,31 +66,37 @@ router.post('/', function(req, res, next) {
     res.status(500).send('다시 입력해 주세요.')
   }
 
-  connection.query('update user_all_b set U_name=?,U_pw=?,U_state=? where U_id=?',param, function(err, results, fields) {
+  User.updateUser(param, function(err, results, fields) {
     if(err) throw err;
     res.send('업데이트 완료되었습니다.');
   });
 });
 
+/* 거래처 등록 page. */
+router.get('/add', function(req, res, next) {
+  if(!req.user){
+    res.redirect('/login');
+  }
+  res.render('userAdd')
+});
+
 router.post('/add', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   var param = Object.values(req.body);
-  console.log(param);
-  connection.query('insert user_all_b(U_id, U_pw, U_class, U_name, U_state, U_regdate) values(?,?,?,?,?,?);',param, function(err, results, fields) {
+  User.insertUser(param, function(err, results, fields) {
     if(err) throw err;
     res.send('거래처 등록이 완료되었습니다.');
   });
 });
 
-router.post('/nameCheck', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
-  console.log(req.body.userName);
-  var name = req.body.userName;
-  connection.query('select * from user_all_b where U_name=?',name, function(err, results, fields) {
+router.post('/idCheck', function(req, res, next) {
+  if(!req.user){
+    res.redirect('/login');
+  }
+  var id = req.body.id;
+  User.checkId(id, function(err, results, fields) {
     if(err) throw err;
     var user = results[0];
     if (!user) {

@@ -24,22 +24,22 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 거래처명</label>
                 <div class="col-sm-5">
-                  <input id="userName" name="userName" type="text" class="form-control" placeholder="중복체크를 해주세요." readonly>
-                  <input type="hidden" id="nameCheck"/>
+                  <input id="userName" name="userName" type="text" class="form-control" placeholder="거래처명">
                   <span class='messages'><p class='text-danger error'></p></span>
-                </div>
-                <div class="col-sm-1 btn-check">
-                  <button id="userCheck" type="button" class="btn btn-inverse alert-prompt">
-                    <i class="icofont icofont-user-alt-3"></i>
-                    중복체크
-                  </button>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* ID</label>
                 <div class="col-sm-5">
-                  <input id="id" name="id" type="text" class="form-control" id="" placeholder="ID">
+                  <input id="id" name="id" type="text" class="form-control" id="" placeholder="중복체크를 해주세요." readonly>
+                  <input type="hidden" id="idCheck"/>
                   <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+                <div class="col-sm-1 btn-check">
+                  <button id="idCheck" type="button" class="btn btn-inverse alert-prompt">
+                    <i class="icofont icofont-user-alt-3"></i>
+                    중복체크
+                  </button>
                 </div>
               </div>
               <div class="form-group row">
@@ -55,13 +55,13 @@
                   <div id="class" class="form-radio">
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" value="C" name="uClass">
+                        <input type="radio" value="c" name="uClass">
                         <i class="helper"></i>CP
                       </label>
                     </div>
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" value="O" name="uClass">
+                        <input type="radio" value="o" name="uClass">
                         <i class="helper"></i>OSP
                       </label>
                     </div>

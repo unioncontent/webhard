@@ -19,20 +19,16 @@
     <div class='page-body'>
       <div class='row'>
         <div class='col-md-12'>
-          <select name='select' class='col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left' id='selectCompany'>
-            <option>CP사</option>
-          </select>
-          <select name='select' class='col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left select-left' id='selectKeyword'>
-            <option value='a'>전체</option>
-            <option value='P'>보류</option>
-            <option value='T'>제휴</option>
-            <option value='D'>삭제</option>
+          <select name='select' class='col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left' id='selectClass'>
+            <option value='a' <%= (uClass == 'a') ? 'selected':''%>>전체</option>
+            <option value='o' <%= (uClass == 'o') ? 'selected':''%>>OSP사</option>
+            <option value='c' <%= (uClass == 'c') ? 'selected':''%>>CP사</option>
           </select>
         </div>
         <div class='col-md-12'>
           <div class='card'>
-            <div class='card-block table-border-style'>
-              <table class='table table-bordered table-sm'>
+            <div class='card-block table-border-style table-responsive'>
+              <table class='table table-sm'>
                 <thead>
                   <tr>
                     <th width='1%'>NO</th>
@@ -45,20 +41,59 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% uList.forEach(function(item,idx){ %>
+                  <% for(var i=0; i < userData.length; i++) { %>
                   <tr>
-                    <th><%= idx+1 %></th>
-                    <td class='user'><%= item.U_name %></td>
-                    <td><%= item.U_id %></td>
-                    <td><%= item.U_pw %></td>
-                    <td><%= (item.U_class == 'O') ? 'OSP' : 'CP' %></td>
-                    <td><%= (item.U_state != '1') ? 'OFF' : 'ON' %></td>
-                    <td><%= moment(item.U_regdate).format('YYYY-MM-DD hh:mm:ss') %></td>
+                    <th><%=totalUser - i - minusCount %></th>
+                    <td class='user'><%= userData[i].U_name %></td>
+                    <td><%= userData[i].U_id %></td>
+                    <td><%= userData[i].U_pw %></td>
+                    <td><%= (userData[i].U_class == 'a') ? 'Admin' : (userData[i].U_class == 'o') ? 'OSP' : 'CP' %></td>
+                    <td><%= (userData[i].U_state != '1') ? 'OFF' : 'ON' %></td>
+                    <td><%= moment(userData[i].U_regdate).format('YYYY-MM-DD hh:mm:ss') %></td>
                   </tr>
-                  <% }); %>
+                  <% }; %>
                 </tbody>
                 <tfoot>
-
+                  <% if(pageCount > 1) { %>
+                  <tr>
+                    <td colspan="9">
+                      <ul class="pagination float-right">
+                        <%
+                          var y = 1;
+                          if(currentPage>1) {
+                            y = currentPage-1;
+                        %>
+                          <li class="page-item">
+                            <a class="page-link" href="/user/?page=<%= y %>&class=<%=uClass%>" aria-label="Previous">&laquo;
+                              <span aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                          </li>
+                        <% } %>
+                        <%
+                          for (y; y <= pageCount; y++) {
+                        %>
+                          <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
+                            <a class="page-link" href="/user/?page=<%= y %>&class=<%=uClass%>"><%= y %></a>
+                          </li>
+                        <%
+                            if(parseInt(currentPage) + 4 == y) {
+                              break;
+                            }
+                          }
+                        %>
+                        <% if(currentPage != pageCount) { %>
+                          <li class="page-item">
+                            <a class="page-link" href="/user/?page=<%= Math.ceil(pageCount) %>&class=<%=uClass%>" aria-label="Next">&raquo;
+                              <span aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </li>
+                        <% } %>
+                      </ul>
+                    </td>
+                  </tr>
+                  <% } %>
                 </tfoot>
               </table>
             </div>
@@ -137,6 +172,7 @@
 </div>
 
 <script type='text/javascript'>
+
   $(document).on('click','.user',function(event){
     var ele = event.currentTarget.parentElement.children;
     $('input[name=userName]').val($(ele[1]).text());
@@ -150,7 +186,7 @@
 
   $('#updateBtn').on('click',function(){
     $.ajax({
-      url: './user',
+      url: '../user',
       type: 'post',
       data : {
 				'userName': $('input[name=userName]').val(),
@@ -168,5 +204,9 @@
         location.reload();
       }
     });
+  });
+
+  $('#selectClass').on('change',function(){
+    location.href = '../user/?class='+$("#selectClass option:selected").val();
   });
 </script>

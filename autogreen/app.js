@@ -58,14 +58,17 @@ app.use(function(req, res, next) {
   res.locals.user = res.user;
   if(req.user){
     res.locals.userNAME = req.user.U_name;
+    res.locals.userCLASS = req.user.U_class;
     res.locals.userID = req.user.U_id;
   }
   else {
     res.locals.userNAME = undefined;
     res.locals.userID = undefined;
+    res.locals.userCLASS = undefined;
   }
   next();
 });
+
 var dashBoard = require('./routes/dashBoard');
 app.use('/', dashBoard);
 app.use('/login', dashBoard);

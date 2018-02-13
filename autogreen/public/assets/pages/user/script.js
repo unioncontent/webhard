@@ -3,26 +3,24 @@ $(document).ready(function () {
   // 중복 체크
   $(".alert-prompt").on("click",function(){
 		swal({
-			title: "✓ 거래처명 중복 체크",
-			text: "거래처명을 입력해주세요.",
-			content: "input",
-      button: {
-        text: "확인",
-        closeModal: false,
-      },
+			title: "✓ 아이디 중복 체크",
+      content: "input",
+      buttons: ["취소", "확인"],
+      closeOnClickOutside: false,
+      closeOnEsc: false
     })
-    .then((inputValue) => {
-      console.log(typeof(inputValue));
-      if (inputValue === "") {
-        swal("ERROR!", "거래처명을 입력해주세요.", "error");
+    .then((value) => {
+      console.log(value);
+      if (value === "") {
+        swal("ERROR!", "아이디를 다시 입력해주세요.", "error");
         return false;
       }
 
 			$.ajax({
 				type: "POST",
-				url: "./nameCheck",
+				url: "./idCheck",
 				dataType: "text",
-				data: {userName : inputValue},
+				data: {id : value},
         error: function(req,status,error){
           swal("ERROR!", req.status+"\n"+error, "error");
         },
@@ -30,14 +28,14 @@ $(document).ready(function () {
 					console.log(data);
 
 					if(data == 'fail'){
-            swal("ERROR!", "거래처명이 중복됩니다. 다시 입력해 주세요.", "error");
+            swal("ERROR!", "아이디가 중복됩니다. 다시 입력해 주세요.", "error");
 					}else if(data == 'success'){
-						swal("중복확인!", inputValue+"는 사용가능한 거래처명입니다.", "success");
+						swal("중복확인!", value+"는 사용가능한 아이디입니다.", "success");
 
-						$('#userName').val(inputValue);
-				    $("#nameCheck").val("true");
-				    $('#userName').removeClass("form-control-danger");
-				    $('#userName').siblings().children("p").text("");
+						$('#id').val(value);
+				    $("#idCheck").val("true");
+				    $('#id').removeClass("form-control-danger");
+				    $('#id').siblings().children("p").text("");
 					}
 				}
 		  });
@@ -50,11 +48,11 @@ $(document).ready(function () {
     if($('#userName').val() == ""){
       check = requiredMessage("userName","거래처명을 입력해주세요.");
     }
-    if($("#userName").val() != "" && $("#userNameCheck").val() == ""){
-      check = requiredMessage("userName","거래처명 중복확인 해주세요.");
-    }
     if($("#id").val() == ""){
       check = requiredMessage("id","아이디를 입력해주세요.");
+    }
+    if($("#id").val() != "" && $("#idCheck").val() == ""){
+      check = requiredMessage("id","아이디를 중복확인 해주세요.");
     }
     if($("#pw").val() == ""){
       check = requiredMessage("pw","비밀번호를 입력해주세요.");
@@ -86,7 +84,8 @@ $(document).ready(function () {
         },
         success:function(data){
           alert(data);
-          location.reload();
+          //input 초기화
+          $('input').val('');
         }
       });
     }

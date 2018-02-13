@@ -30,6 +30,7 @@
           <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
+          <%if (userCLASS == 'a'){%>
           <li>
             <a href="/contents/add" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -37,6 +38,7 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
+          <%}%>
           <li>
             <a href="../contents" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -44,6 +46,7 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
+          <%if (userCLASS == 'a'){%>
           <li>
             <a href="../keyword" data-i18n="nav.advance-components.grid-stack">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -51,6 +54,7 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
+          <%}%>
         </ul>
       </li>
       <li class="filtering">
@@ -60,6 +64,7 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
+      <%if (userCLASS == 'a'){%>
       <li class="manual">
         <a href="../manual" data-i18n="nav.advance-components.main">
           <span class="pcoded-micon"><i class="ti-filter"></i></span>
@@ -90,6 +95,7 @@
           </li>
         </ul>
       </li>
+      <%}%>
     </ul>
   </div>
 </nav>
