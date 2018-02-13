@@ -10,7 +10,7 @@ $(document).ready(function() {
   //add id to main menu for mobile menu end
 
   //loader start
-  $('.theme-loader').fadeOut(1000);
+  $('.theme-loader').fadeOut(500);
   //loader end
 
   // card js start
