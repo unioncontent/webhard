@@ -1,6 +1,6 @@
 var express = require('express');
-var moment = require('moment');
 var User = require('../models/user.js');
+var moment = require('moment'); // 날짜처리
 var router = express.Router();
 
 //Difine variable for Pagination
@@ -36,8 +36,6 @@ router.get('/', function(req, res, next) {
     if (parseInt(currentPage)>0) {
       start = (currentPage - 1) * pageSize;
     }
-    console.log(pageCount)
-    console.log(typeof pageCount)
     User.getUserList({uClass: uClass,offset: start, limit: pageSize}, function(err,result){
       if(err){
         res.json(err);

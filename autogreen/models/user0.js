@@ -11,14 +11,6 @@ var User = {
     var param = Object.values(user);
     connection.query(sql,param,callback);
   },
-  getClassAllList : function(uClass,callback) {
-    var sql = 'select * from user_all_b where U_class=? order by U_name';
-    connection.query(sql,uClass,callback);
-  },
-  getUserName : function(uid,callback) {
-    var sql = 'select U_name from user_all_b where n_idx=?';
-    connection.query(sql,uid,callback);
-  },
   userCount : function(uClass,callback) {
     var sql = 'select count(1) as total from user_all_b where U_class=?';
     if(uClass == 'a'){
