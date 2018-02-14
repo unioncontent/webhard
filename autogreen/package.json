@@ -33,6 +33,7 @@
     "raphael": "^2.2.7",
     "serve-favicon": "~2.4.5",
     "sweetalert": "^2.1.0",
-    "tether": "^1.4.3"
+    "tether": "^1.4.3",
+    "xlsx": "^0.12.0"
   }
 }

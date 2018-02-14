@@ -12,11 +12,14 @@ var Filtering = {
       switch (item.searchType) {
         case 'i': sql+=' and osp_idx=\''+item.search+'\''; break;
         case 'c': sql+=' and cnt_id=\''+item.search+'\''; break;
-        case 't': sql+=' and search=\''+item.search+'\''; break;
+        case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
+      delete item.searchType;
+      delete item.search;
     }
+    console.log(item)
     var param = Object.values(item);
-    connection.query(sql+'order by csState desc limit ?,?',param,callback);
+    connection.query(sql+' order by csState desc limit ?,?',param,callback);
   },
   filteringCount : function(cpId,callback) {
     var sql = 'select count(1) as total from fileis_filtering where cp_id=?';
