@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
     searchObject.search = req.query.search;
   }
 
-  Filtering.filteringCount(searchObject.cpId,function(err,result) {
+  Filtering.filteringCount(searchObject,function(err,result) {
     if(err) throw err;
     totalUser = result[0].total;
     pageCount = Math.ceil(totalUser/searchObject.limit);
