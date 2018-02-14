@@ -4,27 +4,39 @@ var User = require('../models/user.js');
 var moment = require('moment');
 var router = express.Router();
 
-//Difine variable for Pagination
+// 페이징
 var totalUser = 0;
-var pageSize = 10;
 var pageCount = 0;
-var start = 0;
 var currentPage = 1;
-var cpId = '0';
+
+// 검색
+var searchType = 'i';
+var search = '';
 
 /* GET page. */
 router.get('/', function(req, res, next) {
   // if(!req.user){
   //   res.redirect('/login');
   // }
+  var searchObject = {
+    cpId: '0',
+    offset: 0,
+    limit: 10
+  }
   if (typeof req.query.cpId !== 'undefined') {
-    cpId = req.query.cpId;
+    searchObject.cpId = req.query.cpId;
+  }
+  if (typeof req.query.searchType !== 'undefined') {
+    searchObject.searchType = req.query.searchType;
+  }
+  if (typeof req.query.search !== 'undefined') {
+    searchObject.search = req.query.search;
   }
 
-  Filtering.filteringCount(cpId,function(err,result) {
+  Filtering.filteringCount(searchObject.cpId,function(err,result) {
     if(err) throw err;
     totalUser = result[0].total;
-    pageCount = Math.ceil(totalUser/pageSize);
+    pageCount = Math.ceil(totalUser/searchObject.limit);
 
     if (typeof req.query.page !== 'undefined') {
       currentPage = req.query.page;
@@ -33,21 +45,20 @@ router.get('/', function(req, res, next) {
       currentPage = 1
     }
 
-    if (parseInt(currentPage)>0) {
-      start = (currentPage - 1) * pageSize;
+    if (parseInt(currentPage) > 0) {
+      searchObject.offset = (currentPage - 1) * searchObject.limit;
     }
-    Filtering.getFilteringList({cpId: cpId, offset: start, limit: pageSize}, function(err,result){
+
+    Filtering.getFilteringList(searchObject, function(err,result){
       if(err){
         res.json(err);
       }else{
         res.render('filtering',{
           moment: moment,
-          cpId: cpId,
+          data: searchObject,
           fList: result,
           totalUser: totalUser,
-          minusCount: (currentPage - 1) * pageSize,
           pageCount: pageCount,
-          pageSize: pageSize,
           currentPage: currentPage
         });
       }
