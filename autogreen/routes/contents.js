@@ -4,7 +4,6 @@ var Contents = require('../models/contents.js');
 var User = require('../models/user.js');
 var router = express.Router();
 
-/* GET page. */
 // 페이징
 var totalUser = 0;
 var pageCount = 0;
@@ -14,11 +13,10 @@ var currentPage = 1;
 var searchType = 'i';
 var search = '';
 
-/* GET page. */
 router.get('/', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   var searchObject = {
     cpId: '0',
     offset: 0,
@@ -100,16 +98,16 @@ router.post('/delete', function(req, res, next){
 });
 
 router.get('/add', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   res.render('contentsAdd')
 });
 
 router.post('/add', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   var now = new Date();
   var date = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
   req.body.date = date;
@@ -123,7 +121,7 @@ router.post('/add', function(req, res, next) {
       check = Contents.insertContents(req.body, function(err, results, fields) {
         if(err) throw err;
         var kParam = req.body;
-        if(results[0].n_idx != ""){
+        if(results[0].n_idx != "" && kParam.keyword != ""){
           kParam.n_idx_c = results[0].n_idx;
           console.log('kParam : ',kParam);
           Keyword.insertKeyword(kParam,function(err, results, fields) {
@@ -142,11 +140,11 @@ router.post('/add', function(req, res, next) {
   });
 });
 
-router.get('/keyword', function(req, res, next) {
-  if(!req.user){
-    res.redirect('/login');
-  }
-  res.render('keyword')
+router.post('/searchCnt',function(req, res, next) {
+  console.log(req.body);
+  Contents.getSearchCnt(req.body.CP_title, function(err,result){
+    console.log(result);
+    res.send(result);
+  });
 });
-
 module.exports = router;

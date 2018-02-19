@@ -18,6 +18,7 @@ app.set('view engine', 'ejs');
 // ejs-layouts setting
 app.set('layout', 'layout/layout');
 app.set('layout extractScripts', true);
+app.set('layout extractStyles', true);
 
 /* set middlewares */
 app.use(expressLayouts);
@@ -81,7 +82,10 @@ app.use('/period', period);
 var contents = require('./routes/contents');
 app.use('/contents', contents);
 app.use('/contents/add', contents);
-app.use('/keyword', contents);
+
+// 키워드
+var keyword = require('./routes/keyword');
+app.use('/keyword', keyword);
 
 // 필터링현황
 var filtering = require('./routes/filtering');

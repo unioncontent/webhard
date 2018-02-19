@@ -194,8 +194,7 @@ $("#insertBtn").on("click",function(){
       },
       success:function(data){
         alert(data);
-        //input 초기화
-        $('input').val('');
+        window.location.reload();
       }
     });
   }
