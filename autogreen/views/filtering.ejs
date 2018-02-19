@@ -156,30 +156,30 @@
         });
       }
     });
-    // cp 변경시
-    $('#selectCp').on('change',function(){
-      var link = '../filtering/?cpId='+$("#selectCp option:selected").val()
-      var t = url.searchParams.get("searchType");
-      var s = url.searchParams.get("search");
-      if (t !== undefined && t != ''){
-        if (s !== undefined && s != ''){
-          link += '&searchType='+t+'&search='+s;
-        }
+  });
+  // cp 변경시
+  $('#selectCp').on('change',function(){
+    var link = '../filtering/?cpId='+$("#selectCp option:selected").val()
+    var t = url.searchParams.get("searchType");
+    var s = url.searchParams.get("search");
+    if (t !== undefined && t != ''){
+      if (s !== undefined && s != ''){
+        link += '&searchType='+t+'&search='+s;
       }
-      location.href = link;
-    });
-    // 검색시
-    $('#searchBtn').on('click',function(){
-      if($("#keywordInput").val() == ''){
-        alert('검색어를 넣어주세요.');
-        return false;
-      }
-      location.href = '../filtering/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
-    })
-    $('#keywordInput').on('keyup',function(event){
-      if(event.keyCode == 13){
-        $('#searchBtn').trigger('click');
-      };
-    });
+    }
+    location.href = link;
+  });
+  // 검색시
+  $('#searchBtn').on('click',function(){
+    if($("#keywordInput").val() == ''){
+      alert('검색어를 넣어주세요.');
+      return false;
+    }
+    location.href = '../filtering/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  })
+  $('#keywordInput').on('keyup',function(event){
+    if(event.keyCode == 13){
+      $('#searchBtn').trigger('click');
+    };
   });
 </script>

@@ -12,7 +12,7 @@
             </a>
           </li>
           <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
-          <li class="breadcrumb-item"><a href="#!">콘텐츠등록</a></li>
+          <li class="breadcrumb-item"><a href="../contents/add">콘텐츠등록</a></li>
         </ul>
       </div>
     </div>
@@ -22,83 +22,95 @@
           <div class="card">
             <div class="card-block">
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">* 콘텐츠ID</label>
-                <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" value="KBS-10-3">
-                </div>
-              </div>
-              <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* CP사</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="거래처">
+                  <input name="CP_name" id="CP_name" type="text" class="form-control" placeholder="거래처">
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 제목</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="대표제목">
+                  <input name="CP_title" id="CP_title" type="text" class="form-control" placeholder="대표제목">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">영문제목</label>
+                <div class="col-sm-5">
+                  <input name="CP_title_eng" id="CP_title_eng" type="text" class="form-control" placeholder="영어제목">
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* OSP관리ID</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="OSP관리ID">
+                  <input name="OSP_id" id="OSP_id" type="text" class="form-control" placeholder="OSP관리ID">
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 관리방법</label>
                 <div class="col-sm-5">
-                  <div class="form-radio">
+                  <div id="method" class="form-radio">
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio2">
+                        <input type="radio" value="1" name="K_method">
                         <i class="helper"></i>자동
                       </label>
                     </div>
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio2">
+                        <input type="radio" value="0" name="K_method">
                         <i class="helper"></i>수동
                       </label>
                     </div>
                   </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* 관리현황</label>
                 <div class="col-sm-5">
-                  <div class="form-radio">
+                  <div id="apply" class="form-radio">
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio1">
+                        <input type="radio" value="D" name="K_apply">
                         <i class="helper"></i>삭제
                       </label>
                     </div>
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio1">
+                        <input type="radio" value="T" name="K_apply">
                         <i class="helper"></i>제휴
                       </label>
                     </div>
                     <div class="radio radio-inline">
                       <label>
-                        <input type="radio" name="radio1">
+                        <input type="radio" value="P" name="K_apply">
                         <i class="helper"></i>보류
                       </label>
                     </div>
                   </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">금액</label>
+                <div class="col-sm-5">
+                  <input name="CP_price" id="CP_price" type="number" class="form-control" step="500" placeholder="0">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">HASH 값</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="거래처">
+                  <input name="CP_hash" id="CP_hash" type="text" class="form-control" placeholder="HASH 값">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">기본검색어</label>
                 <div class="col-sm-5">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="대표제목">
+                  <input name="keyword" id="keyword" type="text" class="form-control" placeholder="기본검색어">
                 </div>
               </div>
               <div class="row">
@@ -112,7 +124,7 @@
           <div class="card">
             <div class="card-header">
               <h5>일괄등록</h5>
-              <span>* 엑셀양식 : CP사 / 제목 / OSP관리ID / 기본검색어 / 관리현황 / HASH값</span>
+              <span>* 엑셀양식 : CP사 / 제목 / OSP관리ID / 관리현황 / HASH값 / 기본검색어 </span>
             </div>
             <div class="card-block">
               <div class="form-group row">
@@ -130,3 +142,73 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+$("#insertBtn").on("click",function(){
+  var check=true;
+  var param = {
+    'U_id_c': $('input[name=CP_name]').val(),
+    'CP_title': $("input[name=CP_title]").val(),
+    'CP_title_eng': $("input[name=CP_title_eng]").val(),
+    'OSP_id': $('input[name=OSP_id]').val(),
+    'K_method': $("input:radio[name=K_method]:checked").val(),
+    'K_apply': $("input:radio[name=K_apply]:checked").val(),
+    'CP_hash': '',
+    'CP_price': '0',
+    'keyword': ''
+  };
+  if($("#CP_name").val() == ""){
+    check = requiredMessage("CP_name","거래처명을 입력해주세요.");
+  }
+  if($("#CP_title").val() == ""){
+    check = requiredMessage("CP_title","대표제목를 입력해주세요.");
+  }
+  if($("#OSP_id").val() == ""){
+    check = requiredMessage("OSP_id","OSP관리ID를 입력해주세요.");
+  }
+  if($("input:radio[name=K_method]:checked").val() == ""){
+    check = requiredMessage("method","관리방법을 선택해주세요.");
+  }
+  if($("input:radio[name=K_apply]:checked").val() == ""){
+    check = requiredMessage("apply","관리현황을 선택해주세요.");
+  }
+
+  if(check){
+    if($("#CP_hash").val() != ""){
+      param.CP_hash = $("#CP_hash").val();
+    }
+    if($("#CP_price").val() != ""){
+      param.CP_price = $("#CP_price").val();
+    }
+    if($("#keyword").val() != ""){
+      param.keyword = $("#keyword").val();
+    }
+    console.log(param);
+    $.ajax({
+      url: './add',
+      type: 'post',
+      data : param,
+      datatype : 'json',
+      error:function(request,status,error){
+        // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert(request.responseText);
+      },
+      success:function(data){
+        alert(data);
+        //input 초기화
+        $('input').val('');
+      }
+    });
+  }
+
+  return check;
+});
+$("input, select").on("focus",function(){
+  $(this).removeClass("form-control-danger");
+  $(this).siblings().children("p").text("");
+});
+function requiredMessage(target,msg){
+  $("#"+target).siblings().children().text(msg);
+  $("#"+target).addClass("form-control-danger");
+  return false;
+}
+</script>
