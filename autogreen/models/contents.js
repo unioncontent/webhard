@@ -57,6 +57,10 @@ var Contents = {
   deleteContents: function(n_idx,callback){
     var sql = 'delete from fileis_cnts_list_c where n_idx=?';
     connection.query(sql,n_idx,callback);
+  },
+  getSearchCnt: function(search,callback){
+    var sql = 'select * from fileis_cnts_list where search like \'%'+search+'%\'';
+    connection.query(sql,callback);
   }
 }
 

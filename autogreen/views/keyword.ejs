@@ -36,7 +36,7 @@
                 <label class="col-sm-2 col-form-label">* 콘텐츠</label>
                 <div class="col-sm-5">
                   <input name="contentsID" type="hidden" class="form-control">
-                  <input name="reporter_media_name" type="text" class="form-control" id="newsNewName1" placeholder="콘텐츠명">
+                  <input name="cnt_name" type="text" class="form-control" id="cnt_name" placeholder="콘텐츠명">
                     <span class="messages"><p class="text-danger error"></p></span>
                   <span class="messages"><p class="text-danger error"></p></span>
                 </div>
@@ -45,7 +45,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">* 상태</label>
+                <label class="col-sm-2 col-form-label">상태</label>
                 <div class="col-sm-5">
                   <div class="form-radio">
                     <div class="radio radio-inline">
@@ -64,7 +64,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">* 관리방법</label>
+                <label class="col-sm-2 col-form-label">관리방법</label>
                 <div class="col-sm-5">
                   <div class="form-radio">
                     <div class="radio radio-inline">
@@ -83,7 +83,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">* 관리현황</label>
+                <label class="col-sm-2 col-form-label">관리현황</label>
                 <div class="col-sm-5">
                   <div class="form-radio">
                     <div class="radio radio-inline">
@@ -110,15 +110,14 @@
               <div class="row">
                   <label class="col-sm-2"></label>
                   <div class="col-sm-10">
-                      <button id="insertBtn" type="submit" class="btn btn-primary m-b-0">등록</button>
+                      <button id="insertBtn" type="submit" class="btn btn-primary m-b-0">수정</button>
                   </div>
                 </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card">
-              <div class="card-header">
-                <h5>키워드 리스트 - 1박2일(KBS-2312-1231)</h5>
+          <div class="card" id="keywordList" style="display: none;">
+            <div class="card-header">
+              <h5>키워드 리스트 - <p id="cnt_title">1박2일(KBS-2312-1231)</p></h5>
             </div>
             <div class="card-block table-border-style">
               <div class="table-responsive">
@@ -154,7 +153,6 @@
                       <td></td>
                       <td><button class="remove_keyword btn btn-danger btn-sm"><i class="icofont icofont-garbage" style="margin-right:0"></i></button></td>
                     </tr>
-
                   </tbody>
                 </table>
               </div>
@@ -162,6 +160,101 @@
           </div>
         </div>
       </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='keyword-Modal' role='dialog'>
+        <div class='modal-dialog' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">콘텐츠 검색</h5>
+            </div>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-columned table-striped">
+                      <thead>
+                        <tr>
+                          <th>
+                            <input type="text" class="form-control" id="search_cnt_name" placeholder="콘텐츠명">
+                          </th>
+                          <th width="1px">
+                            <button type="button" id="btn-searchCnt" class="btn btn-inverse alert-prompt">검색</button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style="vertical-align: middle;">
+                            <div class="contents">KBS: 1박2일(kbs-fileis-1)</div>
+                          </td>
+                          <td>
+                            <button type="submit" class="btn btn-primary m-b-0">선택</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary mobtn" data-dismiss='modal' aria-label='Close' type="button">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
     </div>
   </div>
 </div>
+<style type="text/css">
+.contents{
+  font-size: 15px;
+  padding-left: 3px;
+  text-overflow: ellipsis;
+  width: 349px;
+  overflow: hidden;
+}
+</style>
+<script type="text/javascript">
+  $("#contentsBtn").on("click",function(){
+    $("#search_cnt_name").val($("#cnt_name").val());
+    $("#keyword-Modal").modal('show');
+  });
+  $("#btn-searchCnt").on("click",function(){
+    searchCnt($("#search_cnt_name").val());
+  });
+  $(document).on("click",".btn-cnt",function(event){
+    var title = $(event.target).parents("tr").find(".contents").text().split(" : ")[1];
+    $("#cnt_title").text(title);
+    $("#search_cnt_name").val("");
+    $("#keyword-Modal tbody").empty();
+    $("#keyword-Modal").modal('hide');
+  });
+  function searchCnt(name){
+    $.ajax({
+      url: '../contents/searchCnt',
+      type: 'post',
+      data : {
+				'CP_title': $('#search_cnt_name').val()
+			},
+			datatype : 'json',
+      error:function(request,status,error){
+        // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert(request.responseText);
+      },
+      success:function(data){
+        $("#keyword-Modal tbody").empty();
+        data.forEach(function(item){
+          var html = '<tr><td style="vertical-align: middle;"><div class="contents">'+item.CP_name+' : '+item.CP_title+'('+item.CP_cntID+')</div></td>\
+          <td><button type="submit" class="btn-cnt btn btn-primary m-b-0">선택</button></td></tr>'
+          $("#keyword-Modal tbody").append(html);
+        });
+        console.log(data);
+      }
+    });
+  }
+</script>
