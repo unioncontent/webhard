@@ -75,13 +75,25 @@ router.post('/getCPList', function(req, res, next){
 });
 
 router.post('/update', function(req, res, next){
-  if(!req.user){
-    res.redirect('/login');
+  // if(!req.user){
+  //   res.redirect('/login');
+  // }
+  if(req.body.type === undefined){
+    if(req.body.K_method == '0'){
+      req.body.K_apply = 'P';
+    }
+    Keyword.updateKeyword(req.body,function(err,result){
+      if(err) throw err;
+      res.send('true');
+    });
   }
-  Keyword.updateKeyword(req.body,function(err,result){
-    if(err) throw err;
-    res.send('true');
-  });
+  else if(req.body.type == 'all'){
+    delete req.body.type;
+    Keyword.updateAllKeyword(req.body,function(err,result){
+      if(err) throw err;
+      res.send('true');
+    });
+  }
 });
 
 router.post('/delete', function(req, res, next){
@@ -90,7 +102,7 @@ router.post('/delete', function(req, res, next){
   }
   Keyword.deleteKeyword(req.body.n_idx_c, function(err,result){
     if(err) throw err;
-    Content.deleteContents(req.body.n_idx_c, function(err,result){
+    Contents.deleteContents(req.body.n_idx_c, function(err,result){
       if(err) throw err;
       res.send('true');
     });
@@ -115,15 +127,15 @@ router.post('/add', function(req, res, next) {
     if(err) throw err;
     // 콘텐츠 ID 설정
     var check = false;
-    var sql = 'select count(1) as total from fileis_cnts_list_c';
-    Contents.contentsCount(req.body,function(err, results, fields) {
-      req.body.CP_CntID = req.body.U_id_c+'-'+req.body.OSP_id+'-'+String(Number(results[0].total)+1);
+    Contents.getNextIdx(req.body,function(err, results, fields) {
+      req.body.CP_CntID = req.body.U_id_c+'-'+req.body.OSP_id+'-'+results[0].idx;
       check = Contents.insertContents(req.body, function(err, results, fields) {
         if(err) throw err;
         var kParam = req.body;
         if(results[0].n_idx != "" && kParam.keyword != ""){
           kParam.n_idx_c = results[0].n_idx;
-          console.log('kParam : ',kParam);
+          kParam.K_key = '1';
+          kParam.K_type = '1';
           Keyword.insertKeyword(kParam,function(err, results, fields) {
             if(err) throw err;
             check = true;
@@ -140,11 +152,4 @@ router.post('/add', function(req, res, next) {
   });
 });
 
-router.post('/searchCnt',function(req, res, next) {
-  console.log(req.body);
-  Contents.getSearchCnt(req.body.CP_title, function(err,result){
-    console.log(result);
-    res.send(result);
-  });
-});
 module.exports = router;
