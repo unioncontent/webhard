@@ -43,87 +43,89 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-block table-border-style">
-              <table class="table table-bordered table-sm">
-                <thead>
-                  <tr>
-                    <th width="1%">NO</th>
-                    <th width="5%">CP사</th>
-                    <th width="5%">게시물번호</th>
-                    <th width="5%">콘텐츠ID</th>
-                    <th width="25%">제목</th>
-                    <th width="5%">금액</th>
-                    <th width="10%">등록일</th>
-                    <th width="10%">처리일</th>
-                    <th width="5%">관리상태</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% for(var i=0; i < fList.length; i++) { %>
-                  <tr>
-                    <th><%= totalUser - i - data.offset %></th>
-                    <td><%= fList[i].cp_name %></td>
-                    <td><%= fList[i].osp_idx %></td>
-                    <td><%= fList[i].cnt_id %></td>
-                    <td><%= fList[i].title %></td>
-                    <td><%= fList[i].price %></th>
-                    <td><%= moment(fList[i].createDate).format('YYYY-MM-DD hh:mm:ss') %></td>
-                    <td><%= moment(fList[i].csDate).format('YYYY-MM-DD hh:mm:ss') %></td>
-                    <td><%= (fList[i].k_method == '1') ? 'A' : 'M' %> - <%= (fList[i].k_apply == 'D') ? '삭제' : (fList[i].k_apply == 'T') ? '제휴' : '보류' %></td>
-                  </tr>
-                  <% }; %>
-                </tbody>
-                <tfoot>
-                  <% if(pageCount > 1) { %>
-                  <tr>
-                    <td colspan="9">
-                      <ul class="pagination float-right">
-                        <%
-                          var y = 1;
-                          var searchParams = '';
-                          if('searchType' in data){
-                            searchParams = "&searchType="+data.searchType+"&search="+data.search;
-                          }
-                          if(currentPage>1) {
-                            y = currentPage-1;
-                            var preLink = "/filtering/?page="+y+"&cpId="+data.cpId+searchParams;
-                        %>
-                          <li class="page-item">
-                            <a class="page-link" href="<%=preLink%>" aria-label="Previous">&laquo;
-                              <span aria-hidden="true"></span>
-                              <span class="sr-only">Previous</span>
-                            </a>
-                          </li>
-                        <% } %>
-                        <%
-                          for (y; y <= pageCount; y++) {
-                            var link = "/filtering/?page="+y+"&cpId="+data.cpId+searchParams;
-                        %>
-                          <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
-                            <a class="page-link" href="<%=link%>"><%= y %></a>
-                          </li>
-                        <%
-                            if(parseInt(currentPage) + 4 == y) {
-                              break;
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                  <thead>
+                    <tr>
+                      <th width="1%">NO</th>
+                      <th width="5%">CP사</th>
+                      <th width="5%">게시물번호</th>
+                      <th width="5%">콘텐츠ID</th>
+                      <th width="25%">제목</th>
+                      <th width="5%">금액</th>
+                      <th width="10%">등록일</th>
+                      <th width="10%">처리일</th>
+                      <th width="5%">관리상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(var i=0; i < fList.length; i++) { %>
+                    <tr>
+                      <th><%= totalUser - i - data.offset %></th>
+                      <td><%= fList[i].cp_name %></td>
+                      <td><%= fList[i].osp_idx %></td>
+                      <td><%= fList[i].cnt_id %></td>
+                      <td><%= fList[i].title %></td>
+                      <td><%= fList[i].price %></th>
+                      <td><%= moment(fList[i].createDate).format('YYYY-MM-DD hh:mm:ss') %></td>
+                      <td><%= moment(fList[i].csDate).format('YYYY-MM-DD hh:mm:ss') %></td>
+                      <td><%= (fList[i].k_method == '1') ? 'A' : 'M' %> - <%= (fList[i].k_apply == 'D') ? '삭제' : (fList[i].k_apply == 'T') ? '제휴' : '보류' %></td>
+                    </tr>
+                    <% }; %>
+                  </tbody>
+                  <tfoot>
+                    <% if(pageCount > 1) { %>
+                    <tr>
+                      <td colspan="9">
+                        <ul class="pagination float-right">
+                          <%
+                            var y = 1;
+                            var searchParams = '';
+                            if('searchType' in data){
+                              searchParams = "&searchType="+data.searchType+"&search="+data.search;
                             }
-                          }
-                        %>
-                        <%
-                          if(currentPage != pageCount) {
-                            var nextLink = "/filtering/?page="+Math.ceil(pageCount).toString()+"&cpId="+data.cpId+searchParams;
+                            if(currentPage>1) {
+                              y = currentPage-1;
+                              var preLink = "/filtering/?page="+y+"&cpId="+data.cpId+searchParams;
                           %>
-                          <li class="page-item">
-                            <a class="page-link" href="<%=nextLink%>" aria-label="Next">&raquo;
-                              <span aria-hidden="true"></span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </li>
-                        <% } %>
-                      </ul>
-                    </td>
-                  </tr>
-                  <% } %>
-                </tfoot>
-              </table>
+                            <li class="page-item">
+                              <a class="page-link" href="<%=preLink%>" aria-label="Previous">&laquo;
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                          <% } %>
+                          <%
+                            for (y; y <= pageCount; y++) {
+                              var link = "/filtering/?page="+y+"&cpId="+data.cpId+searchParams;
+                          %>
+                            <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
+                              <a class="page-link" href="<%=link%>"><%= y %></a>
+                            </li>
+                          <%
+                              if(parseInt(currentPage) + 4 == y) {
+                                break;
+                              }
+                            }
+                          %>
+                          <%
+                            if(currentPage != pageCount) {
+                              var nextLink = "/filtering/?page="+Math.ceil(pageCount).toString()+"&cpId="+data.cpId+searchParams;
+                            %>
+                            <li class="page-item">
+                              <a class="page-link" href="<%=nextLink%>" aria-label="Next">&raquo;
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                          <% } %>
+                        </ul>
+                      </td>
+                    </tr>
+                    <% } %>
+                  </tfoot>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -131,55 +133,4 @@
     </div>
   </div>
 </div>
-<script type="text/javascript">
-  $(document).ready(function(){
-    // cp 선택 후
-    var url_string = window.location.href
-    var url = new URL(url_string);
-    var c = url.searchParams.get("cpId");
-    // cp 셀렉트 박스 옵션값 넣기
-    $.ajax({
-      url: '../filtering/getCPList',
-      type: 'post',
-			datatype : 'json',
-      error:function(request,status,error){
-        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-      },
-      success:function(data){
-        console.log(data);
-        data.forEach(function(item){
-          var html = '<option value="'+item.n_idx+'">'+item.U_name+'</option>'
-          if(c == item.n_idx){
-            html = '<option value="'+item.n_idx+'" selected>'+item.U_name+'</option>'
-          }
-          $('#selectCp').append(html);
-        });
-      }
-    });
-  });
-  // cp 변경시
-  $('#selectCp').on('change',function(){
-    var link = '../filtering/?cpId='+$("#selectCp option:selected").val()
-    var t = url.searchParams.get("searchType");
-    var s = url.searchParams.get("search");
-    if (t !== undefined && t != ''){
-      if (s !== undefined && s != ''){
-        link += '&searchType='+t+'&search='+s;
-      }
-    }
-    location.href = link;
-  });
-  // 검색시
-  $('#searchBtn').on('click',function(){
-    if($("#keywordInput").val() == ''){
-      alert('검색어를 넣어주세요.');
-      return false;
-    }
-    location.href = '../filtering/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
-  })
-  $('#keywordInput').on('keyup',function(event){
-    if(event.keyCode == 13){
-      $('#searchBtn').trigger('click');
-    };
-  });
-</script>
+<script type="text/javascript" src="/assets/pages/filtering/script.js"></script>

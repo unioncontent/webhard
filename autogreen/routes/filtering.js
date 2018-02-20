@@ -15,9 +15,9 @@ var search = '';
 
 /* GET page. */
 router.get('/', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   var searchObject = {
     cpId: '0',
     offset: 0,
@@ -70,6 +70,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/getCPList', function(req, res, next){
+  if(!req.user){
+    res.redirect('/login');
+  }
   User.getClassAllList('c',function(err,result){
     if(err) throw err;
     res.send(result);

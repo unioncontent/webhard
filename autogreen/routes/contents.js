@@ -75,9 +75,9 @@ router.post('/getCPList', function(req, res, next){
 });
 
 router.post('/update', function(req, res, next){
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   if(req.body.type === undefined){
     if(req.body.K_method == '0'){
       req.body.K_apply = 'P';
