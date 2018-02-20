@@ -34,6 +34,10 @@ var Contents = {
     }
     connection.query(sql,param,callback);
   },
+  getNextIdx: function(item,callback) {
+    var sql = 'select n_idx+1 as idx from fileis_cnts_list_c order by CP_regdate desc limit 1';
+    connection.query(sql,callback);
+  },
   insertContents: function(item,callback) {
     console.log('----------insertContents--------');
     if('CP_CntID' in item){

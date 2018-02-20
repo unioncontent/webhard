@@ -86,9 +86,12 @@
   <script src="/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/assets/js/jquery.mousewheel.min.js"></script>
   <script>
-    var className = $(location).attr('pathname').replace("/","").split("/")[0]
+    var className = $(location).attr('pathname').replace("/","").split("/")[0];
     if(className == ""){
       className = "dashBoard";
+    }
+    else if(className == "keyword"){
+      className = "contents";
     }
     $("ul.pcoded-item li."+className).addClass('active pcoded-trigger');
   </script>

@@ -154,7 +154,7 @@ $("#insertBtn").on("click",function(){
     'K_apply': $("input:radio[name=K_apply]:checked").val(),
     'CP_hash': '',
     'CP_price': '0',
-    'keyword': ''
+    'keyword': $("input[name=CP_title]").val()
   };
   if($("#CP_name").val() == ""){
     check = requiredMessage("CP_name","거래처명을 입력해주세요.");
