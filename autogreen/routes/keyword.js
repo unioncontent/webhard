@@ -5,25 +5,34 @@ var User = require('../models/user.js');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   res.render('keyword');
 });
 
 router.post('/searchKeyInfo',function(req, res, next){
+  if(!req.user){
+    res.redirect('/login');
+  }
   Keyword.getKeyInfo(req.body.n_idx_c, function(err,result){
     res.send(result);
   });
 });
 
 router.post('/searchCnt',function(req, res, next) {
+  if(!req.user){
+    res.redirect('/login');
+  }
   Contents.getSearchCnt(req.body.CP_title, function(err,result){
     res.send(result);
   });
 });
 
 router.post('/add',function(req, res, next) {
+  if(!req.user){
+    res.redirect('/login');
+  }
   var now = new Date();
   var date = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
   req.body.date = date;
@@ -47,6 +56,9 @@ router.post('/add',function(req, res, next) {
 });
 
 router.post('/delete',function(req, res, next){
+  if(!req.user){
+    res.redirect('/login');
+  }
   Keyword.deleteKeyword(req.body.n_idx, function(err,result){
     if(err) throw err;
     res.send(true);
