@@ -74,33 +74,39 @@ router.post('/getCPList', function(req, res, next){
 });
 
 router.post('/delete', function(req, res, next){
-  if(!req.user){
-    res.redirect('/login');
-  }
   console.log(req.body.OSP_idx);
   Manual.delete(req.body.OSP_idx, function(err,result){
-    if(err) throw err;
+    if(err){
+      res.status(500).send('다시 시도해 주세요.');
+      return false;
+    }
     res.send('true');
   });
 });
 
 router.post('/update', function(req, res, next){
-  if(!req.user){
-    res.redirect('/login');
-  }
   //수동처리 관리상태 수정
   Manual.updateSortData([req.body.K_apply,req.body.OSP_idx],function(err,result){
-    if(err) throw err;
+    if(err){
+      res.status(500).send('수동처리 관리상태 수정 에러');
+      return false;
+    }
     //크롤링 테이블에서 게시물 정보 가져옴
     Manual.getCntDatainfo([req.body.OSP_idx,req.body.U_id_c], function(err,result){
-      if(err) throw err;
+      if(err){
+        res.status(500).send('크롤링 테이블에서 게시물 정보 가져오는 부분 에러');
+        return false;
+      }
       delete result[0].n_idx;
       delete result[0].OSP_regdate;
       var param = Object.values(result[0]);
       param.unshift(req.body.U_id_c);
       //히스토리 테이블에서 게시물 저장
       Manual.insertHisData(param, function(err,result){
-        if(err) throw err;
+        if(err){
+          res.status(500).send('히스토리 테이블에서 게시물 저장 에러');
+          return false;
+        }
         //크롤링 테이블에서 게시물 삭제
         Manual.deleteAllTable(req.body.OSP_idx, function(err,result){
           if(err) throw err;

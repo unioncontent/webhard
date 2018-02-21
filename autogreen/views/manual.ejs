@@ -276,15 +276,16 @@ $(document).on('click','.btn-update',function(){
         'U_id_c': eles.eq(0).text()
       },
       error:function(request,status,error){
-        alert("다시시도해주세요.");
+        alert(request.responseText);
         console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
       },
       success:function(data){
         if(data){
-          alert("수정완료.");
+          alert("수정 완료 되었습니다.");
+          trEle.remove();
         }
         else{
-          alert("다시시도해주세요.");
+          alert("다시 시도 해주세요.");
         }
       }
     });

@@ -17,8 +17,9 @@ var Keyword = {
     connection.query(sql,n_idx,callback);
   },
   insertKeyword: function(item,callback) {
-    var param = [item.n_idx_c,item.U_id_c,item.keyword,item.K_apply,item.K_method,item.K_key,item.K_type,item.date];
-    var sql = 'insert fileis_cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, K_regdate) values(?,?,?,?,?,?,?,?)';
+    var param = [item.n_idx_c,item.U_id_c,item.keyword,item.K_apply,item.K_method,item.K_key,item.K_type];
+    var sql = 'insert fileis_cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, K_regdate) values(?,?,?,?,?,?,?,now())';
+    console.log(sql,param);
     connection.query(sql,param,callback);
   },
   getKeyInfo: function(idx,callback){

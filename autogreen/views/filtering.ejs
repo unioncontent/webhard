@@ -65,7 +65,7 @@
                       <td><%= fList[i].cp_name %></td>
                       <td><%= fList[i].osp_idx %></td>
                       <td><%= fList[i].cnt_id %></td>
-                      <td><%= fList[i].title %></td>
+                      <td><div class="title_nobr"><%= fList[i].title %></div></td>
                       <td><%= fList[i].price %></th>
                       <td><%= moment(fList[i].createDate).format('YYYY-MM-DD hh:mm:ss') %></td>
                       <td><%= moment(fList[i].csDate).format('YYYY-MM-DD hh:mm:ss') %></td>
@@ -133,4 +133,66 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="/assets/pages/filtering/script.js"></script>
+<style type="text/css">
+.title_nobr{
+  font-size: 15px;
+  padding-left: 3px;
+  text-overflow: ellipsis;
+  width: 400px;
+  overflow: hidden;
+}
+
+</style>
+<script type="text/javascript">
+// cp 선택 후
+var url_string = window.location.href
+var url = new URL(url_string);
+var c = url.searchParams.get("cpId");
+$(document).ready(function(){
+  // cp 셀렉트 박스 옵션값 넣기
+  $.ajax({
+    url: '../filtering/getCPList',
+    type: 'post',
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      console.log(data);
+      data.forEach(function(item){
+        var html = '<option value="'+item.U_name+'">'+item.U_name+'</option>'
+        if(c == item.U_name){
+          html = '<option value="'+item.U_name+'" selected>'+item.U_name+'</option>'
+        }
+        $('#selectCp').append(html);
+      });
+    }
+  });
+});
+// cp 변경시
+$('#selectCp').on('change',function(){
+  var link = '../filtering/?cp_name='+$("#selectCp option:selected").val()
+  var t = url.searchParams.get("searchType");
+  var s = url.searchParams.get("search");
+  if (t !== undefined && t != ''){
+    if (s !== undefined && s != ''){
+      link += '&searchType='+t+'&search='+s;
+    }
+  }
+  location.href = link;
+});
+// 검색시
+$('#searchBtn').on('click',function(){
+  if($("#keywordInput").val() == ''){
+    alert('검색어를 넣어주세요.');
+    return false;
+  }
+  location.href = '../filtering/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+})
+$('#keywordInput').on('keyup',function(event){
+  if(event.keyCode == 13){
+    $('#searchBtn').trigger('click');
+  };
+});
+
+</script>
