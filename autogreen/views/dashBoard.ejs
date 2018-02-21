@@ -20,7 +20,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-inverse">
-              <h3>675,203</h3>
+              <h3><%=totalCount%></h3>
               <span class="m-t-10">전체데이터</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -29,7 +29,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-primary">
-              <h3>675,203</h3>
+              <h3><%=TCount%></h3>
               <span class="m-t-10">제휴처리</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -38,7 +38,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-danger">
-              <h3>675,203</h3>
+              <h3><%=DCount%></h3>
               <span class="m-t-10">삭제처리</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -47,7 +47,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-twitter">
-              <h3>675,203</h3>
+              <h3><%=PCount%></h3>
               <span class="m-t-10">보류처리</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -63,7 +63,7 @@
               </div>
             </div>
             <div class="card-block">
-              <div id="morris-extra-area" style="height: 300px; position: relative;"></div>
+              <div id="24graph" style="height: 300px; position: relative;"></div>
             </div>
           </div>
         </div>
@@ -74,26 +74,17 @@
             </div>
             <div class="card-block table-border-style">
               <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-cp table-bordered">
                   <thead>
                     <tr>
-                      <th width="5%">저작권사</th>
+                      <th width="10%">저작권사</th>
                       <th>전체데이터</th>
                       <th>제휴처리</th>
                       <th>삭제처리</th>
                       <th>보류처리</th>
-                      <th>합계</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th>KBS</th>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -105,6 +96,96 @@
   </div>
 </div>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<!-- Morris Chart js -->
+<style type="text/css">
+.table-cp td,.table-cp th{
+  text-align: center;
+}
+</style>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+<script type="text/javascript">
+$(window).resize(function(){
+  window.areaChart.redraw();
+});
+
+$(document).ready(function(){
+  $.ajax({
+    url: '../getCPList',
+    type: 'post',
+    datatype : 'json',
+    xLabels: 'hour',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      data.forEach(function(item,idx){
+        cpCountList(item.U_name);
+      });
+    }
+  });
+  areaChart();
+});
+
+function cpCountList(cp){
+  // console.log('cpCountList:',cp);
+  $.ajax({
+    url: '../getCPCcountList',
+    type: 'post',
+    data: { 'cp': cp },
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      $('.table-cp tbody').append("<tr>\
+      <th>"+cp+"</th>\
+      <td>"+data.total+"</td>\
+      <td>"+data.tTotal+"</td>\
+      <td>"+data.dTotal+"</td>\
+      <td>"+data.pTotal+"</td>\
+      </tr>");
+    }
+  });
+}
+
+function areaChart(){
+  $.ajax({
+    url: '../get24DataList',
+    type: 'post',
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      // var script = "[";
+      // data.forEach(function(item,idx){
+      //   script += "{'date':'"+item.date+"','t':'"+item.tTotal+"','d':'"+item.dTotal+"','p':'"+item.pTotal+"'}";
+      //   if(data.length-1 != idx){
+      //     script += ","
+      //   }
+      // });
+      // script += "]";
+      var arr = [];
+      data.forEach(function(item,idx){
+        arr.push({'date':item.date,'t':item.tTotal,'d':item.dTotal,'p':item.pTotal});
+      });
+
+      window.areaChart = Morris.Area({
+        element: '24graph',
+        data: arr,
+        lineColors: ['#1abc9c', '#e74c3c', '#4099FF'],
+        xkey: 'date',
+        ykeys: ['t', 'd', 'p'],
+        labels: ['제휴', '삭제', '보류'],
+        pointSize: 0,
+        lineWidth: 0,
+        resize: true,
+        fillOpacity: 0.8,
+        behaveLikeLine: true,
+        hideHover: 'auto'
+      });
+    }
+  });
+}
+</script>
