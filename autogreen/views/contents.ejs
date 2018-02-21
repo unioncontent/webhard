@@ -145,4 +145,108 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="/assets/pages/contents/script.js"></script>
+<script type="text/javascript">
+// cp 선택 후
+var url_string = window.location.href
+var url = new URL(url_string);
+var c = url.searchParams.get("cpId");
+$(document).ready(function(){
+  // cp 셀렉트 박스 옵션값 넣기
+  $.ajax({
+    url: '../contents/getCPList',
+    type: 'post',
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      console.log(data);
+      data.forEach(function(item){
+        var html = '<option value="'+item.n_idx+'">'+item.U_name+'</option>'
+        if(c == item.n_idx){
+          html = '<option value="'+item.n_idx+'" selected>'+item.U_name+'</option>'
+        }
+        $('#selectCp').append(html);
+      });
+    }
+  });
+});
+// cp 변경시
+$('#selectCp').on('change',function(){
+  var link = '../contents/?cpId='+$("#selectCp option:selected").val()
+  var t = url.searchParams.get("searchType");
+  var s = url.searchParams.get("search");
+  if (t !== undefined && t != ''){
+    if (s !== undefined && s != ''){
+      link += '&searchType='+t+'&search='+s;
+    }
+  }
+  console.log(link);
+  location.href = link;
+});
+// 검색시
+$('#searchBtn').on('click',function(){
+  if($("#keywordInput").val() == ''){
+    alert('검색어를 넣어주세요.');
+    return false;
+  }
+  location.href = '../contents/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+})
+
+$('#keywordInput').on('keyup',function(event){
+  if(event.keyCode == 13){
+    $('#searchBtn').trigger('click');
+  };
+});
+
+$(document).on('click','.btn-update',function(event){
+  var tdEle = $(event.target).closest("tr").find('td');
+  var input = $(event.target).closest("tr").find('input');
+  $.ajax({
+    url: '../contents/update',
+    type: 'post',
+    data: {
+      'K_method': tdEle.eq(3).find('option:selected').val(),
+      'K_key': tdEle.eq(4).find('option:selected').val(),
+      'n_idx_k': input.eq(0).val()
+    },
+    error:function(request,status,error){
+      alert("다시시도해주세요.");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        window.location.reload();
+      }
+      else{
+        alert("다시시도해주세요.");
+      }
+    }
+  });
+});
+
+$(document).on('click','.btn-delete',function(){
+  var trEle = $(this).closest("tr");
+  var input = trEle.find('input');
+  $.ajax({
+    url: '../contents/delete',
+    type: 'post',
+    data: {
+      'n_idx_k': input.eq(0).val(),
+      'n_idx_c': input.eq(1).val()
+    },
+    error:function(request,status,error){
+      alert(request.responseText);
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        trEle.remove();
+      }
+      else{
+        alert("다시시도해주세요.");
+      }
+    }
+  });
+});
+</script>

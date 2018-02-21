@@ -61,11 +61,15 @@ router.post('/', function(req, res, next) {
   }
   var param = Object.values(req.body);
   if(param[0] == '' || param[2] == '' || param[3] == ''){
-    res.status(500).send('다시 입력해 주세요.')
+    res.status(500).send('다시 입력해 주세요.');
+    return false;
   }
 
   User.updateUser(param, function(err, results, fields) {
-    if(err) throw err;
+    if(err){
+      res.status(500).send('다시 시도해 주세요.');
+      return false;
+    }
     res.send('업데이트 완료되었습니다.');
   });
 });
@@ -84,7 +88,10 @@ router.post('/add', function(req, res, next) {
   }
   var param = Object.values(req.body);
   User.insertUser(param, function(err, results, fields) {
-    if(err) throw err;
+    if(err){
+      res.status(500).send('다시 입력해 주세요.');
+      return false;
+    }
     res.send('거래처 등록이 완료되었습니다.');
   });
 });

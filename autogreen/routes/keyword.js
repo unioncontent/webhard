@@ -33,9 +33,6 @@ router.post('/add',function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  var now = new Date();
-  var date = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-  req.body.date = date;
   var param = req.body;
   console.log("param:",param);
   req.body.keyword.forEach(function(item, idx){
@@ -49,7 +46,10 @@ router.post('/add',function(req, res, next) {
       param.K_type = '0';
     }
     Keyword.insertKeyword(param,function(err, results, fields) {
-      if(err) throw err;
+      if(err){
+        res.status(500).send('다시 입력해 주세요.');
+        return false;
+      }
     });
   });
   res.send(req.body);

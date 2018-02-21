@@ -120,31 +120,46 @@ router.post('/add', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  var now = new Date();
-  var date = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-  req.body.date = date;
-  // OSP ID확인
-  User.searchOSP(req.body.OSP_id,function(err, results, fields) {
-    if(err) throw err;
-    // 콘텐츠 ID 설정
-    Contents.getNextIdx(req.body,function(err, results, fields) {
-      req.body.CP_CntID = req.body.U_id_c+'-'+req.body.OSP_id+'-'+results[0].idx;
-      // 콘텐츠 추가
-      Contents.insertContents(req.body, function(err, results, fields) {
-        if(err) throw err;
-        var kParam = req.body;
-        if(results[0].n_idx != "" && kParam.keyword != ""){
-          kParam.n_idx_c = results[0].n_idx;
-          kParam.K_key = '1';
-          kParam.K_type = '1';
-          // 키워드 추가
-          Keyword.insertKeyword(kParam,function(err, results, fields) {
-            if(err){
-              res.status(500).send('다시 입력해 주세요.');
-            }
-            res.send('콘텐츠 등록이 완료되었습니다.');
-          });
+  // CP ID확인
+  User.checkOCId(['c',req.body.U_id_c],function(err, results) {
+    if(err || results.length == 0){
+      res.status(500).send('CP사를 다시 입력해 주세요.');
+      return false;
+    }
+    // OSP ID확인
+    User.checkOCId(['o',req.body.OSP_id],function(err, results) {
+      if(err || results.length == 0){
+        res.status(500).send('OSP ID를 다시 입력해 주세요.');
+        return false;
+      }
+      // 콘텐츠 ID 설정
+      Contents.getNextIdx(req.body,function(err, results, fields) {
+        if(err){
+          res.status(500).send('다시 입력해 주세요.');
+          return false;
         }
+        req.body.CP_CntID = req.body.U_id_c+'-'+req.body.OSP_id+'-'+results[0].idx;
+        // 콘텐츠 추가
+        Contents.insertContents(req.body, function(err, results, fields) {
+          if(err){
+            res.status(500).send('다시 입력해 주세요.');
+            return false;
+          }
+          var kParam = req.body;
+          if(results[0].n_idx != "" && kParam.keyword != ""){
+            kParam.n_idx_c = results[0].n_idx;
+            kParam.K_key = '1';
+            kParam.K_type = '1';
+            // 키워드 추가
+            Keyword.insertKeyword(kParam,function(err, results, fields) {
+              if(err){
+                res.status(500).send('다시 입력해 주세요.');
+                return false;
+              }
+              res.send('콘텐츠 등록이 완료되었습니다.');
+            });
+          }
+        });
       });
     });
   });

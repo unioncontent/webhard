@@ -170,4 +170,41 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="/assets/pages/user/script.js"></script>
+<script type="text/javascript">
+$(document).on('click','.user',function(event){
+  var ele = event.currentTarget.parentElement.children;
+  $('input[name=userName]').val($(ele[1]).text());
+  $('input[name=id]').val($(ele[2]).text());
+  $('input[name=pwd]').val($(ele[3]).text());
+  $('input[name=class]').val($(ele[4]).text());
+  $('#'+$(ele[5]).text()).prop('selected', true);
+  $('input[name=date]').val($(ele[6]).text());
+  $('#user-Modal').modal('show');
+});
+
+$('#updateBtn').on('click',function(){
+  $.ajax({
+    url: '../user',
+    type: 'post',
+    data : {
+      'userName': $('input[name=userName]').val(),
+      'pwd': $('input[name=pwd]').val(),
+      'status': $("#status option:selected").val(),
+      'id': $('input[name=id]').val()
+    },
+    datatype : 'json',
+    error:function(request,status,error){
+      // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert(request.responseText);
+    },
+    success:function(data){
+      alert(data);
+      location.reload();
+    }
+  });
+});
+
+$('#selectClass').on('change',function(){
+  location.href = '../user/?class='+$("#selectClass option:selected").val();
+});
+</script>

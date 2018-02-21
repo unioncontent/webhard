@@ -19,9 +19,13 @@ var User = {
     var sql = 'select U_name from user_all_b where n_idx=?';
     connection.query(sql,uid,callback);
   },
-  searchOSP : function(uid,callback) {
+  checkOCId : function(item,callback) {
     var sql = 'select * from user_all_b where U_id=? and U_class=\'o\'';
-    connection.query(sql,uid,callback);
+    if(item[0] == 'c'){
+      sql = 'select * from user_all_b where U_id=? and U_class=\'c\'';
+    }
+    console.log(sql,item[1]);
+    connection.query(sql,item[1],callback);
   },
   userCount : function(uClass,callback) {
     var sql = 'select count(1) as total from user_all_b where U_class=?';

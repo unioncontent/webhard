@@ -142,4 +142,74 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="/assets/pages/contents/script.js"></script>
+<script type="text/javascript">
+$("#insertBtn").on("click",function(){
+  var check=true;
+  var param = {
+    'U_id_c': $('input[name=CP_name]').val(),
+    'CP_title': $("input[name=CP_title]").val(),
+    'CP_title_eng': $("input[name=CP_title_eng]").val(),
+    'OSP_id': $('input[name=OSP_id]').val(),
+    'K_method': $("input:radio[name=K_method]:checked").val(),
+    'K_apply': $("input:radio[name=K_apply]:checked").val(),
+    'CP_hash': '',
+    'CP_price': '0',
+    'keyword': $("input[name=CP_title]").val()
+  };
+  if($("#CP_name").val() == ""){
+    check = requiredMessage("CP_name","거래처명을 입력해주세요.");
+  }
+  if($("#CP_title").val() == ""){
+    check = requiredMessage("CP_title","대표제목를 입력해주세요.");
+  }
+  if($("#OSP_id").val() == ""){
+    check = requiredMessage("OSP_id","OSP관리ID를 입력해주세요.");
+  }
+  if($("input:radio[name=K_method]:checked").val() == ""){
+    check = requiredMessage("method","관리방법을 선택해주세요.");
+  }
+  if($("input:radio[name=K_apply]:checked").val() == ""){
+    check = requiredMessage("apply","관리현황을 선택해주세요.");
+  }
+
+  if(check){
+    if($("#CP_hash").val() != ""){
+      param.CP_hash = $("#CP_hash").val();
+    }
+    if($("#CP_price").val() != ""){
+      param.CP_price = $("#CP_price").val();
+    }
+    if($("#keyword").val() != ""){
+      param.keyword = $("#keyword").val();
+    }
+    console.log(param);
+    $.ajax({
+      url: './add',
+      type: 'post',
+      data : param,
+      datatype : 'json',
+      error:function(request,status,error){
+        // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert(request.responseText);
+      },
+      success:function(data){
+        alert(data);
+        window.location.reload();
+      }
+    });
+  }
+
+  return check;
+});
+
+$("input, select").on("focus",function(){
+  $(this).removeClass("form-control-danger");
+  $(this).siblings().children("p").text("");
+});
+
+function requiredMessage(target,msg){
+  $("#"+target).siblings().children().text(msg);
+  $("#"+target).addClass("form-control-danger");
+  return false;
+}
+</script>

@@ -44,7 +44,7 @@ var Manual = {
     connection.query(sql+'fileis_cnts_his_g where OSP_idx=?',OSP_idx,callback);
   },
   updateSortData: function(item,callback){
-    var sql = 'update fileis_cnts_sort_e set CS_state=\'1\',K_apply=? where OSP_idx=?';
+    var sql = 'update fileis_cnts_sort_e set CS_state=\'1\',K_apply=?,CS_regdate=now() where OSP_idx=?';
     connection.query(sql,item,callback);
   },
   getCntDatainfo: function(item,callback){
@@ -54,10 +54,12 @@ var Manual = {
   insertHisData: function(item,callback){
     var sql = 'insert into fileis_cnts_his_g(U_id_c, OSP_idx, OSP_title, OSP_title_null, OSP_seller, OSP_price, OSP_filename, OSP_regdate)\
     values(?,?,?,?,?,?,?,now())';
+    console.log(sql,item);
     connection.query(sql,item,callback);
   },
   deleteAllTable: function(OSP_idx,callback){
     var sql = 'delete from fileis_cnts_all_a where OSP_idx=?';
+    console.log(sql,OSP_idx);
     connection.query(sql,OSP_idx,callback);
   }
 }
