@@ -19,24 +19,20 @@ router.get('/', function(req, res, next) {
     res.redirect('/login');
   }
   var searchObject = {
-    cpId: '0',
+    cp_name: '0',
     offset: 0,
     limit: 10
   }
-  if (typeof req.query.cpId !== 'undefined') {
-    searchObject.cpId = req.query.cpId;
-    // console.log('1 : ',searchObject);
+  if (typeof req.query.cp_name !== 'undefined') {
+    searchObject.cp_name = req.query.cp_name;
   }
   if (typeof req.query.searchType !== 'undefined') {
     searchObject.searchType = req.query.searchType;
-    // console.log('2 : ',searchObject);
   }
   if (typeof req.query.search !== 'undefined') {
     searchObject.search = req.query.search;
-    // console.log('3 : ',searchObject);
   }
   Filtering.filteringCount(searchObject,function(err,result) {
-    // console.log('after:',searchObject);
     if(err) throw err;
     totalUser = result[0].total;
     pageCount = Math.ceil(totalUser/searchObject.limit);
@@ -51,7 +47,7 @@ router.get('/', function(req, res, next) {
     if (parseInt(currentPage) > 0) {
       searchObject.offset = (currentPage - 1) * searchObject.limit;
     }
-    // console.log('3 : ',searchObject);
+    console.log('3 : ',searchObject);
     Filtering.getFilteringList(searchObject, function(err,result){
       if(err){
         res.json(err);

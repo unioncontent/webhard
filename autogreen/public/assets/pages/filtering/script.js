@@ -14,9 +14,9 @@ $(document).ready(function(){
     success:function(data){
       console.log(data);
       data.forEach(function(item){
-        var html = '<option value="'+item.n_idx+'">'+item.U_name+'</option>'
-        if(c == item.n_idx){
-          html = '<option value="'+item.n_idx+'" selected>'+item.U_name+'</option>'
+        var html = '<option value="'+item.U_name+'">'+item.U_name+'</option>'
+        if(c == item.U_name){
+          html = '<option value="'+item.U_name+'" selected>'+item.U_name+'</option>'
         }
         $('#selectCp').append(html);
       });
@@ -25,7 +25,7 @@ $(document).ready(function(){
 });
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../filtering/?cpId='+$("#selectCp option:selected").val()
+  var link = '../filtering/?cp_name='+$("#selectCp option:selected").val()
   var t = url.searchParams.get("searchType");
   var s = url.searchParams.get("search");
   if (t !== undefined && t != ''){
