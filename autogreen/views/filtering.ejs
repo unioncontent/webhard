@@ -86,7 +86,7 @@
                             }
                             if(currentPage>1) {
                               y = currentPage-1;
-                              var preLink = "/filtering/?page="+y+"&cpId="+data.cpId+searchParams;
+                              var preLink = "/filtering/?page="+y+"&cp_name="+data.cp_name+searchParams;
                           %>
                             <li class="page-item">
                               <a class="page-link" href="<%=preLink%>" aria-label="Previous">&laquo;
@@ -97,7 +97,7 @@
                           <% } %>
                           <%
                             for (y; y <= pageCount; y++) {
-                              var link = "/filtering/?page="+y+"&cpId="+data.cpId+searchParams;
+                              var link = "/filtering/?page="+y+"&cp_name="+data.cp_name+searchParams;
                           %>
                             <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
                               <a class="page-link" href="<%=link%>"><%= y %></a>
@@ -110,7 +110,7 @@
                           %>
                           <%
                             if(currentPage != pageCount) {
-                              var nextLink = "/filtering/?page="+Math.ceil(pageCount).toString()+"&cpId="+data.cpId+searchParams;
+                              var nextLink = "/filtering/?page="+Math.ceil(pageCount).toString()+"&cp_name="+data.cp_name+searchParams;
                             %>
                             <li class="page-item">
                               <a class="page-link" href="<%=nextLink%>" aria-label="Next">&raquo;

@@ -5,9 +5,9 @@ var Filtering = {
   getFilteringList : function(item,callback) {
     var sql = 'select * from fileis_filtering where search is not null';
     var param = [item.offset,item.limit];
-    if(item.cpId != '0'){
-      sql = 'select * from fileis_filtering where cp_id=?';
-      param.unshift(item.cpId);
+    if(item.cp_name != '0'){
+      sql = 'select * from fileis_filtering where cp_name=?';
+      param.unshift(item.cp_name);
     }
     if('searchType' in item){
       switch (item.searchType) {
@@ -16,15 +16,15 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
-    // console.log(sql+' order by csState desc limit ?,?',param);
-    connection.query(sql+' order by csState desc limit ?,?',param,callback);
+    console.log(sql+' order by csDate desc limit ?,?',param);
+    connection.query(sql+' order by csDate desc limit ?,?',param,callback);
   },
   filteringCount : function(item,callback) {
     var sql = 'select count(1) as total from fileis_filtering where search is not null';
     var param = [];
-    if(item.cpId != '0'){
-      sql = 'select count(1) as total from fileis_filtering where cp_id=?';
-      param[0] = item.cpId;
+    if(item.cp_name != '0'){
+      sql = 'select count(1) as total from fileis_filtering where cp_name=?';
+      param[0] = item.cp_name;
     }
     if('searchType' in item){
       switch (item.searchType) {

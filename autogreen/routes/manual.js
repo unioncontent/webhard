@@ -13,11 +13,10 @@ var currentPage = 1;
 var searchType = 'i';
 var search = '';
 
-/* GET page. */
 router.get('/', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   var searchObject = {
     cp_name: '0',
     offset: 0,
@@ -65,9 +64,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/getCPList', function(req, res, next){
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   User.getClassAllList('c',function(err,result){
     if(err) throw err;
     res.send(result);
@@ -75,35 +74,40 @@ router.post('/getCPList', function(req, res, next){
 });
 
 router.post('/delete', function(req, res, next){
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   console.log(req.body.OSP_idx);
   Manual.delete(req.body.OSP_idx, function(err,result){
     if(err) throw err;
+    res.send('true');
   });
-  res.send('true');
 });
 
 router.post('/update', function(req, res, next){
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
-  console.log(req.body.OSP_idx);
-  var u_id_c = Manual.updateSortData(req.body.OSP_idx);
-  Manual.getCntDatainfo([u_id_c,req.body.OSP_idx], function(err,result){
+  if(!req.user){
+    res.redirect('/login');
+  }
+  //수동처리 관리상태 수정
+  Manual.updateSortData([req.body.K_apply,req.body.OSP_idx],function(err,result){
     if(err) throw err;
-    console.log(u_id_c);``
-    delete result[0].OSP_regdate;
-    res.send('true');
+    //크롤링 테이블에서 게시물 정보 가져옴
+    Manual.getCntDatainfo([req.body.OSP_idx,req.body.U_id_c], function(err,result){
+      if(err) throw err;
+      delete result[0].n_idx;
+      delete result[0].OSP_regdate;
+      var param = Object.values(result[0]);
+      param.unshift(req.body.U_id_c);
+      //히스토리 테이블에서 게시물 저장
+      Manual.insertHisData(param, function(err,result){
+        if(err) throw err;
+        //크롤링 테이블에서 게시물 삭제
+        Manual.deleteAllTable(req.body.OSP_idx, function(err,result){
+          if(err) throw err;
+          res.send('true');
+        });
+      });
+    });
   });
-  // Manual.insertHisData(req.body.OSP_idx, function(err,result){
-  //   if(err) throw err;
-  //   Manual.deleteAllTable(req.body.OSP_idx, function(err,result){
-  //     if(err) throw err;
-  //     res.send('true');
-  //   });
-  // });
-
 });
 module.exports = router;

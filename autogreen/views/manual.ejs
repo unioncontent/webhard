@@ -22,7 +22,7 @@
           <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectCp">
             <option value='0'>CP사선택</option>
           </select>
-          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left select-left" id="selectKeyword">
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left select-left" id="selectApply" style="display:none;">
             <option value="a">전체</option>
             <option value="P">보류</option>
             <option value="T">제휴</option>
@@ -271,7 +271,9 @@ $(document).on('click','.btn-update',function(){
       url: '../manual/update',
       type: 'post',
       data: {
-        'OSP_idx': eles.eq(3).text()
+        'K_apply': eles.find('select').find('option:selected').val(),
+        'OSP_idx': eles.eq(3).text(),
+        'U_id_c': eles.eq(0).text()
       },
       error:function(request,status,error){
         alert("다시시도해주세요.");
