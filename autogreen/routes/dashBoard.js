@@ -1,17 +1,55 @@
-const express = require('express');
-const passport = require('passport');
-const bcrypt = require('bcrypt-nodejs');
+var express = require('express');
+var passport = require('passport');
+var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/user.js');
+var DashBoard = require('../models/dashBoard.js');
 var LocalStrategy = require('passport-local').Strategy;
 
-const router = express.Router();
+var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   // if(!req.user){
   //   res.redirect('/login');
   // }
-  res.render('dashBoard');
+  DashBoard.getAllDataCount('',function(err,result){
+    res.render('dashBoard',{
+      totalCount: result[0].total,
+      TCount: result[0].tTotal,
+      DCount: result[0].dTotal,
+      PCount: result[0].pTotal
+    });
+  });
+});
+
+router.post('/getCPList', function(req, res, next) {
+  User.getClassList('c',function(err,result){
+    if(err){
+      res.status(500).send('다시 시도해주세요.');
+      return false;
+    }
+    res.send(result);
+  });
+});
+
+router.post('/get24DataList', function(req, res, next) {
+  DashBoard.get24DataList(function(err,result){
+    if(err){
+      res.status(500).send('다시 시도해주세요.');
+      return false;
+    }
+    res.send(result);
+  });
+});
+
+router.post('/getCPCcountList', function(req, res, next) {
+  DashBoard.getAllDataCount(req.body.cp,function(err,result){
+    if(err){
+      res.status(500).send('다시 시도해주세요.');
+      return false;
+    }
+    res.send(result[0]);
+  });
 });
 
 router.get('/login', function(req, res, next) {

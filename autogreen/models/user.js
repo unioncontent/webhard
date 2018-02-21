@@ -15,6 +15,10 @@ var User = {
     var sql = 'select * from user_all_b where U_class=? order by U_name';
     connection.query(sql,uClass,callback);
   },
+  getClassList : function(c,callback) {
+    var sql = 'select U_name from user_all_b where U_class=?';
+    connection.query(sql,c,callback);
+  },
   getUserName : function(uid,callback) {
     var sql = 'select U_name from user_all_b where n_idx=?';
     connection.query(sql,uid,callback);
