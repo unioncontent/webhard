@@ -4,7 +4,7 @@ var connection = mysql.createConnection(require('../db/db_con.js'));
 var Filtering = {
   getFilteringList : function(item,callback) {
     var sql = 'select * from fileis_filtering where search is not null';
-    var param = [item.offset,item.limit];
+    var param = [];
     if(item.cp_name != '0'){
       sql = 'select * from fileis_filtering where cp_name=?';
       param.unshift(item.cp_name);
@@ -16,8 +16,13 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
-    console.log(sql+' order by csDate desc limit ?,?',param);
-    connection.query(sql+' order by csDate desc limit ?,?',param,callback);
+    sql += ' order by csDate desc ';
+    if('offset' in item){
+      param.push(item.offset,item.limit);
+      sql += ' limit ?,?'
+    }
+    console.log(sql,param);
+    connection.query(sql,param,callback);
   },
   filteringCount : function(item,callback) {
     var sql = 'select count(1) as total from fileis_filtering where search is not null';

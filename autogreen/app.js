@@ -69,6 +69,11 @@ app.use(function(req, res, next) {
   }
   next();
 });
+var excel = require('./routes/excel');
+app.use('/excel', excel);
+
+// var test = require('./routes/test');
+// app.use('/test', test);
 
 var dashBoard = require('./routes/dashBoard');
 app.use('/', dashBoard);

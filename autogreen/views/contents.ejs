@@ -22,7 +22,7 @@
           <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectCp">
             <option value='0'>CP사선택</option>
           </select>
-          <button class="btn btn-warning alert-confirm f-left p-r-5 p-l-5 m-l-15 m-b-10">
+          <button class="btn btn-warning alert-excel f-left p-r-5 p-l-5 m-l-15 m-b-10">
             <i class="icofont icofont-download-alt"></i>EXCEL
           </button>
           <div class="col-sm-3 input-group input-group-button input-group-inverse p-l-0 p-r-0 m-b-10 f-right btn-select">
@@ -145,6 +145,7 @@
     </div>
   </div>
 </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 // cp 선택 후
 var url_string = window.location.href
@@ -171,6 +172,23 @@ $(document).ready(function(){
     }
   });
 });
+
+//엑셀출력
+$('.alert-excel').on("click",function(){
+  swal({
+    title: "엑셀출력 하시겠습니까?",
+    text: "현재 리스트가 엑셀출력 됩니다.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonClass: "btn-danger",
+    confirmButtonText: "YES",
+    closeOnConfirm: false
+  })
+  .then((value) =>{
+    location.href = '/excel/contents/?cpId='+c+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+  });
+});
+
 // cp 변경시
 $('#selectCp').on('change',function(){
   var link = '../contents/?cpId='+$("#selectCp option:selected").val()
@@ -184,6 +202,7 @@ $('#selectCp').on('change',function(){
   console.log(link);
   location.href = link;
 });
+
 // 검색시
 $('#searchBtn').on('click',function(){
   if($("#keywordInput").val() == ''){

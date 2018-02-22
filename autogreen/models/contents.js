@@ -4,7 +4,8 @@ var connection = mysql.createConnection(require('../db/db_con.js'));
 var Contents = {
   getContentsList : function(item,callback) {
     var sql = 'select * from fileis_cnts_list where search is not null';
-    var param = [item.offset,item.limit];
+    // var param = [item.offset,item.limit];
+    var param = [];
     if(item.cpId != '0'){
       sql = 'select * from fileis_cnts_list where CP_id=?';
       param.unshift(item.cpId);
@@ -15,7 +16,13 @@ var Contents = {
         case 't': sql+=' and (search like \'%'+item.search+'%\' or CP_title like \'%'+item.search+'%\')'; break;
       }
     }
-    connection.query(sql+' limit ?,?',param,callback);
+    if('offset' in item){
+      param.push(item.offset,item.limit);
+      sql += ' limit ?,?'
+    }
+    console.log(sql,param);
+    connection.query(sql,param,callback);
+    // connection.query(sql+' limit ?,?',param,callback);
   },
   contentsCount : function(item,callback) {
     var sql = 'select count(1) as total from fileis_cnts_list where search is not null';
