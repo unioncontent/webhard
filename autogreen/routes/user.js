@@ -79,7 +79,7 @@ router.get('/add', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  res.render('userAdd')
+  res.render('userAdd');
 });
 
 router.post('/add', function(req, res, next) {
