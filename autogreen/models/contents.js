@@ -48,22 +48,18 @@ var Contents = {
   insertContents: function(item,callback) {
     console.log('----------insertContents--------');
     if('CP_CntID' in item){
-      console.log('콘텐츠 insert');
       // 콘텐츠 insert
-      var param = [item.CP_CntID,item.U_id_c,item.CP_title,item.CP_title_eng,item.CP_price,item.CP_hash,item.date];
+      var param = [item.CP_CntID,item.U_id_c,item.CP_title,item.CP_title_eng,item.CP_price,item.CP_hash];
       sql = 'insert fileis_cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
-      connection.query(sql,param,function(err, results, fields) {
-        if(err) throw err;
-        console.log('콘텐츠 확인');
-        // 콘텐츠 확인
-        sql = 'select * from fileis_cnts_list_c where CP_CntID = ?';
-        console.log(sql,item.CP_CntID);
-        connection.query(sql,item.CP_CntID,callback);
-      });
+      connection.query(sql,param,callback);
     }
-    else{
-      return false;
-    }
+  },
+  checkInsert: function(item,callback) {
+    console.log('----------콘텐츠 확인--------');
+    // 콘텐츠 확인
+    sql = 'select * from fileis_cnts_list_c where CP_CntID = ?';
+    // console.log(sql,item.CP_CntID);
+    connection.query(sql,item.CP_CntID,callback);
   },
   deleteContents: function(n_idx,callback){
     var sql = 'delete from fileis_cnts_list_c where n_idx=?';
