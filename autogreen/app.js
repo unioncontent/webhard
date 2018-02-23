@@ -86,7 +86,7 @@ app.use('/period', period);
 // 콘텐츠
 var contents = require('./routes/contents');
 app.use('/contents', contents);
-app.use('/contents/add', contents);
+app.use('/contents/add/:addType', contents);
 
 // 키워드
 var keyword = require('./routes/keyword');

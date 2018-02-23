@@ -124,17 +124,19 @@
           <div class="card">
             <div class="card-header">
               <h5>일괄등록</h5>
-              <span>* 엑셀양식 : CP사 / 제목 / OSP관리ID / 관리현황 / HASH값 / 기본검색어 </span>
+              <span>* 엑셀양식 : CP사(cpId) / 제목(title) / 영문제목(engTitle) / OSP관리ID(ospId) / 관리방법(method) / 관리현황(apply) / HASH값(hash) / 가격(price) / 기본검색어(keyword) </span>
             </div>
             <div class="card-block">
-              <div class="form-group row">
-                <div class="col-sm-5">
-                  <input name="thumbnail" type="image" class="form-control">
+              <form action='/contents/add/upload' id='uploadFrm' method="post" enctype="multipart/form-data">
+                <div class="form-group row">
+                  <div class="col-sm-5">
+                    <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
+                  </div>
+                  <div class="col-sm-1">
+                    <button id="insertBtn2" type="submit" class="btn btn-inverse m-b-0 p-b-10 p-t-10">등록</button>
+                  </div>
                 </div>
-                <div class="col-sm-1">
-                  <button id="insertBtn" type="submit" class="btn btn-inverse m-b-0">등록</button>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -143,6 +145,19 @@
   </div>
 </div>
 <script type="text/javascript">
+$(function(){
+  var url_string = window.location.href
+  var url = new URL(url_string);
+  var uploadCheck = url.searchParams.get("upload");
+  if(uploadCheck != null){
+    if(uploadCheck == 't'){
+      alert('등록되었습니다.');
+    }
+    else {
+      alert('다시시도해주세요.');
+    }
+  }
+});
 $("#insertBtn").on("click",function(){
   var check=true;
   var param = {
@@ -182,18 +197,16 @@ $("#insertBtn").on("click",function(){
     if($("#keyword").val() != ""){
       param.keyword = $("#keyword").val();
     }
-    console.log(param);
     $.ajax({
       url: './add',
       type: 'post',
       data : param,
       datatype : 'json',
       error:function(request,status,error){
-        // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-        alert(request.responseText);
+        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
       },
       success:function(data){
-        alert(data);
+        // alert(data);
         window.location.reload();
       }
     });
@@ -212,4 +225,8 @@ function requiredMessage(target,msg){
   $("#"+target).addClass("form-control-danger");
   return false;
 }
+
+$("#insertBtn2").on("click",function(){
+  $("#uploadFrm").submit();
+});
 </script>
