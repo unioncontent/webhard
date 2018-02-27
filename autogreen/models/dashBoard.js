@@ -1,5 +1,6 @@
 var mysql = require('mysql');
-var connection = mysql.createConnection(require('../db/db_con.js'));
+var dbInfo = require('../db/db_con.js');
+var connection = mysql.createConnection(dbInfo.getDBInfo);
 
 var DashBoard = {
   getAllDataCount: function(item,callback){
