@@ -13,11 +13,15 @@ router.get('/', function(req, res, next) {
   //   res.redirect('/login');
   // }
   DashBoard.getAllDataCount('',function(err,result){
+    var data = null;
+    if(result.length > 0){
+      data = result[0]
+    }
     res.render('dashBoard',{
-      totalCount: result[0].total,
-      TCount: result[0].tTotal,
-      DCount: result[0].dTotal,
-      PCount: result[0].pTotal
+      totalCount: data.total,
+      TCount: data.tTotal,
+      DCount: data.dTotal,
+      PCount: data.pTotal
     });
   });
 });
@@ -48,7 +52,11 @@ router.post('/getCPCcountList', function(req, res, next) {
       res.status(500).send('다시 시도해주세요.');
       return false;
     }
-    res.send(result[0]);
+    var data = null;
+    if(result.length > 0){
+      data = result[0]
+    }
+    res.send(data);
   });
 });
 
