@@ -12,8 +12,10 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '8080');
+// var host = '180.210.20.178'; //'autogreen.co.kr';
 app.set('port', port);
+// app.set('host', host);
 
 /**
  * Create HTTP server.
@@ -25,7 +27,11 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port); //이부분 수정
+server.listen(port, function(){
+// server.listen(8080, '180.210.20.178', function(){
+  // console.log( "Server listening = %s:%s", host ,port );
+  console.log( "Server listening");
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
