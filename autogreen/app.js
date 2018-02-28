@@ -61,6 +61,7 @@ app.use(function(req, res, next) {
     res.locals.userNAME = req.user.U_name;
     res.locals.userCLASS = req.user.U_class;
     res.locals.userID = req.user.U_id;
+    global.osp = res.locals.userID;
   }
   else {
     res.locals.userNAME = undefined;
