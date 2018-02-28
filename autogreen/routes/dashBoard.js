@@ -13,16 +13,19 @@ router.get('/', function(req, res, next) {
     res.redirect('/login');
   }
   DashBoard.getAllDataCount('',function(err,result){
-    var data = null;
-    if(result.length > 0){
-      data = result[0]
+    var data = {
+      totalCount: 0,
+      TCount: 0,
+      DCount: 0,
+      PCount: 0
+    };
+    if(result){
+      data['totalCount'] = result[0].total;
+      data['TCount'] = result[0].tTotal;
+      data['DCount'] = result[0].dTotal;
+      data['PCount'] = result[0].pTotal;
     }
-    res.render('dashBoard',{
-      totalCount: data.total,
-      TCount: data.tTotal,
-      DCount: data.dTotal,
-      PCount: data.pTotal
-    });
+    res.render('dashBoard',data);
   });
 });
 
@@ -83,10 +86,10 @@ passport.use(new LocalStrategy({
   passwordField: 'password'
 }, function(username, password, done) {
   User.checkId(username, function(err, results) {
-    var user = results[0];
     if (err) {
       return done(err);
     }
+    var user = results[0];
     if (!user) {
       return done(null, false, { message: '아이디가 맞지 않습니다.' });
     }
@@ -104,6 +107,7 @@ router.post('/login',passport.authenticate('local', {
 }));
 
 router.get('/logout', function (req, res){
+  delete global.name;
   req.logout();
   res.redirect('/');
 });
