@@ -6,7 +6,7 @@ var  expressLayouts = require('express-ejs-layouts');
 var  cookieParser = require('cookie-parser');
 var  session = require('express-session');
 var  passport = require('passport');
-var  flash = require('connect-flash'); // use passport flash message
+var  flash = require('connect-flash');
 var  bodyParser = require('body-parser');
 
 var  app = express();
@@ -71,6 +71,7 @@ app.use(function(req, res, next) {
   }
   next();
 });
+
 //엑셀
 var excel = require('./routes/excel');
 app.use('/excel', excel);

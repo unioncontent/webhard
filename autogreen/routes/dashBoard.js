@@ -114,10 +114,4 @@ router.get('/logout', function (req, res){
   res.redirect('/');
 });
 
-router.get('/test', function(req, res, next) {
-  Test.getTable(function(err,result){
-    console.log('result:',result);
-    res.render('test', {layout: false,data: result});
-  });
-});
 module.exports = router;
