@@ -2,14 +2,11 @@ var mysql = require('mysql');
 var connection = mysql.createConnection(require('../db/db_con.js'));
 
 var Filtering = {
-  view: function(){
-    return global.osp.replace('_admin','') + '_filtering';
-  },
   getFilteringList : function(item,callback) {
-    var sql = 'select * from '+this.view()+' where search is not null';
+    var sql = 'select * from filtering where search is not null';
     var param = [];
     if(item.cp_name != '0'){
-      sql = 'select * from '+this.view()+' where cp_name=?';
+      sql = 'select * from filtering where cp_name=?';
       param.unshift(item.cp_name);
     }
     if('searchType' in item){
@@ -28,10 +25,10 @@ var Filtering = {
     connection.query(sql,param,callback);
   },
   filteringCount : function(item,callback) {
-    var sql = 'select count(1) as total from '+this.view()+' where search is not null';
+    var sql = 'select count(1) as total from filtering where search is not null';
     var param = [];
     if(item.cp_name != '0'){
-      sql = 'select count(1) as total from '+this.view()+' where cp_name=?';
+      sql = 'select count(1) as total from filtering where cp_name=?';
       param[0] = item.cp_name;
     }
     if('searchType' in item){
