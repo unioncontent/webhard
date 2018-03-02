@@ -108,9 +108,9 @@ router.post('/delete', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
+  if(!req.user){
+    res.redirect('/login');
+  }
   res.render('contentsAdd')
 });
 

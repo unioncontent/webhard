@@ -114,7 +114,6 @@ $(document).ready(function(){
     url: '../getCPList',
     type: 'post',
     datatype : 'json',
-    xLabels: 'hour',
     error:function(request,status,error){
       console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
     },
