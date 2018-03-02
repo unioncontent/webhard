@@ -1,8 +1,5 @@
-var mysql = require('mysql');
-var info = require('../db/db_con.js');
-info.mysql.database = global.osp;
-console.log('global.osp:',global.osp);
-var connection = mysql.createConnection(info.mysql);
+const mysql = require('mysql');
+const info = require('../db/db_con.js');
 
 var DashBoard = {
   getAllDataCount: function(item,callback){
@@ -15,6 +12,7 @@ var DashBoard = {
       sql += "and U_id_c=?"
     }
     // console.log(sql,item);
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,item,callback);
   },
   get24DataList: function(callback){
@@ -26,6 +24,7 @@ var DashBoard = {
     group by hour(CS_regdate);";
 
     // console.log(sql);
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
   }
 }

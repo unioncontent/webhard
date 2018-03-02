@@ -12,19 +12,16 @@ const password = 'uni1004';
 const port = '3306';
 
 var environments = {
-  init : {
+  mysql : {
     host     : host,
     user     : user,
     password : password,
     port     : port,
     database : 'webhard'
   },
-  mysql : {
-    host     : host,
-    user     : user,
-    password : password,
-    port     : port,
-    database : ''
+  changeDB : function(name){
+    this.mysql.database = name || 'webhard';
+    return this.mysql;
   }
 }
 

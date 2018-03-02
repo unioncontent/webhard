@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var info = require('../db/db_con.js');
-var connection = mysql.createConnection(info.init);
+var connection = mysql.createConnection(info.changeDB('webhard'));
 
 var User = {
   getUserList : function(user,callback) {
