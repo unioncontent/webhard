@@ -3,14 +3,6 @@ var dbInfo = {
   user     : 'autogreen',
   password : 'uni1004',
   port     : '3306',
-  database : 'fileis'
+  database : 'webhard'
 };
-var db = {
-  getDBInfo : function(){
-    return dbInfo;
-  }
-  setDatabase : function(name){
-    dbInfo.database = name;
-  }
-};
-module.exports = db;
+module.exports = dbInfo;

@@ -125,73 +125,72 @@ router.post('/add', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  // asyncInsert(req.body);
-  // res.send(true);
-  var data = req.body;
-  param = {
-    'U_id_c': data["cpid"],
-    'CP_title': data["title"],
-    'CP_title_eng': data["engtitle"],
-    'OSP_id': data["ospid"],
-    'K_method': data["method"],
-    'K_apply': data["apply"],
-    'CP_hash': data["hash"],
-    'CP_price': (data["price"] == "") ? 0 : data["price"],
-    'keyword': (data["keyword"] == "") ? data["title"] : data["keyword"]
-  };
-  async.waterfall(tasks, function (err) {
-    if (err){
-      console.log('err:',err);
-      res.status(500).send(err);
-    }
-    else{
-      console.log('done');
-      res.send('콘텐츠 등록이 완료되었습니다.');
-    }
-  });
-  // CP ID확인
-  // User.checkOCId(['c', req.body.U_id_c], function(err, results) {
-  //   if (err || results.length == 0) {
-  //     res.status(500).send('CP사를 다시 입력해 주세요.');
-  //     return false;
+  // var data = req.body;
+  // param = {
+  //   'U_id_c': data["cpid"],
+  //   'CP_title': data["title"],
+  //   'CP_title_eng': data["engtitle"],
+  //   'OSP_id': data["ospid"],
+  //   'K_method': data["method"],
+  //   'K_apply': data["apply"],
+  //   'CP_hash': data["hash"],
+  //   'CP_price': (data["price"] == "") ? 0 : data["price"],
+  //   'keyword': (data["keyword"] == "") ? data["title"] : data["keyword"]
+  // };
+  // async.waterfall(tasks, function (err) {
+  //   if (err){
+  //     console.log('err:',err);
+  //     res.status(500).send(err);
   //   }
-  //   // OSP ID확인
-  //   User.checkOCId(['o', req.body.OSP_id], function(err, results) {
-  //     if (err || results.length == 0) {
-  //       res.status(500).send('OSP ID를 다시 입력해 주세요.');
-  //       return false;
-  //     }
-  //     // 콘텐츠 ID 설정
-  //     Contents.getNextIdx(req.body, function(err, results, fields) {
-  //       if (err) {
-  //         res.status(500).send('다시 입력해 주세요.');
-  //         return false;
-  //       }
-  //       req.body.CP_CntID = req.body.U_id_c + '-' + req.body.OSP_id + '-' + results[0].idx;
-  //       // 콘텐츠 추가
-  //       Contents.insertContents(req.body, function(err, results, fields) {
-  //         if (err) {
-  //           res.status(500).send('다시 입력해 주세요.');
-  //           return false;
-  //         }
-  //         var kParam = req.body;
-  //         if (results[0].n_idx != "" && kParam.keyword != "") {
-  //           kParam.n_idx_c = results[0].n_idx;
-  //           kParam.K_key = '1';
-  //           kParam.K_type = '1';
-  //           // 키워드 추가
-  //           Keyword.insertKeyword(kParam, function(err, results, fields) {
-  //             if (err) {
-  //               res.status(500).send('다시 입력해 주세요.');
-  //               return false;
-  //             }
-  //             res.send('콘텐츠 등록이 완료되었습니다.');
-  //           });
-  //         }
-  //       });
-  //     });
-  //   });
+  //   else{
+  //     console.log('done');
+  //     res.send('콘텐츠 등록이 완료되었습니다.');
+  //   }
   // });
+  //콘텐츠 등록 수정하기!!!!
+  // CP ID확인
+  User.checkOCId(['c', req.body.U_id_c], function(err, results) {
+    if (err || results.length == 0) {
+      res.status(500).send('CP사를 다시 입력해 주세요.');
+      return false;
+    }
+    // OSP ID확인
+    User.checkOCId(['o', req.body.OSP_id], function(err, results) {
+      if (err || results.length == 0) {
+        res.status(500).send('OSP ID를 다시 입력해 주세요.');
+        return false;
+      }
+      // 콘텐츠 ID 설정
+      Contents.getNextIdx(req.body, function(err, results, fields) {
+        if (err) {
+          res.status(500).send('다시 입력해 주세요.');
+          return false;
+        }
+        req.body.CP_CntID = req.body.U_id_c + '-' + req.body.OSP_id + '-' + results[0].idx;
+        // 콘텐츠 추가
+        Contents.insertContents(req.body, function(err, results, fields) {
+          if (err) {
+            res.status(500).send('다시 입력해 주세요.');
+            return false;
+          }
+          var kParam = req.body;
+          if (results[0].n_idx != "" && kParam.keyword != "") {
+            kParam.n_idx_c = results[0].n_idx;
+            kParam.K_key = '1';
+            kParam.K_type = '1';
+            // 키워드 추가
+            Keyword.insertKeyword(kParam, function(err, results, fields) {
+              if (err) {
+                res.status(500).send('다시 입력해 주세요.');
+                return false;
+              }
+              res.send('콘텐츠 등록이 완료되었습니다.');
+            });
+          }
+        });
+      });
+    });
+  });
 });
 
 var xlstojson = require("xls-to-json-lc");

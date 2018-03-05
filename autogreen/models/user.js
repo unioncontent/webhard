@@ -1,6 +1,5 @@
 var mysql = require('mysql');
-var dbInfo = require('../db/db_con.js');
-var connection = mysql.createConnection(dbInfo.getDBInfo);
+var connection = mysql.createConnection(require('../db/db_con.js'));
 
 var User = {
   getUserList : function(user,callback) {
@@ -13,11 +12,11 @@ var User = {
     connection.query(sql,param,callback);
   },
   getClassAllList : function(uClass,callback) {
-    var sql = 'select * from user_all_b where U_class=? order by U_name';
+    var sql = 'select * from user_all_b where U_class=?  order by U_name';
     connection.query(sql,uClass,callback);
   },
   getClassList : function(c,callback) {
-    var sql = 'select U_name from user_all_b where U_class=?';
+    var sql = 'select U_name from user_all_b where U_class=? and U_state= \'1\'';
     connection.query(sql,c,callback);
   },
   getUserName : function(uid,callback) {
@@ -49,7 +48,7 @@ var User = {
     connection.query('insert user_all_b(U_id, U_pw, U_class, U_name, U_state, U_regdate) values(?,?,?,?,?,?)',userArr, callback);
   },
   checkId: function(id,callback) {
-    connection.query('select * from user_all_b where U_id=?',id, callback);
+    connection.query('select * from user_all_b where U_id=? and U_state= \'1\'',id, callback);
   }
 }
 

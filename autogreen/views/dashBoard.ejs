@@ -158,18 +158,15 @@ function areaChart(){
       console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
     },
     success:function(data){
-      // var script = "[";
-      // data.forEach(function(item,idx){
-      //   script += "{'date':'"+item.date+"','t':'"+item.tTotal+"','d':'"+item.dTotal+"','p':'"+item.pTotal+"'}";
-      //   if(data.length-1 != idx){
-      //     script += ","
-      //   }
-      // });
-      // script += "]";
       var arr = [];
-      data.forEach(function(item,idx){
-        arr.push({'date':item.date,'t':item.tTotal,'d':item.dTotal,'p':item.pTotal});
-      });
+      if(data){
+        data.forEach(function(item,idx){
+          arr.push({'date':item.date,'t':item.tTotal,'d':item.dTotal,'p':item.pTotal});
+        });
+      }
+      else{
+        arr.push({'date':0,'t':0,'d':0,'p':0});
+      }
 
       window.areaChart = Morris.Area({
         element: '24graph',
