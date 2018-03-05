@@ -12,20 +12,53 @@ router.get('/', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  DashBoard.getAllDataCount('',function(err,result){
-    var data = {
-      totalCount: 0,
-      TCount: 0,
-      DCount: 0,
-      PCount: 0
-    };
-    if(result){
-      data['totalCount'] = result[0].total;
-      data['TCount'] = result[0].tTotal;
-      data['DCount'] = result[0].dTotal;
-      data['PCount'] = result[0].pTotal;
-    }
-    res.render('dashBoard',data);
+  var sql = "SELECT FORMAT(COUNT(*),0) AS totalCount,\
+  FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as TCount,\
+  FORMAT(COUNT(IF(K_apply='D' and CS_state='1',1,null)),0) as DCount,\
+  FORMAT(COUNT(IF(K_apply='P',1,null)),0) as PCount\
+  FROM dashboard where date(CS_regdate) = date(now()) ";
+  var promise = require('../db/db_promise.js');
+  var DBpromise = new promise(global.osp);
+  var countObj = null;
+  var arr = [];
+  DBpromise.query(sql).then(rows => {
+    countObj = rows[0];
+    var sql = 'select U_name from user_all where U_class=\'c\' and U_state= \'1\'';
+    return DBpromise.userQuery(sql)
+  })
+  .then(rows => {
+    sql += "and U_id_c=?";
+    arr = [];
+    rows.forEach(function(entry) {
+      var result = DBpromise.query(sql,entry.U_name).then(rows => {
+        rows[0].cp_name = entry.U_name;
+        return rows[0];
+      });
+      arr.push(result);
+    });
+    return arr;
+  })
+  .then(rows => {
+    DBpromise.userClose();
+    DBpromise.close();
+
+    // rows.forEach(function(entry) {
+    //   entry.then(rows => {
+    //     console.log(rows.cp_name);
+    //     console.log(rows.totalCount);
+    //   });
+    // });
+
+    Promise.all(rows).then(data => {
+      res.render('dashBoard',{
+        count : countObj,
+        countList : data
+      });
+    });
+
+  })
+  .catch(function (err) {
+    console.log(err);
   });
 });
 
