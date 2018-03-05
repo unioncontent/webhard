@@ -52,6 +52,7 @@ router.post('/get24DataList', function(req, res, next) {
 router.post('/getCPCcountList', function(req, res, next) {
   DashBoard.getAllDataCount(req.body.cp,function(err,result){
     if(err){
+      console.log(err);
       res.status(500).send('다시 시도해주세요.');
       return false;
     }
@@ -59,6 +60,7 @@ router.post('/getCPCcountList', function(req, res, next) {
     if(result.length > 0){
       data = result[0]
     }
+    console.log(data);
     res.send(data);
   });
 });

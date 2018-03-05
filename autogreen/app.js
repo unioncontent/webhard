@@ -6,7 +6,7 @@ var  expressLayouts = require('express-ejs-layouts');
 var  cookieParser = require('cookie-parser');
 var  session = require('express-session');
 var  passport = require('passport');
-var  flash = require('connect-flash'); // use passport flash message
+var  flash = require('connect-flash');
 var  bodyParser = require('body-parser');
 
 var  app = express();
@@ -27,6 +27,7 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+//로그인
 app.use(session({
   secret: '1@%24^%$3^*&98&^%$', // 쿠키에 저장할 connect.sid값을 암호화할 키값 입력
   resave: false, //세션 아이디를 접속할때마다 새롭게 발급하지 않음
@@ -61,7 +62,7 @@ app.use(function(req, res, next) {
     res.locals.userNAME = req.user.U_name;
     res.locals.userCLASS = req.user.U_class;
     res.locals.userID = req.user.U_id;
-    global.osp = res.locals.userID;
+    global.osp = res.locals.userID.replace('_admin','');
   }
   else {
     res.locals.userNAME = undefined;
@@ -70,15 +71,16 @@ app.use(function(req, res, next) {
   }
   next();
 });
+
+//엑셀
 var excel = require('./routes/excel');
 app.use('/excel', excel);
 
-// var test = require('./routes/test');
-// app.use('/test', test);
-
+//대시보드
 var dashBoard = require('./routes/dashBoard');
 app.use('/', dashBoard);
 app.use('/login', dashBoard);
+app.use('/test', dashBoard);
 
 // 통계
 var period = require('./routes/period');

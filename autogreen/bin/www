@@ -9,11 +9,11 @@ var debug = require('debug')('autogreen:server');
 var http = require('http');
 
 /**
- * Get port from environment and store in Express.
+ * Get port from environment and store in Express. 'autogreen.co.kr';
  */
 
 var port = normalizePort(process.env.PORT || '8080');
-var host = 'autogreen.co.kr';
+var host = '192.168.0.43';
 app.set('port', port);
 
 /**
@@ -25,7 +25,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
+// server.listen(port, function(){
 server.listen(port, host, function(){
   console.log( "Server listening = %s:%s", host ,port );
 });

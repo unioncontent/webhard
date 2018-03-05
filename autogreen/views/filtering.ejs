@@ -44,7 +44,7 @@
           <div class="card">
             <div class="card-block table-border-style">
               <div class="table-responsive">
-                <table class="table table-bordered table-sm">
+                <table class="table table-bordered">
                   <thead>
                     <tr>
                       <th width="1%">NO</th>
@@ -62,7 +62,7 @@
                     <% for(var i=0; i < fList.length; i++) { %>
                     <tr>
                       <th><%= totalUser - i - data.offset %></th>
-                      <td><%= fList[i].cp_name %></td>
+                      <td><div class="cp_nobr"><%= fList[i].cp_name %></div></td>
                       <td><%= fList[i].osp_idx %></td>
                       <td><%= fList[i].cnt_id %></td>
                       <td><div class="title_nobr"><%= fList[i].title %></div></td>
@@ -134,14 +134,16 @@
   </div>
 </div>
 <style type="text/css">
-.title_nobr{
+.title_nobr,.cp_nobr{
   font-size: 15px;
   padding-left: 3px;
   text-overflow: ellipsis;
   width: 400px;
   overflow: hidden;
 }
-
+.cp_nobr{
+  width: 117px;
+}
 </style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
