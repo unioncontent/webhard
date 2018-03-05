@@ -20,7 +20,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-inverse">
-              <h3><%=totalCount%></h3>
+              <h3><%=count.totalCount%></h3>
               <span class="m-t-10">전체데이터</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -29,7 +29,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-primary">
-              <h3><%=TCount%></h3>
+              <h3><%=count.TCount%></h3>
               <span class="m-t-10">제휴처리</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -38,7 +38,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-danger">
-              <h3><%=DCount%></h3>
+              <h3><%=count.DCount%></h3>
               <span class="m-t-10">삭제처리</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -47,7 +47,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-twitter">
-              <h3><%=PCount%></h3>
+              <h3><%=count.PCount%></h3>
               <span class="m-t-10">보류처리</span>
               <i class="icofont icofont-search"></i>
             </div>
@@ -85,6 +85,15 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <% countList.forEach(function(entry) { %>
+                      <tr>
+                        <th><%=entry.cp_name%></th>
+                        <td><%=entry.totalCount%></td>
+                        <td><%=entry.TCount%></td>
+                        <td><%=entry.DCount%></td>
+                        <td><%=entry.PCount%></td>
+                      </tr>
+                    <% }); %>
                   </tbody>
                 </table>
               </div>
@@ -110,43 +119,43 @@ $(window).resize(function(){
 });
 
 $(document).ready(function(){
-  $.ajax({
-    url: '../getCPList',
-    type: 'post',
-    datatype : 'json',
-    error:function(request,status,error){
-      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-    },
-    success:function(data){
-      data.forEach(function(item,idx){
-        cpCountList(item.U_name);
-      });
-    }
-  });
+  // $.ajax({
+  //   url: '../getCPList',
+  //   type: 'post',
+  //   datatype : 'json',
+  //   error:function(request,status,error){
+  //     console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+  //   },
+  //   success:function(data){
+  //     data.forEach(function(item,idx){
+  //       cpCountList(item.U_name);
+  //     });
+  //   }
+  // });
   areaChart();
 });
 
-function cpCountList(cp){
-  // console.log('cpCountList:',cp);
-  $.ajax({
-    url: '../getCPCcountList',
-    type: 'post',
-    data: { 'cp': cp },
-    datatype : 'json',
-    error:function(request,status,error){
-      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-    },
-    success:function(data){
-      $('.table-cp tbody').append("<tr>\
-      <th>"+cp+"</th>\
-      <td>"+data.total+"</td>\
-      <td>"+data.tTotal+"</td>\
-      <td>"+data.dTotal+"</td>\
-      <td>"+data.pTotal+"</td>\
-      </tr>");
-    }
-  });
-}
+// function cpCountList(cp){
+//   // console.log('cpCountList:',cp);
+//   $.ajax({
+//     url: '../getCPCcountList',
+//     type: 'post',
+//     data: { 'cp': cp },
+//     datatype : 'json',
+//     error:function(request,status,error){
+//       console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+//     },
+//     success:function(data){
+//       $('.table-cp tbody').append("<tr>\
+//       <th>"+cp+"</th>\
+//       <td>"+data.total+"</td>\
+//       <td>"+data.tTotal+"</td>\
+//       <td>"+data.dTotal+"</td>\
+//       <td>"+data.pTotal+"</td>\
+//       </tr>");
+//     }
+//   });
+// }
 
 function areaChart(){
   $.ajax({
