@@ -4,11 +4,10 @@ const info = require('../db/db_con.js');
 var Contents = {
   getContentsList : function(item,callback) {
     var sql = 'select * from cnts_list where search is not null';
-    // var param = [item.offset,item.limit];
     var param = [];
-    if(item.cpId != '0'){
-      sql = 'select * from cnts_list where CP_id=?';
-      param.unshift(item.cpId);
+    if(item.cp_name != '0'){
+      sql = 'select * from cnts_list where CP_name=?';
+      param.unshift(item.cp_name);
     }
     if('searchType' in item){
       switch (item.searchType) {
@@ -20,17 +19,18 @@ var Contents = {
       param.push(item.offset,item.limit);
       sql += ' limit ?,?'
     }
-    // console.log(sql,param);
+    console.log(sql,param);
+    console.log(global.osp);
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
   },
   contentsCount : function(item,callback) {
     var sql = 'select count(1) as total from cnts_list where search is not null';
     var param = [];
-    if('cpId' in item){
-      if(item.cpId != '0'){
-        sql = 'select count(1) as total from cnts_list where CP_id=?';
-        param[0] = item.cpId;
+    if('cp_name' in item){
+      if(item.cp_name != '0'){
+        sql = 'select count(1) as total from cnts_list where CP_name=?';
+        param[0] = item.cp_name;
       }
     }
     if('searchType' in item){
@@ -71,7 +71,7 @@ var Contents = {
     connection.query(sql,n_idx,callback);
   },
   getSearchCnt: function(search,callback){
-    var sql = 'select * from cnts_list_c where search like \'%'+search+'%\'';
+    var sql = 'select * from cnts_list where search like \'%'+search+'%\'';
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
   }

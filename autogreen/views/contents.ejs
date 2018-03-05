@@ -38,7 +38,7 @@
         </div>
         <div class="col-md-12">
           <div class="card">
-            <div class="card-block table-border-style">
+            <div class="card-block table-border-style  table-responsive">
               <table class="table table-bordered table-sm">
                 <thead>
                   <tr>
@@ -58,9 +58,9 @@
                     <input type="hidden" class="kwd_idx" value='<%= cList[i].n_idx_k %>'/>
                     <input type="hidden" class="cnt_idx" value='<%= cList[i].n_idx_c %>'/>
                     <th><%= totalUser - i - data.offset %></th>
-                    <td><%= cList[i].CP_name %></td>
-                    <td><%= cList[i].CP_cntID %></td>
-                    <td><%= cList[i].CP_title %></td>
+                    <td><div class='cp_nobr'><%= cList[i].CP_name %></div></td>
+                    <td><div class='cntId_nobr'><%= cList[i].CP_cntID %></div></td>
+                    <td><div class='title_nobr'><%= cList[i].CP_title %></div></td>
                     <td>
                       <select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectMethod">
                         <option value="1" <%= (cList[i].K_method == '1') ? 'selected' : '' %>>자동</option>
@@ -99,7 +99,7 @@
                           }
                           if(currentPage>1) {
                             y = currentPage-1;
-                            var preLink = "/contents/?page="+y+"&cpId="+data.cpId+searchParams;
+                            var preLink = "/contents/?page="+y+"&cp_name="+data.cp_name+searchParams;
                         %>
                           <li class="page-item">
                             <a class="page-link" href="<%=preLink%>" aria-label="Previous">&laquo;
@@ -110,7 +110,7 @@
                         <% } %>
                         <%
                           for (y; y <= pageCount; y++) {
-                            var link = "/contents/?page="+y+"&cpId="+data.cpId+searchParams;
+                            var link = "/contents/?page="+y+"&cp_name="+data.cp_name+searchParams;
                         %>
                           <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
                             <a class="page-link" href="<%=link%>"><%= y %></a>
@@ -123,7 +123,7 @@
                         %>
                         <%
                           if(currentPage != pageCount) {
-                            var nextLink = "/contents/?page="+Math.ceil(pageCount).toString()+"&cpId="+data.cpId+searchParams;
+                            var nextLink = "/contents/?page="+Math.ceil(pageCount).toString()+"&cp_name="+data.cp_name+searchParams;
                           %>
                           <li class="page-item">
                             <a class="page-link" href="<%=nextLink%>" aria-label="Next">&raquo;
@@ -145,12 +145,27 @@
     </div>
   </div>
 </div>
+<style type="text/css">
+.title_nobr,.cp_nobr,.cntId_nobr{
+  font-size: 15px;
+  padding-left: 3px;
+  text-overflow: ellipsis;
+  width: 400px;
+  overflow: hidden;
+}
+.cp_nobr{
+  width: 105px;
+}
+.cntId_nobr{
+  width: 134px;
+}
+</style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 // cp 선택 후
 var url_string = window.location.href
 var url = new URL(url_string);
-var c = url.searchParams.get("cpId");
+var c = url.searchParams.get("cp_name");
 $(document).ready(function(){
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
@@ -163,9 +178,9 @@ $(document).ready(function(){
     success:function(data){
       console.log(data);
       data.forEach(function(item){
-        var html = '<option value="'+item.n_idx+'">'+item.U_name+'</option>'
-        if(c == item.n_idx){
-          html = '<option value="'+item.n_idx+'" selected>'+item.U_name+'</option>'
+        var html = '<option value="'+item.U_name+'">'+item.U_name+'</option>'
+        if(c == item.U_name){
+          html = '<option value="'+item.U_name+'" selected>'+item.U_name+'</option>'
         }
         $('#selectCp').append(html);
       });
@@ -185,13 +200,13 @@ $('.alert-excel').on("click",function(){
     closeOnConfirm: false
   })
   .then((value) =>{
-    location.href = '/excel/contents/?cpId='+c+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+    location.href = '/excel/contents/?cp_name='+$("#selectCp option:selected").val()+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
   });
 });
 
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../contents/?cpId='+$("#selectCp option:selected").val()
+  var link = '../contents/?cp_name='+$("#selectCp option:selected").val()
   var t = url.searchParams.get("searchType");
   var s = url.searchParams.get("search");
   if (t !== undefined && t != ''){
@@ -209,7 +224,7 @@ $('#searchBtn').on('click',function(){
     alert('검색어를 넣어주세요.');
     return false;
   }
-  location.href = '../contents/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  location.href = '../contents/?cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
 })
 
 $('#keywordInput').on('keyup',function(event){

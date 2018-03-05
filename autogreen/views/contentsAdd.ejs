@@ -145,19 +145,6 @@
   </div>
 </div>
 <script type="text/javascript">
-$(function(){
-  var url_string = window.location.href
-  var url = new URL(url_string);
-  var uploadCheck = url.searchParams.get("upload");
-  if(uploadCheck != null){
-    if(uploadCheck == 't'){
-      alert('등록되었습니다.');
-    }
-    else {
-      alert('다시시도해주세요.');
-    }
-  }
-});
 $("#insertBtn").on("click",function(){
   var check=true;
   var param = {
@@ -204,6 +191,7 @@ $("#insertBtn").on("click",function(){
       datatype : 'json',
       error:function(request,status,error){
         console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert(request.responseText);
       },
       success:function(data){
         // alert(data);
