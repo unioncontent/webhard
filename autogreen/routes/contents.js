@@ -18,12 +18,12 @@ router.get('/', function(req, res, next) {
     res.redirect('/login');
   }
   var searchObject = {
-    cpId: '0',
+    cp_name: '0',
     offset: 0,
     limit: 10
   }
-  if (typeof req.query.cpId !== 'undefined') {
-    searchObject.cpId = req.query.cpId;
+  if (typeof req.query.cp_name !== 'undefined') {
+    searchObject.cp_name = req.query.cp_name;
   }
   if (typeof req.query.searchType !== 'undefined') {
     searchObject.searchType = req.query.searchType;
@@ -108,89 +108,157 @@ router.post('/delete', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-  // if(!req.user){
-  //   res.redirect('/login');
-  // }
-  res.render('contentsAdd')
+  if(!req.user){
+    res.redirect('/login');
+  }
+  res.render('contentsAdd');
 });
 
-// var async = require('async');
-// const asyncHandler = require('express-async-handler');
-// router.post('/add', asyncHandler(async (req, res, next) => {
-//   const result = await asyncInsert(req.body);
-//   console.log(result);
-//   res.send(result);
-// }));
+var async = require('async');
+var param = {};
+var num = 0;
+var tasks = [
+  function (callback) {
+    console.log("1 CP ID확인");
+    var iData = param;
+    User.checkOCId(['c', iData.U_id_c], function(err, results) {
+      if (err || results.length == 0) {
+        console.log('CP사를 다시 입력해 주세요.');
+        callback('CP사를 다시 입력해 주세요.', 1);
+      }
+      callback(null, true, iData);
+    });
+  },
+  function (check, data, callback) {
+    console.log("2 OSP ID확인");
+    if(check){
+      User.checkOCId(['o', data.OSP_id], function(err, results) {
+        if (err || results.length == 0) {
+          console.log('OSP ID를 다시 입력해 주세요.');
+          callback(err);
+        }
+        callback(null, data);
+      });
+    }
+  },
+  function (data, callback) {
+    console.log("3 콘텐츠 ID 설정",data);
+    Contents.getNextIdx(data, function(err, results) {
+      if (err) {
+        callback(err);
+      }
+
+      if(num == 0){
+        num = Number(results[0].idx);
+      }
+      else {
+        num += 1;
+      }
+      data.CP_CntID = data.U_id_c + '-' + data.OSP_id + '-' + num;
+      callback(null, data);
+    });
+  },
+  function (data, callback) {
+    console.log("4 콘텐츠 추가");
+    Contents.insertContents(data, function(err, results, fields) {
+      if (err) {
+        callback(err);
+      }
+      callback(null, data);
+    });
+  },
+  function (data, callback) {
+    console.log("5 콘텐츠 확인");
+    Contents.checkInsert(data, function(err, results, fields) {
+      if (err) {
+        callback(err);
+      }
+      callback(null, results[0].n_idx, data);
+    });
+  },
+  function (n_idx, data, callback) {
+    console.log("6 키워드 추가");
+    if (n_idx != "" && data.keyword != "") {
+      data.n_idx_c = n_idx;
+      data.K_key = '1';
+      data.K_type = '1';
+      Keyword.insertKeyword(data, function(err, results, fields) {
+        if (err) {
+          callback(err);
+        }
+        callback();
+      });
+    }
+  }
+];
+
 router.post('/add', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  // var data = req.body;
-  // param = {
-  //   'U_id_c': data["cpid"],
-  //   'CP_title': data["title"],
-  //   'CP_title_eng': data["engtitle"],
-  //   'OSP_id': data["ospid"],
-  //   'K_method': data["method"],
-  //   'K_apply': data["apply"],
-  //   'CP_hash': data["hash"],
-  //   'CP_price': (data["price"] == "") ? 0 : data["price"],
-  //   'keyword': (data["keyword"] == "") ? data["title"] : data["keyword"]
-  // };
-  // async.waterfall(tasks, function (err) {
-  //   if (err){
-  //     console.log('err:',err);
-  //     res.status(500).send(err);
-  //   }
-  //   else{
-  //     console.log('done');
-  //     res.send('콘텐츠 등록이 완료되었습니다.');
-  //   }
-  // });
-  //콘텐츠 등록 수정하기!!!!
-  // CP ID확인
-  User.checkOCId(['c', req.body.U_id_c], function(err, results) {
-    if (err || results.length == 0) {
-      res.status(500).send('CP사를 다시 입력해 주세요.');
-      return false;
-    }
-    // OSP ID확인
-    User.checkOCId(['o', req.body.OSP_id], function(err, results) {
-      if (err || results.length == 0) {
-        res.status(500).send('OSP ID를 다시 입력해 주세요.');
-        return false;
-      }
-      // 콘텐츠 ID 설정
-      Contents.getNextIdx(req.body, function(err, results, fields) {
-        if (err) {
-          res.status(500).send('다시 입력해 주세요.');
-          return false;
+  var data = req.body;
+  var DBpromise = require('../db/db_promise.js');
+  console.log("1 CP ID확인");
+  DBpromise.userQuery('select * from user_all where U_id=? and U_class=\'c\'',data.U_id_c)
+      .then(rows => {
+        console.log("2 OSP ID확인");
+        return DBpromise.userQuery('select * from user_all where U_id=? and U_class=\'o\'',data.OSP_id)
+      }, err => {
+        res.status(500).send('CP ID를 다시 확인해주세요.');
+        return DBpromise.userClose().then(() => { throw err; })
+      })
+      .then(rows => {
+        console.log("3 콘텐츠 ID 설정");
+        return DBpromise.query('select n_idx+1 as idx from cnts_list_c order by CP_regdate desc limit 1');
+      }, err => {
+        console.log('ospId err 부분')
+        res.status(500).send('OSP ID를 다시 확인해주세요.');
+        return DBpromise.userClose().then(() => { throw err; })
+      })
+      .then(rows => {
+        console.log("4 콘텐츠 추가");
+        data.CP_CntID = data.U_id_c + '-' + data.OSP_id + '-' + rows[0].idx;
+        var param = [data.CP_CntID,data.U_id_c,data.CP_title,data.CP_title_eng,data.CP_price,data.CP_hash];
+        var sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
+        return DBpromise.query(sql,param);
+      }, err => {
+        res.status(500).send('콘텐츠 등록이 실패했습니다.');
+        return DBpromise.close().then(() => { throw err; })
+      })
+      .then(rows => {
+        console.log("5 콘텐츠 확인");
+        sql = 'select * from cnts_list_c order by CP_regdate desc limit 1';
+        return DBpromise.query(sql);
+      }, err => {
+        res.status(500).send('콘텐츠 등록이 실패했습니다.');
+        return DBpromise.close().then(() => { throw err; })
+      })
+      .then(rows => {
+        console.log("6 키워드 추가");
+        if(data.CP_CntID == rows[0].CP_CntID){
+          data.n_idx_c = rows[0].n_idx;
+          data.K_key = '1';
+          data.K_type = '1';
+          var param = [data.n_idx_c,data.U_id_c,data.keyword,data.K_apply,data.K_method,data.K_key,data.K_type];
+          var sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, K_regdate) values(?,?,?,?,?,?,?,now())';
+          console.log(sql,param);
+          return DBpromise.query(sql,param);
         }
-        req.body.CP_CntID = req.body.U_id_c + '-' + req.body.OSP_id + '-' + results[0].idx;
-        // 콘텐츠 추가
-        Contents.insertContents(req.body, function(err, results, fields) {
-          if (err) {
-            res.status(500).send('다시 입력해 주세요.');
-            return false;
-          }
-          var kParam = req.body;
-          if (results[0].n_idx != "" && kParam.keyword != "") {
-            kParam.n_idx_c = results[0].n_idx;
-            kParam.K_key = '1';
-            kParam.K_type = '1';
-            // 키워드 추가
-            Keyword.insertKeyword(kParam, function(err, results, fields) {
-              if (err) {
-                res.status(500).send('다시 입력해 주세요.');
-                return false;
-              }
-              res.send('콘텐츠 등록이 완료되었습니다.');
-            });
-          }
-        });
+      }, err => {
+        res.status(500).send('키워드 추가를 실패했습니다.');
+        console.log("6-1 콘텐츠 삭제");
+        Test.query('delete cnts_list_c where n_idx = ?',data.n_idx_c);
+        return DBpromise.close().then(() => { throw err; })
+      })
+      .then(rows => {
+        console.log(rows);
+        DBpromise.userClose();
+        DBpromise.close();
+        res.send('콘텐츠 등록이 완료되었습니다.');
+      })
+      .catch(function (err) {
+        console.log(err);
       });
-    });
-  });
 });
 
 var xlstojson = require("xls-to-json-lc");
@@ -206,82 +274,6 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-var param = {};
-var num = 0;
-var tasks = [
-  function (callback) {
-    console.log("1 CP ID확인:",param.CP_title);
-    var iData = param;
-    User.checkOCId(['c', iData.U_id_c], function(err, results) {
-      if (err || results.length == 0) {
-        console.log('CP사를 다시 입력해 주세요.');
-        callback('CP사를 다시 입력해 주세요.', 1);
-      }
-      callback(null, true, iData);
-    });
-  },
-  function (check, data, callback) {
-    console.log("2 OSP ID확인:",data.CP_title);
-    if(check){
-      User.checkOCId(['o', data.OSP_id], function(err, results) {
-        if (err || results.length == 0) {
-          console.log('OSP ID를 다시 입력해 주세요.');
-          callback('OSP ID를 다시 입력해 주세요.');
-        }
-        callback(null, data);
-      });
-    }
-  },
-  function (data, callback) {
-    console.log("3 콘텐츠 ID 설정:",data.CP_title);
-    Contents.getNextIdx(data, function(err, results, fields) {
-      if (err) {
-        callback('다시 입력해 주세요.');
-      }
-      if (num == 0){
-        num = results[0].idx;
-      }
-      else{
-        num += 1;
-      }
-      data.CP_CntID = data.U_id_c + '-' + data.OSP_id + '-' + num;
-      callback(null, data);
-    });
-  },
-  function (data, callback) {
-    console.log("4 콘텐츠 추가:",data.CP_title);
-    Contents.insertContents(data, function(err, results, fields) {
-      if (err) {
-        callback('다시 입력해 주세요.');
-      }
-      callback(null, data);
-    });
-  },
-  function (data, callback) {
-    console.log("5 콘텐츠 확인:",data.CP_title);
-    Contents.checkInsert(data, function(err, results, fields) {
-      if (err) {
-        callback('다시 입력해 주세요.');
-      }
-      callback(null, results[0].n_idx, data);
-    });
-  },
-  function (n_idx, data, callback) {
-    console.log("6 키워드 추가:",data.CP_title);
-    if (n_idx != "" && data.keyword != "") {
-      data.n_idx_c = n_idx;
-      data.K_key = '1';
-      data.K_type = '1';
-      Keyword.insertKeyword(data, function(err, results, fields) {
-        if (err) {
-          callback('다시 입력해 주세요.');
-        }
-        callback();
-      });
-    }
-  }
-];
-
 router.post('/add/upload', upload.single('excel'), function(req, res){
   num = 0;
   if (!req.file) {
@@ -296,6 +288,7 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
   } else {
     exceltojson = xlstojson;
   }
+
   try {
     exceltojson({
       input: req.file.path, //the same path where we uploaded our file
@@ -309,20 +302,15 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
           data: null
         });
       }
-      var count = 1;
+      var count = 0;
       async.forEach(result,function(item){
         param = {};
         var check = asyncInsert(item, null);
-        if(check == false){
-          res.redirect('/contents/add/?upload=f');
-        }
-        else if(count == result.length){
-          res.redirect('/contents/add/?upload=t');
+        if(count == result.length){
+          res.redirect('/contents/add');
         }
         count += 1;
       });
-
-      // res.send('true');
     });
   } catch (e) {
     res.json({
@@ -350,17 +338,18 @@ function asyncInsert(data, res){
     'CP_price': (data["price"] == "") ? 0 : data["price"],
     'keyword': (data["keyword"] == "") ? data["title"] : data["keyword"]
   };
-  async.waterfall(tasks, function (err) {
-    if (err){
-      console.log('err:',err);
-      return err;
-    }
-    else{
+  try {
+    async.waterfall(tasks, function (err) {
+      if (err){
+        console.log('err:',err);
+        throw (new Error(err));
+      }
       console.log('done');
       return true;
-    }
-  });
-
+    });
+  } catch (e) {
+    return e;
+  }
 }
 
 module.exports = router;

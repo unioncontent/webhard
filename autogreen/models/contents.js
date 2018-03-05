@@ -1,20 +1,13 @@
-var mysql = require('mysql');
-var connection = mysql.createConnection(require('../db/db_con.js'));
+const mysql = require('mysql');
+const info = require('../db/db_con.js');
 
 var Contents = {
-  table: function(){
-    return global.osp.replace('_admin','') + '_cnts_list_c';
-  },
-  view: function(){
-    return global.osp.replace('_admin','')+ '_cnts_list';
-  },
   getContentsList : function(item,callback) {
-    var sql = 'select * from '+this.view()+' where search is not null';
-    // var param = [item.offset,item.limit];
+    var sql = 'select * from cnts_list where search is not null';
     var param = [];
-    if(item.cpId != '0'){
-      sql = 'select * from '+this.view()+' where CP_id=?';
-      param.unshift(item.cpId);
+    if(item.cp_name != '0'){
+      sql = 'select * from cnts_list where CP_name=?';
+      param.unshift(item.cp_name);
     }
     if('searchType' in item){
       switch (item.searchType) {
@@ -27,16 +20,17 @@ var Contents = {
       sql += ' limit ?,?'
     }
     console.log(sql,param);
+    console.log(global.osp);
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
-    // connection.query(sql+' limit ?,?',param,callback);
   },
   contentsCount : function(item,callback) {
-    var sql = 'select count(1) as total from '+this.view()+' where search is not null';
+    var sql = 'select count(1) as total from cnts_list where search is not null';
     var param = [];
-    if('cpId' in item){
-      if(item.cpId != '0'){
-        sql = 'select count(1) as total from '+this.view()+' where CP_id=?';
-        param[0] = item.cpId;
+    if('cp_name' in item){
+      if(item.cp_name != '0'){
+        sql = 'select count(1) as total from cnts_list where CP_name=?';
+        param[0] = item.cp_name;
       }
     }
     if('searchType' in item){
@@ -45,10 +39,12 @@ var Contents = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
   },
   getNextIdx: function(item,callback) {
-    var sql = 'select n_idx+1 as idx from '+this.table()+' order by CP_regdate desc limit 1';
+    var sql = 'select n_idx+1 as idx from cnts_list_c order by CP_regdate desc limit 1';
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
   },
   insertContents: function(item,callback) {
@@ -56,23 +52,27 @@ var Contents = {
     if('CP_CntID' in item){
       // 콘텐츠 insert
       var param = [item.CP_CntID,item.U_id_c,item.CP_title,item.CP_title_eng,item.CP_price,item.CP_hash];
-      sql = 'insert '+this.table()+'(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
+      sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
+      var connection = mysql.createConnection(info.changeDB(global.osp));
       connection.query(sql,param,callback);
     }
   },
   checkInsert: function(item,callback) {
     console.log('----------콘텐츠 확인--------');
     // 콘텐츠 확인
-    sql = 'select * from '+this.table()+' where CP_CntID = ?';
+    sql = 'select * from cnts_list_c where CP_CntID = ?';
     // console.log(sql,item.CP_CntID);
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,item.CP_CntID,callback);
   },
   deleteContents: function(n_idx,callback){
-    var sql = 'delete from '+this.table()+' where n_idx=?';
+    var sql = 'delete from cnts_list_c where n_idx=?';
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,n_idx,callback);
   },
   getSearchCnt: function(search,callback){
-    var sql = 'select * from '+this.view()+' where search like \'%'+search+'%\'';
+    var sql = 'select * from cnts_list where search like \'%'+search+'%\'';
+    var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
   }
 }
