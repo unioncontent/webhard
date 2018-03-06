@@ -63,6 +63,40 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post('/getNextPage', function(req, res, next) {
+  if (!req.user) {
+    res.redirect('/login');
+  }
+  var searchObject = {
+    cp_name: req.body.cp_name || '0',
+    offset: Number(req.body.start) || 0,
+    limit: 10
+  }
+  console.log(req.body);
+  if('searchType' in req.body){
+    searchObject.searchType = req.body.searchType;
+    searchObject.search = req.body.search;
+  }
+  var currentPage = req.body.start;
+  Contents.contentsCount(searchObject, function(err, result) {
+    if (err) throw err;
+    total = result[0].total;
+    pageCount = Math.ceil(total / searchObject.limit);
+    Contents.getContentsList(searchObject, function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.send({
+          total: total,
+          data: searchObject,
+          pageCount: pageCount,
+          cList: result
+        });
+      }
+    });
+  });
+});
+
 router.post('/getCPList', function(req, res, next) {
   if (!req.user) {
     res.redirect('/login');

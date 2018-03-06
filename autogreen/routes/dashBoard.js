@@ -23,8 +23,8 @@ router.get('/', function(req, res, next) {
   var arr = [];
   DBpromise.query(sql).then(rows => {
     countObj = rows[0];
-    var sql = 'select U_name from user_all where U_class=\'c\' and U_state= \'1\'';
-    return DBpromise.userQuery(sql)
+    var sql = 'select U_name from user_all_b where U_class=\'c\' and U_state= \'1\'';
+    return DBpromise.query(sql)
   })
   .then(rows => {
     sql += "and U_id_c=?";
@@ -39,31 +39,23 @@ router.get('/', function(req, res, next) {
     return arr;
   })
   .then(rows => {
-    DBpromise.userClose();
     DBpromise.close();
-
-    // rows.forEach(function(entry) {
-    //   entry.then(rows => {
-    //     console.log(rows.cp_name);
-    //     console.log(rows.totalCount);
-    //   });
-    // });
-
     Promise.all(rows).then(data => {
       res.render('dashBoard',{
         count : countObj,
         countList : data
       });
     });
-
   })
   .catch(function (err) {
+    DBpromise.close();
     console.log(err);
   });
 });
 
 router.post('/getCPList', function(req, res, next) {
   User.getClassList('c',function(err,result){
+
     if(err){
       res.status(500).send('다시 시도해주세요.');
       return false;
@@ -74,6 +66,7 @@ router.post('/getCPList', function(req, res, next) {
 
 router.post('/get24DataList', function(req, res, next) {
   DashBoard.get24DataList(function(err,result){
+
     if(err){
       res.status(500).send('다시 시도해주세요.');
       return false;
@@ -84,6 +77,7 @@ router.post('/get24DataList', function(req, res, next) {
 
 router.post('/getCPCcountList', function(req, res, next) {
   DashBoard.getAllDataCount(req.body.cp,function(err,result){
+
     if(err){
       console.log(err);
       res.status(500).send('다시 시도해주세요.');
@@ -121,6 +115,7 @@ passport.use(new LocalStrategy({
   passwordField: 'password'
 }, function(username, password, done) {
   User.checkId(username, function(err, results) {
+
     if (err) {
       return done(err);
     }

@@ -14,6 +14,7 @@ var DashBoard = {
     // console.log(sql,item);
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,item,callback);
+
   },
   get24DataList: function(callback){
     var sql = "SELECT FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as tTotal,\
@@ -26,6 +27,7 @@ var DashBoard = {
     // console.log(sql);
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
+    
   }
 }
 

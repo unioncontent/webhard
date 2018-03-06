@@ -24,6 +24,7 @@ var Filtering = {
     // console.log(sql,param);
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
+
   },
   filteringCount : function(item,callback) {
     var sql = 'select count(1) as total from filtering where search is not null';
@@ -41,6 +42,7 @@ var Filtering = {
     }
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql, param, callback);
+    
   }
 }
 

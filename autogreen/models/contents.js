@@ -17,10 +17,9 @@ var Contents = {
     }
     if('offset' in item){
       param.push(item.offset,item.limit);
-      sql += ' limit ?,?'
+      sql += ' order by n_idx_c desc limit ?,?'
     }
-    console.log(sql,param);
-    console.log(global.osp);
+
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
   },
@@ -41,11 +40,13 @@ var Contents = {
     }
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
+
   },
   getNextIdx: function(item,callback) {
     var sql = 'select n_idx+1 as idx from cnts_list_c order by CP_regdate desc limit 1';
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
+
   },
   insertContents: function(item,callback) {
     console.log('----------insertContents--------');
@@ -55,6 +56,7 @@ var Contents = {
       sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
       var connection = mysql.createConnection(info.changeDB(global.osp));
       connection.query(sql,param,callback);
+
     }
   },
   checkInsert: function(item,callback) {
@@ -64,16 +66,19 @@ var Contents = {
     // console.log(sql,item.CP_CntID);
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,item.CP_CntID,callback);
+
   },
   deleteContents: function(n_idx,callback){
     var sql = 'delete from cnts_list_c where n_idx=?';
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,n_idx,callback);
+
   },
   getSearchCnt: function(search,callback){
     var sql = 'select * from cnts_list where search like \'%'+search+'%\'';
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,callback);
+
   }
 }
 
