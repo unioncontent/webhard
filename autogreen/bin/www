@@ -12,7 +12,7 @@ var http = require('http');
  * Get port from environment and store in Express. 'autogreen.co.kr';
  */
 
-var port = normalizePort(process.env.PORT || '8080');
+var port = normalizePort(process.env.PORT || '80');
 var host = '192.168.0.43';
 app.set('port', port);
 

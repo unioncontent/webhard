@@ -2,10 +2,9 @@ const mysql = require('mysql');
 const info = require('../db/db_con.js');
 
 class Database {
-    constructor() {
+    constructor(config) {
       this.UserConnection = mysql.createConnection(info.changeDB('webhard'));
-      this.connection = mysql.createConnection(info.changeDB(global.osp));
-      console.log(global.osp);
+      this.connection = mysql.createConnection(info.changeDB(config));
     }
     userQuery(sql, args) {
         return new Promise((resolve, reject) => {
@@ -45,4 +44,4 @@ class Database {
     }
 }
 
-module.exports = new Database();
+module.exports = Database;
