@@ -7,6 +7,8 @@ var xl = require('excel4node');
 var moment = require('moment');
 var router = express.Router();
 
+const aDir = 'C:/Users/user/Documents/webhard/autogreen/'
+
 router.get('/', function(req, res, next) {
   req.body = {
     cp_name : '0'
@@ -24,8 +26,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/contents', function(req, res, next) {
-  console.log(req.query);
   Contents.getContentsList(req.query,function(err,result){
+    if(err){
+      res.status(500).send('다시 시도해주세요.\n'+err);
+      return false;
+    }
     var wb = new xl.Workbook({
       defaultFont: {
         size: 12,
@@ -67,13 +72,14 @@ router.get('/contents', function(req, res, next) {
     ws.cell(1,7).string('등록일').style(tStyle);
 
     var row = 0;
+    console.log('ContentsList:',result);
     result.forEach(function(item,idx){
       row = idx+2;
       var method = (item.K_method == '1')? '자동' : '수동';
       var key = (item.K_key == '1')? '검출' : '제외';
       ws.cell(row,1).string((idx+1).toString());
       ws.cell(row,2).string(item.CP_name);
-      ws.cell(row,3).string(item.CP_id.toString());
+      ws.cell(row,3).string(item.CP_cntID);
       ws.cell(row,4).string(item.CP_title);
       ws.cell(row,5).string(method);
       ws.cell(row,6).string(key);
@@ -85,7 +91,7 @@ router.get('/contents', function(req, res, next) {
         console.log(err);
       }
       else{
-        var filepath = 'C:/gitProject/webhard/autogreen/'+filename;
+        var filepath = aDir+filename;
         res.setHeader('Content-Type', 'application/x-msdownload');
       	res.setHeader("Content-Disposition", "attachment; filename=" + filename);
 
@@ -101,8 +107,13 @@ router.get('/contents', function(req, res, next) {
 });
 
 router.get('/filetering', function(req, res, next) {
-  console.log('req:',req.query);
+  console.log('global.osp:',global.osp);
+  console.log('res.locals:',res.locals);
   Filtering.getFilteringList(req.query,function(err,result){
+    if(err){
+      res.status(500).send('다시 시도해주세요.\n'+err);
+      return false;
+    }
     var wb = new xl.Workbook({
       defaultFont: {
         size: 12,
@@ -148,6 +159,7 @@ router.get('/filetering', function(req, res, next) {
     ws.cell(1,9).string('관리상태').style(tStyle);
 
     var row = 0;
+    console.log('FilteringList:',result);
     result.forEach(function(item,idx){
       row = idx+2;
       ws.cell(row,1).string((idx+1).toString());
@@ -168,7 +180,7 @@ router.get('/filetering', function(req, res, next) {
         console.log(err);
       }
       else{
-        var filepath = 'C:/gitProject/webhard/autogreen/'+filename;
+        var filepath = aDir+filename;
         res.setHeader('Content-Type', 'application/x-msdownload');
       	res.setHeader("Content-Disposition", "attachment; filename=" + filename);
 
