@@ -3,8 +3,8 @@ const info = require('../db/db_con.js');
 
 var Keyword = {
   updateKeyword: function(item,callback){
-    var sql = 'update cnts_kwd_f set K_method=?, K_key=?, K_apply=? where n_idx=?';
-    var param = [item.K_method,item.K_key,item.K_apply,item.n_idx_k];
+    var sql = 'update cnts_kwd_f set K_method=?, K_key=? where n_idx=?';
+    var param = [item.K_method,item.K_key,item.n_idx_k];
     var connection = mysql.createConnection(info.changeDB(global.osp));
     connection.query(sql,param,callback);
   },

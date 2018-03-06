@@ -4,25 +4,21 @@ var connection = mysql.createConnection(info.changeDB('webhard'));
 
 var User = {
   getUserList : function(user,callback) {
-    var sql = 'select * from user_all where U_class=? order by n_idx desc limit ?,?';
+    var sql = 'select * from user_all where U_class=? order by U_regdate desc limit ?,?';
     if(user.uClass == 'a'){
-      sql = 'select * from user_all order by n_idx desc limit ?,?';
+      sql = 'select * from user_all order by U_regdate desc limit ?,?';
       delete user.uClass;
     }
     var param = Object.values(user);
     connection.query(sql,param,callback);
   },
   getClassAllList : function(uClass,callback) {
-    var sql = 'select * from user_all where U_class=?  order by U_name';
+    var sql = 'select * from user_all where U_class=? order by U_regdate desc';
     connection.query(sql,uClass,callback);
   },
   getClassList : function(c,callback) {
     var sql = 'select U_name from user_all where U_class=? and U_state= \'1\'';
     connection.query(sql,c,callback);
-  },
-  getUserName : function(uid,callback) {
-    var sql = 'select U_name from user_all where n_idx=?';
-    connection.query(sql,uid,callback);
   },
   checkOCId : function(item,callback) {
     var sql = 'select * from user_all where U_id=? and U_class=\'o\'';
