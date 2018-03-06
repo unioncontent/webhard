@@ -98,40 +98,33 @@
                         <ul class="pagination float-right">
                           <%
                             var y = 1;
-                            var searchParams = '';
-                            if('searchType' in data){
-                              searchParams = "&searchType="+data.searchType+"&search="+data.search;
-                            }
-                            if(currentPage>1) {
+                            if(currentPage > 1 && pageCount > 4) {
                               y = currentPage-1;
-                              var preLink = "/manual/?page=1&cp_name="+data.cp_name+searchParams;
                           %>
                             <li class="page-item">
-                              <a class="page-link" href="<%=preLink%>" aria-label="Previous">&laquo;
+                              <a class="page-link" data-value="0" data-num="1" aria-label="Previous">
+                                &laquo;
                                 <span aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
                               </a>
                             </li>
                           <% } %>
-                          <%
-                            for (y; y <= pageCount; y++) {
-                              var link = "/manual/?page="+y+"&cp_name="+data.cp_name+searchParams;
-                          %>
+                          <% for (y; y <= pageCount; y++) { %>
                             <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
-                              <a class="page-link" href="<%=link%>"><%= y %></a>
+                              <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 10)).toString()%>" >
+                                <%= y %>
+                              </a>
                             </li>
                           <%
-                              if(parseInt(currentPage) + 4 == y) {
+                              if(parseInt(currentPage) + 3 == y) {
                                 break;
                               }
                             }
                           %>
-                          <%
-                            if(currentPage != pageCount) {
-                              var nextLink = "/manual/?page="+Math.ceil(pageCount).toString()+"&cp_name="+data.cp_name+searchParams;
-                            %>
+                          <% if(currentPage != pageCount && pageCount > 4) { %>
                             <li class="page-item">
-                              <a class="page-link" href="<%=nextLink%>" aria-label="Next">&raquo;
+                              <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 10)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
+                                &raquo;
                                 <span aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                               </a>
@@ -152,25 +145,27 @@
   </div>
 </div>
 <style type="text/css">
-.cntId_nobr,.keyword_nobr,.title_nobr{
-  font-size: 15px;
-  padding-left: 3px;
-  text-overflow: ellipsis;
-  width: 100px;
-  overflow: hidden;
-}
-.title_nobr{
-  width: 400px;
-}
-.keyword_nobr{
-  width: 100px;
-}
+  .cntId_nobr,.keyword_nobr,.title_nobr{
+    font-size: 15px;
+    padding-left: 3px;
+    text-overflow: ellipsis;
+    width: 100px;
+    overflow: hidden;
+  }
+  .title_nobr{
+    width: 400px;
+  }
+  .keyword_nobr{
+    width: 100px;
+  }
 </style>
 <script type="text/javascript">
-// cp 선택 후
+// url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("cpId");
+
+// cp 셀렉트 박스 옵션값 넣기
 $(document).ready(function(){
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
@@ -192,9 +187,10 @@ $(document).ready(function(){
     }
   });
 });
+
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../manual/?cp_name='+$("#selectCp option:selected").val()
+  var link = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()
   var t = url.searchParams.get("searchType");
   var s = url.searchParams.get("search");
   if (t !== undefined && t != ''){
@@ -204,19 +200,21 @@ $('#selectCp').on('change',function(){
   }
   location.href = link;
 });
+
 // 검색시
 $('#searchBtn').on('click',function(){
   if($("#keywordInput").val() == ''){
     alert('검색어를 넣어주세요.');
     return false;
   }
-  location.href = '../manual/?cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  location.href = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
 })
 $('#keywordInput').on('keyup',function(event){
   if(event.keyCode == 13){
     $('#searchBtn').trigger('click');
   };
 });
+
 //삭제버튼 클릭시
 $(document).on('click','.btn-delete',function(){
   var trEle = $(this).closest("tr");
@@ -241,6 +239,7 @@ $(document).on('click','.btn-delete',function(){
     }
   });
 });
+
 //수정버튼 클릭시
 $(document).on('click','.btn-update',function(){
   var trEle = $(this).closest("tr");
@@ -291,4 +290,108 @@ $(document).on('click','.btn-update',function(){
     });
   }
 });
+
+//페이지 변경시
+$(document).on('click','.page-link',function(){
+  var num = Number($(this).text()) || Number($(this).data().num);
+  var param = {
+    cp_name :  $('#selectCp option:selected').val() || '0',
+    start : Number($(this).data().value)
+  };
+  if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+    param.searchType = url.searchParams.get("searchType");
+  }
+  if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+    param.search = url.searchParams.get("search");
+  }
+  ajaxGetPageList(param,num);
+});
+
+function ajaxGetPageList(param,pageNum){
+  $.ajax({
+    url: '../manual/getNextPage',
+    type: 'post',
+    data: param,
+    error: function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert('새로고침해주세요~');
+    },
+    success: function(data){
+      pageNum = pageNum || data.pageCount;
+      if(typeof(history.pushState) == 'function'){
+        //현재 주소를 가져온다.
+        var renewURL = location.href;
+        //현재 주소 중 page 부분이 있다면 새로 부여될 페이지 번호를 할당한다.
+        renewURL = renewURL.replace(/\?page=([0-9]+)/ig,'?page='+pageNum);
+        if(renewURL.indexOf("?page=") == -1){
+          renewURL += '?page='+pageNum;
+        }
+        //페이지 갱신 실행!
+        history.pushState(null, null,renewURL);
+      }
+      $('tfoot').empty();
+      if(data.pageCount > 1) {
+        var html = '<tr><td colspan="10"><ul class="pagination float-right">';
+        var y = 1;
+        if(pageNum > 1  && data.pageCount > 4) {
+          y = pageNum-1;
+          html += '<li class="page-item"><a class="page-link" data-value="0" data-num="1" aria-label="Previous">&laquo;\
+              <span aria-hidden="true"></span>\
+              <span class="sr-only">Previous</span>\
+            </a></li>';
+        }
+
+        for (y; y <= data.pageCount; y++) {
+          var active = (pageNum == y) ? "active" : "";
+          html += '<li class=\"'+active+' page-item">\
+            <a class="page-link" data-value=\"'+((y-1) * 10)+'"\ >'+y+'</a></li>'
+
+          if(parseInt(pageNum) + 3 == y) {
+            break;
+          }
+        }
+        if(pageNum != data.pageCount && data.pageCount > 4) {
+          html += '<li class="page-item">\
+                <a class="page-link" data-value=\"'+(Math.floor(597/10)*10)+'"\ aria-label="Next">&raquo;\
+                  <span aria-hidden="true"></span>\
+                  <span class="sr-only">Next</span>\
+                </a></li>';
+        }
+        html += '</ul></td></tr>';
+        $('tfoot').append(html);
+      }
+
+      $('tbody').empty();
+      data.cList.forEach(function(item,idx){
+        var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
+        $('tbody').append('<tr><th>'+numIdx+'</th>\
+          <td>'+(item.cp_name || '')+'</td>\
+          <td><div class="cntId_nobr">'+(item.CP_CntID || '')+'</div></td>\
+          <td><div class="title_nobr">'+(item.title || '')+'</div></td>\
+          <td>'+(item.OSP_idx || '')+'</td>\
+          <td>'+(item.OSP_price || '')+'</td>\
+          <td><div class="keyword_nobr">'+(item.K_keyword || '')+'</div></td>\
+          <td>비제휴</td>\
+          <td>\
+            <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">\
+              <option value="P">보류</option>\
+              <option value="T">제휴</option>\
+              <option value="D">삭제</option>\
+            </select>\
+          </td>\
+          <td class="text-center">\
+            <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">\
+              <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;">\
+                <span class="icofont icofont-ui-delete"></span>\
+              </button>\
+              <button type="button" class="btn-update btn btn-primary waves-effect waves-light" >\
+                <span class="icofont icofont-ui-edit"></span>\
+              </button>\
+            </div>\
+          </td>\
+        </tr>');
+      });
+    }
+  });
+}
 </script>
