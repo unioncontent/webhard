@@ -16,6 +16,7 @@ router.post('/searchKeyInfo',function(req, res, next){
     res.redirect('/login');
   }
   Keyword.getKeyInfo(req.body.n_idx_c, function(err,result){
+    console.log(result);
     res.send(result);
   });
 });
@@ -46,6 +47,7 @@ router.post('/add',function(req, res, next) {
       param.K_type = '0';
     }
     Keyword.insertKeyword(param,function(err, results, fields) {
+
       if(err){
         res.status(500).send('다시 입력해 주세요.');
         return false;
@@ -60,6 +62,7 @@ router.post('/delete',function(req, res, next){
     res.redirect('/login');
   }
   Keyword.deleteKeyword(req.body.n_idx, function(err,result){
+
     if(err) throw err;
     res.send(true);
   });

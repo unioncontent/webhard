@@ -6,7 +6,8 @@
 //   database : 'webhard'
 // };
 
-const host = '192.168.0.43';
+// const host = '192.168.0.43';
+const host = '121.138.117.49';
 const user = 'autogreen';
 const password = 'uni1004';
 const port = '3306';
