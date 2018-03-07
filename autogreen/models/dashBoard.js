@@ -1,8 +1,9 @@
 const mysql = require('mysql');
-const info = require('../db/db_con.js');
+const promise = require('../db/db_promise.js');
 
 var DashBoard = {
   getAllDataCount: function(item,callback){
+    console.log('getAllDataCount');
     var sql = "SELECT FORMAT(COUNT(*),0) AS total,\
     FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as tTotal,\
     FORMAT(COUNT(IF(K_apply='D' and CS_state='1',1,null)),0) as dTotal,\
@@ -12,9 +13,20 @@ var DashBoard = {
       sql += "and U_id_c=?"
     }
     // console.log(sql,item);
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,item,callback);
-
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,item,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,item)
+    .then(rows => {
+      return callback(rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      console.log(err);
+    });
   },
   get24DataList: function(callback){
     var sql = "SELECT FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as tTotal,\
@@ -25,9 +37,20 @@ var DashBoard = {
     group by hour(CS_regdate);";
 
     // console.log(sql);
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,callback);
-    
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql)
+    .then(rows => {
+      return callback(rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      console.log(err);
+    });
   }
 }
 

@@ -55,7 +55,6 @@
                 <tbody>
                   <% for(var i=0; i < cList.length; i++) { %>
                   <tr>
-                    <input type="hidden" class="kwd_idx" value='<%= cList[i].n_idx_k %>'/>
                     <input type="hidden" class="cnt_idx" value='<%= cList[i].n_idx_c %>'/>
                     <th><%= totalUser - i - data.offset %></th>
                     <td><div class='cp_nobr'><%= cList[i].CP_name %></div></td>
@@ -218,7 +217,7 @@ $('#searchBtn').on('click',function(){
     alert('검색어를 넣어주세요.');
     return false;
   }
-  location.href = '../contents/?cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  location.href = '../contents?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
 })
 $('#keywordInput').on('keyup',function(event){
   if(event.keyCode == 13){
@@ -261,8 +260,7 @@ $(document).on('click','.btn-delete',function(){
     url: '../contents/delete',
     type: 'post',
     data: {
-      'n_idx_k': input.eq(0).val(),
-      'n_idx_c': input.eq(1).val()
+      'n_idx_c': input.eq(0).val()
     },
     error:function(request,status,error){
       alert(request.responseText);
@@ -352,7 +350,7 @@ function ajaxGetPageList(param,pageNum){
       $('tbody').empty();
       data.cList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
-        $('tbody').append('<tr><input type="hidden" class="kwd_idx" value=\"'+item.n_idx_c+'"\><input type="hidden" class="cnt_idx" value=\"'+item.n_idx_k+'"\><th>'+numIdx+'</th>\
+        $('tbody').append('<tr><input type="hidden" class="cnt_idx" value=\"'+item.n_idx_c+'"\><th>'+numIdx+'</th>\
           <td><div class="cp_nobr">'+item.CP_name+'</div></td>\
           <td><div class="cntId_nobr">'+item.CP_cntID+'</div></td>\
           <td><div class="title_nobr">'+item.CP_title+'</div></td>\
