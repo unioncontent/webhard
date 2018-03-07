@@ -196,18 +196,17 @@
   </div>
 </div>
 <style type="text/css">
-.contents{
-  font-size: 15px;
-  padding-left: 3px;
-  text-overflow: ellipsis;
-  width: 332px;
-  overflow: hidden;
-}
-#keyword-Modal .modal-body{
-  overflow: auto;
-  max-height: 546px;
-}
-
+  .contents{
+    font-size: 15px;
+    padding-left: 3px;
+    text-overflow: ellipsis;
+    width: 332px;
+    overflow: hidden;
+  }
+  #keyword-Modal .modal-body{
+    overflow: auto;
+    max-height: 546px;
+  }
 </style>
 <script type="text/javascript">
 $('#search_cnt_name').on('keyup',function(event){
@@ -370,7 +369,7 @@ function searchCnt(name){
     url: '../keyword/searchCnt',
     type: 'post',
     data : {
-      'CP_title': $('#search_cnt_name').val()
+      'CP_title': $('#search_cnt_name').val().replace(' ','')
     },
     datatype : 'json',
     error:function(request,status,error){

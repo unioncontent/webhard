@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const info = require('../db/db_con.js');
+const promise = require('../db/db_promise.js');
+// const info = require('../db/db_con.js');
 
 var Filtering = {
   getFilteringList : function(item,callback) {
@@ -22,8 +23,21 @@ var Filtering = {
       sql += ' limit ?,?'
     }
     // console.log(sql,param);
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,param,callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,param,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,param)
+    .then(rows => {
+
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   },
   filteringCount : function(item,callback) {
     var sql = 'select count(1) as total from filtering where search is not null';
@@ -39,8 +53,21 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql, param, callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql, param, callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,param)
+    .then(rows => {
+
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   }
 }
 
