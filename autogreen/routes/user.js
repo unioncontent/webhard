@@ -13,6 +13,7 @@ var uClass = 'a';
 
 /* 거래처 리스트 page. */
 router.get('/', function(req, res, next) {
+  console.log(req);
   if(!req.user){
     res.redirect('/login');
   }
@@ -55,6 +56,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
+/* 거래처 정보 업데이트 */
 router.post('/', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
@@ -65,12 +67,17 @@ router.post('/', function(req, res, next) {
     return false;
   }
 
-  User.updateUser(param, function(err, results, fields) {
-    if(err){
-      res.status(500).send('다시 시도해 주세요.');
-      return false;
-    }
+  var promise = require('../db/db_promise.js');
+  var DBpromise = new promise(global.osp);
+  DBpromise.query('update user_all_b set U_name=?,U_pw=?,U_state=? where U_id=?',param).then(rows => {
     res.send('업데이트 완료되었습니다.');
+  })
+  .then(rows =>{
+    DBpromise.close();
+  })
+  .catch(function (err) {
+    res.status(500).send('다시 시도해 주세요.');
+    return false;
   });
 });
 
@@ -81,29 +88,66 @@ router.get('/add', function(req, res, next) {
   }
   res.render('userAdd');
 });
-
 router.post('/add', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
   var param = Object.values(req.body);
-  User.insertUser(param, function(err, results, fields) {
-    if(err){
-      res.status(500).send('다시 입력해 주세요.');
-      return false;
-    }
+  var promise = require('../db/db_promise.js');
+  var DBpromise = new promise(global.osp);
+  DBpromise.query('insert user_all_b(U_id, U_pw, U_class, U_name, U_state, U_regdate) values(?,?,?,?,?,?)',param).then(rows => {
     res.send('거래처 등록이 완료되었습니다.');
+  })
+  .then(rows =>{
+    DBpromise.close();
+  })
+  .catch(function (err) {
+    res.status(500).send('다시 입력해 주세요.');
   });
 });
 
+/* 거래처 page 이동. */
+router.post('/getNextPage', function(req, res, next) {
+  if (!req.user) {
+    res.redirect('/login');
+  }
+  var searchObject = {
+    uClass: req.body.uClass || 'a',
+    offset: Number(req.body.start) || 0,
+    limit: 10
+  }
+  console.log(req.body);
+  var currentPage = req.body.start;
+  User.userCount(searchObject.uClass, function(err, result) {
+
+    if (err) throw err;
+    total = result[0].total;
+    pageCount = Math.ceil(total / searchObject.limit);
+    User.getUserList(searchObject, function(err, result) {
+
+      if (err) {
+        throw err;
+      } else {
+        res.send({
+          total: total,
+          data: searchObject,
+          pageCount: pageCount,
+          cList: result
+        });
+      }
+    });
+  });
+});
+
+/* 거래처 아이디 중복체크 */
 router.post('/idCheck', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
   var id = req.body.id;
-  User.checkId(id, function(err, results, fields) {
+  User.checkId(id, function(err, results) {
     if(err) throw err;
-    var user = results[0];
+    var user = results;
     if (!user) {
       res.send('success');
     }

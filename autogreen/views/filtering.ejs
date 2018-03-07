@@ -80,40 +80,33 @@
                         <ul class="pagination float-right">
                           <%
                             var y = 1;
-                            var searchParams = '';
-                            if('searchType' in data){
-                              searchParams = "&searchType="+data.searchType+"&search="+data.search;
-                            }
-                            if(currentPage>1) {
+                            if(currentPage > 1 && pageCount > 4) {
                               y = currentPage-1;
-                              var preLink = "/filtering/?page="+y+"&cp_name="+data.cp_name+searchParams;
                           %>
                             <li class="page-item">
-                              <a class="page-link" href="<%=preLink%>" aria-label="Previous">&laquo;
+                              <a class="page-link" data-value="0" data-num="1" aria-label="Previous">
+                                &laquo;
                                 <span aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
                               </a>
                             </li>
                           <% } %>
-                          <%
-                            for (y; y <= pageCount; y++) {
-                              var link = "/filtering/?page="+y+"&cp_name="+data.cp_name+searchParams;
-                          %>
+                          <% for (y; y <= pageCount; y++) { %>
                             <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
-                              <a class="page-link" href="<%=link%>"><%= y %></a>
+                              <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 10)).toString()%>" >
+                                <%= y %>
+                              </a>
                             </li>
                           <%
-                              if(parseInt(currentPage) + 4 == y) {
+                              if(parseInt(currentPage) + 3 == y) {
                                 break;
                               }
                             }
                           %>
-                          <%
-                            if(currentPage != pageCount) {
-                              var nextLink = "/filtering/?page="+Math.ceil(pageCount).toString()+"&cp_name="+data.cp_name+searchParams;
-                            %>
+                          <% if(currentPage != pageCount && pageCount > 4) { %>
                             <li class="page-item">
-                              <a class="page-link" href="<%=nextLink%>" aria-label="Next">&raquo;
+                              <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 10)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
+                                &raquo;
                                 <span aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                               </a>
@@ -134,26 +127,26 @@
   </div>
 </div>
 <style type="text/css">
-.title_nobr,.cp_nobr{
-  font-size: 15px;
-  padding-left: 3px;
-  text-overflow: ellipsis;
-  width: 400px;
-  overflow: hidden;
-}
-.cp_nobr{
-  width: 117px;
-}
+  .title_nobr,.cp_nobr{
+    font-size: 15px;
+    padding-left: 3px;
+    text-overflow: ellipsis;
+    width: 400px;
+    overflow: hidden;
+  }
+  .cp_nobr{
+    width: 117px;
+  }
 </style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
-// cp 선택 후
+// url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("cp_name");
 
+// cp 셀렉트 박스 옵션값 넣기
 $(document).ready(function(){
-  // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
     url: '../filtering/getCPList',
     type: 'post',
@@ -173,6 +166,7 @@ $(document).ready(function(){
     }
   });
 });
+
 //엑셀출력
 $('.alert-excel').on("click",function(){
   swal({
@@ -191,7 +185,7 @@ $('.alert-excel').on("click",function(){
 
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../filtering/?cp_name='+$("#selectCp option:selected").val()
+  var link = '../filtering?page=1&cp_name='+$("#selectCp option:selected").val()
   var t = url.searchParams.get("searchType");
   var s = url.searchParams.get("search");
   if (t !== undefined && t != ''){
@@ -201,14 +195,14 @@ $('#selectCp').on('change',function(){
   }
   location.href = link;
 });
+
 // 검색시
 $('#searchBtn').on('click',function(){
   if($("#keywordInput").val() == ''){
     alert('검색어를 넣어주세요.');
     return false;
   }
-  // location.href = '../filtering/?cpId='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
-  location.href = '../filtering/?cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  location.href = '../filtering?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
 })
 $('#keywordInput').on('keyup',function(event){
   if(event.keyCode == 13){
@@ -216,4 +210,91 @@ $('#keywordInput').on('keyup',function(event){
   };
 });
 
+//페이지 이동
+$(document).on('click','.page-link',function(){
+  var num = Number($(this).text()) || Number($(this).data().num);
+  var param = {
+    cp_name :  $('#selectCp option:selected').val() || '0',
+    start : Number($(this).data().value)
+  };
+  if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+    param.searchType = url.searchParams.get("searchType");
+  }
+  if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+    param.search = url.searchParams.get("search");
+  }
+  ajaxGetPageList(param,num);
+});
+
+function ajaxGetPageList(param,pageNum){
+  $.ajax({
+    url: '../filtering/getNextPage',
+    type: 'post',
+    data: param,
+    error: function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert('새로고침해주세요~');
+    },
+    success: function(data){
+      pageNum = pageNum || data.pageCount;
+      if(typeof(history.pushState) == 'function'){
+        //현재 주소를 가져온다.
+        var renewURL = location.href;
+        //현재 주소 중 page 부분이 있다면 새로 부여될 페이지 번호를 할당한다.
+        renewURL = renewURL.replace(/\?page=([0-9]+)/ig,'?page='+pageNum);
+        if(renewURL.indexOf("?page=") == -1){
+          renewURL += '?page='+pageNum;
+        }
+        //페이지 갱신 실행!
+        history.pushState(null, null,renewURL);
+      }
+      $('tfoot').empty();
+      if(data.pageCount > 1) {
+        var html = '<tr><td colspan="9"><ul class="pagination float-right">';
+        var y = 1;
+        if(pageNum > 1  && data.pageCount > 4) {
+          y = pageNum-1;
+          html += '<li class="page-item"><a class="page-link" data-value="0" data-num="1" aria-label="Previous">&laquo;\
+              <span aria-hidden="true"></span>\
+              <span class="sr-only">Previous</span>\
+            </a></li>';
+        }
+
+        for (y; y <= data.pageCount; y++) {
+          var active = (pageNum == y) ? "active" : "";
+          html += '<li class=\"'+active+' page-item">\
+            <a class="page-link" data-value=\"'+((y-1) * 10)+'"\ >'+y+'</a></li>'
+
+          if(parseInt(pageNum) + 3 == y) {
+            break;
+          }
+        }
+        if(pageNum != data.pageCount && data.pageCount > 4) {
+          html += '<li class="page-item">\
+                <a class="page-link" data-value=\"'+(Math.floor(597/10)*10)+'"\ aria-label="Next">&raquo;\
+                  <span aria-hidden="true"></span>\
+                  <span class="sr-only">Next</span>\
+                </a></li>';
+        }
+        html += '</ul></td></tr>';
+        $('tfoot').append(html);
+      }
+
+      $('tbody').empty();
+      data.cList.forEach(function(item,idx){
+        var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
+        $('tbody').append('<tr><th>'+numIdx+'</th>\
+          <td><div class="cp_nobr">'+item.cp_name+'</div></td>\
+          <td>'+item.osp_idx+'</td>\
+          <td>'+item.cnt_id+'</td>\
+          <td><div class="title_nobr">'+item.title+'</div></td>\
+          <td>'+item.price+'</th>\
+          <td>'+moment(item.createDate).format('YYYY-MM-DD hh:mm:ss')+'</td>\
+          <td>'+moment(item.csDate).format('YYYY-MM-DD hh:mm:ss')+'</td>\
+          <td>'+((item.k_method == '1') ? 'A' : 'M') +'-'+ ((item.k_apply == 'D') ? '삭제' : (item.k_apply == 'T') ? '제휴' : '보류'))+'</td>\
+        </tr>');
+      });
+    }
+  });
+}
 </script>
