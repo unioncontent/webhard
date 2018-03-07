@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const info = require('../db/db_con.js');
+const promise = require('../db/db_promise.js');
+// const info = require('../db/db_con.js');
 
 var Manual = {
   getManualList : function(item,callback) {
@@ -18,10 +19,21 @@ var Manual = {
       }
     }
     // console.log(sql+' order by n_idx desc limit ?,?',param);
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql+' order by n_idx desc limit ?,?',param,callback);
-    console.log("sjfklsjdklfskldfsdl");
-    
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql+' order by n_idx desc limit ?,?',param,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql+' order by n_idx desc limit ?,?',param)
+    .then(rows => {
+
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   },
   manualCount : function(item,callback) {
     var sql = 'select count(1) as total from manual where search is not null';
@@ -38,44 +50,119 @@ var Manual = {
         case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
       }
     }
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql, param, callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql, param, callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,param)
+    .then(rows => {
 
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   },
   delete: function(OSP_idx,callback){
-    var sql = 'delete from ';
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql+'cnts_all_a where OSP_idx=?',OSP_idx,callback);
-    connection.query(sql+'cnts_sort_e where OSP_idx=?',OSP_idx,callback);
-    connection.query(sql+'cnts_his_g where OSP_idx=?',OSP_idx,callback);
-
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql+'cnts_all_a where OSP_idx=?',OSP_idx,callback);
+    // connection.query(sql+'cnts_sort_e where OSP_idx=?',OSP_idx,callback);
+    // connection.query(sql+'cnts_his_g where OSP_idx=?',OSP_idx,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query('delete from cnts_all_a where OSP_idx=?;',OSP_idx)
+    .then(rows => {
+      return DBpromise.query('delete from cnts_sort_e where OSP_idx=?;',OSP_idx);
+    })
+    .then(rows => {
+      return DBpromise.query('delete from cnts_his_g where OSP_idx=?;',OSP_idx);
+    })
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      return callback(err,null);
+    });
   },
   updateSortData: function(item,callback){
     var sql = 'update cnts_sort_e set CS_state=\'1\',K_apply=?,CS_regdate=now() where OSP_idx=?';
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,item,callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,item,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,item)
+    .then(rows => {
 
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   },
   getCntDatainfo: function(item,callback){
     var sql = 'select * from cnts_all_a where OSP_idx=?';
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,item[0],callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,item[0],callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,item[0])
+    .then(rows => {
 
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   },
   insertHisData: function(item,callback){
     var sql = 'insert into cnts_his_g(U_id_c, OSP_idx, OSP_title, OSP_title_null, OSP_seller, OSP_price, OSP_filename, OSP_regdate)\
     values(?,?,?,?,?,?,?,now())';
     // console.log(sql,item);
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,item,callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,item,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,item)
+    .then(rows => {
 
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   },
   deleteAllTable: function(OSP_idx,callback){
     var sql = 'delete from cnts_all_a where OSP_idx=?';
     // console.log(sql,OSP_idx);
-    var connection = mysql.createConnection(info.changeDB(global.osp));
-    connection.query(sql,OSP_idx,callback);
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,OSP_idx,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,item)
+    .then(rows => {
 
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
   }
 }
 

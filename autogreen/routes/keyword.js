@@ -16,7 +16,7 @@ router.post('/searchKeyInfo',function(req, res, next){
     res.redirect('/login');
   }
   Keyword.getKeyInfo(req.body.n_idx_c, function(err,result){
-
+    console.log(result);
     res.send(result);
   });
 });
@@ -26,7 +26,6 @@ router.post('/searchCnt',function(req, res, next) {
     res.redirect('/login');
   }
   Contents.getSearchCnt(req.body.CP_title, function(err,result){
-
     res.send(result);
   });
 });

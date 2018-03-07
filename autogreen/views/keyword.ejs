@@ -369,7 +369,7 @@ function searchCnt(name){
     url: '../keyword/searchCnt',
     type: 'post',
     data : {
-      'CP_title': $('#search_cnt_name').val()
+      'CP_title': $('#search_cnt_name').val().replace(' ','')
     },
     datatype : 'json',
     error:function(request,status,error){

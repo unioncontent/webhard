@@ -31,7 +31,7 @@
             <div class="card-block-big bg-primary">
               <h3><%=count.TCount%></h3>
               <span class="m-t-10">제휴처리</span>
-              <i class="icofont icofont-search"></i>
+              <i class="icofont icofont-ui-clip-board"></i>
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
             <div class="card-block-big bg-danger">
               <h3><%=count.DCount%></h3>
               <span class="m-t-10">삭제처리</span>
-              <i class="icofont icofont-search"></i>
+              <i class="icofont icofont-ui-delete"></i>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
             <div class="card-block-big bg-twitter">
               <h3><%=count.PCount%></h3>
               <span class="m-t-10">보류처리</span>
-              <i class="icofont icofont-search"></i>
+              <i class="icofont icofont-database"></i>
             </div>
           </div>
         </div>
@@ -119,43 +119,8 @@ $(window).resize(function(){
 });
 
 $(document).ready(function(){
-  // $.ajax({
-  //   url: '../getCPList',
-  //   type: 'post',
-  //   datatype : 'json',
-  //   error:function(request,status,error){
-  //     console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-  //   },
-  //   success:function(data){
-  //     data.forEach(function(item,idx){
-  //       cpCountList(item.U_name);
-  //     });
-  //   }
-  // });
   areaChart();
 });
-
-// function cpCountList(cp){
-//   // console.log('cpCountList:',cp);
-//   $.ajax({
-//     url: '../getCPCcountList',
-//     type: 'post',
-//     data: { 'cp': cp },
-//     datatype : 'json',
-//     error:function(request,status,error){
-//       console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-//     },
-//     success:function(data){
-//       $('.table-cp tbody').append("<tr>\
-//       <th>"+cp+"</th>\
-//       <td>"+data.total+"</td>\
-//       <td>"+data.tTotal+"</td>\
-//       <td>"+data.dTotal+"</td>\
-//       <td>"+data.pTotal+"</td>\
-//       </tr>");
-//     }
-//   });
-// }
 
 function areaChart(){
   $.ajax({

@@ -13,6 +13,7 @@ var uClass = 'a';
 
 /* 거래처 리스트 page. */
 router.get('/', function(req, res, next) {
+  console.log(req);
   if(!req.user){
     res.redirect('/login');
   }
@@ -144,10 +145,9 @@ router.post('/idCheck', function(req, res, next) {
     res.redirect('/login');
   }
   var id = req.body.id;
-  User.checkId(id, function(err, results, fields) {
-
+  User.checkId(id, function(err, results) {
     if(err) throw err;
-    var user = results[0];
+    var user = results;
     if (!user) {
       res.send('success');
     }
