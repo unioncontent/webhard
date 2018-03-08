@@ -73,7 +73,6 @@ router.post('/get24DataList', function(req, res, next) {
       }
     });
 
-    console.log(result);
     res.send(result);
   });
 });

@@ -1,7 +1,7 @@
 var express = require('express');
 var Filtering = require('../models/filtering.js');
 var User = require('../models/user.js');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var router = express.Router();
 
 // 페이징

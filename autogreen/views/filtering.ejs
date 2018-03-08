@@ -67,8 +67,8 @@
                       <td><%= fList[i].cnt_id %></td>
                       <td><div class="title_nobr"><%= fList[i].title %></div></td>
                       <td><%= fList[i].price %></th>
-                      <td><%= moment(fList[i].createDate).format('YYYY-MM-DD hh:mm:ss') %></td>
-                      <td><%= moment(fList[i].csDate).format('YYYY-MM-DD hh:mm:ss') %></td>
+                      <td><%= moment(fList[i].createDate).format('YYYY-MM-DD HH:mm:ss') %></td>
+                      <td><%= moment(fList[i].csDate).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td><%= (fList[i].k_method == '1') ? 'A' : 'M' %> - <%= (fList[i].k_apply == 'D') ? '삭제' : (fList[i].k_apply == 'T') ? '제휴' : '보류' %></td>
                     </tr>
                     <% }; %>
@@ -271,7 +271,7 @@ function ajaxGetPageList(param,pageNum){
         }
         if(pageNum != data.pageCount && data.pageCount > 4) {
           html += '<li class="page-item">\
-                <a class="page-link" data-value=\"'+(Math.floor(597/10)*10)+'"\ aria-label="Next">&raquo;\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/10)*10)+'"\ aria-label="Next">&raquo;\
                   <span aria-hidden="true"></span>\
                   <span class="sr-only">Next</span>\
                 </a></li>';
@@ -289,8 +289,8 @@ function ajaxGetPageList(param,pageNum){
           <td>'+item.cnt_id+'</td>\
           <td><div class="title_nobr">'+item.title+'</div></td>\
           <td>'+item.price+'</th>\
-          <td>'+moment(item.createDate).format('YYYY-MM-DD hh:mm:ss')+'</td>\
-          <td>'+moment(item.csDate).format('YYYY-MM-DD hh:mm:ss')+'</td>\
+          <td>'+moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
+          <td>'+moment(item.csDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>'+((item.k_method == '1') ? 'A' : 'M') +'-'+ ((item.k_apply == 'D') ? '삭제' : (item.k_apply == 'T') ? '제휴' : '보류')+'</td>\
         </tr>');
       });
