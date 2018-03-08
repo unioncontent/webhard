@@ -50,7 +50,7 @@ var Contents = {
     if('searchType' in item){
       switch (item.searchType) {
         case 'c': sql+=' and CP_cntID =\''+item.search+'\''; break;
-        case 't': sql+=' and search like \'%'+item.search+'%\''; break;
+        case 't': sql+=' and (search like \'%'+item.search+'%\' or CP_title like \'%'+item.search+'%\')'; break;
       }
     }
     // var connection = mysql.createConnection(info.changeDB(global.osp));

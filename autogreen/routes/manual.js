@@ -34,6 +34,7 @@ router.get('/', function(req, res, next) {
   Manual.manualCount(searchObject,function(err,result) {
     if(err) throw err;
     totalUser = result[0].total;
+    console.log(result);
     pageCount = Math.ceil(totalUser/searchObject.limit);
 
     if (typeof req.query.page !== 'undefined') {
