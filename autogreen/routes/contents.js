@@ -153,9 +153,17 @@ router.post('/add', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
-  var result = addContents(req.body);
-  console.log(result);
-  res.send('콘텐츠 등록 완료.');
+
+  var DBpromise = new promise(global.osp);
+  Promise.all([addContents(req.body,DBpromise)])
+    .then(function(data){
+      totalCount = data.length;
+      res.send('콘텐츠 등록 완료.');
+    })
+    .catch(function(err){
+      res.status(500).send('다시시도해주세요.');
+    });
+
 });
 
 var xlstojson = require("xls-to-json-lc");

@@ -35,7 +35,6 @@ router.get('/contents', function(req, res, next) {
       alignment: {
         horizontal: 'left'
       },
-      dateFormat: 'yyyy-mm-dd hh:mm:ss',
       numberFormat: '$#,##0;-'
     });
     var ws = wb.addWorksheet('Sheet 1');
@@ -74,7 +73,7 @@ router.get('/contents', function(req, res, next) {
       ws.cell(row,4).string(item.CP_title);
       ws.cell(row,5).string(method);
       ws.cell(row,6).string(key);
-      ws.cell(row,7).date(new Date(item.CP_regdate));
+      ws.cell(row,7).string(moment(item.CP_regdate).format('YYYY-MM-DD HH:mm:ss'));
     });
     var filename = 'autogreen_contents_'+moment().format('YYYYMMDD')+'.xlsx';
     wb.write(filename,function(err,stats){
@@ -157,8 +156,10 @@ router.get('/filetering', function(req, res, next) {
       ws.cell(row,4).string(item.cnt_id);
       ws.cell(row,5).string(item.title);
       ws.cell(row,6).number(Number(item.price));
-      ws.cell(row,7).date(new Date(item.createDate));
-      ws.cell(row,8).date(new Date(item.csDate));
+      ws.cell(row,7).string(moment(item.createDate).format('YYYY-MM-DD HH:mm:ss'));
+      ws.cell(row,8).string(moment(item.csDate).format('YYYY-MM-DD HH:mm:ss'));
+      // ws.cell(row,7).date(new Date(item.createDate).toLocaleString('ko-kr', {timeZone: 'asia/seoul'}));
+      // ws.cell(row,8).date(new Date(item.csDate).toLocaleString('ko-kr', {timeZone: 'asia/seoul'}));
       ws.cell(row,9).string(((item.k_method == '0')? 'M - ' : 'A - ')+((item.k_apply == 'T')? '제휴' : (item.k_apply == 'D')? '삭제' : '보류'));
     });
     var filename = 'autogreen_filtering_'+moment().format('YYYYMMDD')+'.xlsx';

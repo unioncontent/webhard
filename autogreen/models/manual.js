@@ -93,6 +93,7 @@ var Manual = {
     var sql = 'update cnts_sort_e set CS_state=\'1\',K_apply=?,CS_regdate=now() where OSP_idx=?';
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,item,callback);
+    console.log(sql,item);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,item)
     .then(rows => {
@@ -111,6 +112,7 @@ var Manual = {
     var sql = 'select * from cnts_all_a where OSP_idx=?';
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,item[0],callback);
+    console.log(sql,item[0]);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,item[0])
     .then(rows => {
@@ -131,10 +133,10 @@ var Manual = {
     // console.log(sql,item);
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,item,callback);
+    console.log(sql,item);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,item)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {
@@ -150,8 +152,9 @@ var Manual = {
     // console.log(sql,OSP_idx);
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,OSP_idx,callback);
+    console.log(sql,OSP_idx);
     var DBpromise = new promise(global.osp);
-    DBpromise.query(sql,item)
+    DBpromise.query(sql,OSP_idx)
     .then(rows => {
 
       return callback(null,rows);

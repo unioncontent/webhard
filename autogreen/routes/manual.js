@@ -1,7 +1,7 @@
 var express = require('express');
 var Manual = require('../models/manual.js');
 var User = require('../models/user.js');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var router = express.Router();
 
 // 페이징
@@ -122,12 +122,14 @@ router.post('/delete', function(req, res, next){
 });
 
 router.post('/update', function(req, res, next){
+  console.log('Manual.updateSortData:',[req.body.K_apply,req.body.OSP_idx]);
   //수동처리 관리상태 수정
   Manual.updateSortData([req.body.K_apply,req.body.OSP_idx],function(err,result){
     if(err){
       res.status(500).send('수동처리 관리상태 수정 에러');
       return false;
     }
+    console.log('Manual.getCntDatainfo:',[req.body.OSP_idx,req.body.U_id_c]);
     //크롤링 테이블에서 게시물 정보 가져옴
     Manual.getCntDatainfo([req.body.OSP_idx,req.body.U_id_c], function(err,result){
       if(err){
@@ -138,12 +140,15 @@ router.post('/update', function(req, res, next){
       delete result[0].OSP_regdate;
       var param = Object.values(result[0]);
       param.unshift(req.body.U_id_c);
+
+      console.log('Manual.insertHisData:',param);
       //히스토리 테이블에서 게시물 저장
       Manual.insertHisData(param, function(err,result){
         if(err){
           res.status(500).send('히스토리 테이블에서 게시물 저장 에러');
           return false;
         }
+        console.log('Manual.deleteAllTable:',req.body.OSP_idx);
         //크롤링 테이블에서 게시물 삭제
         Manual.deleteAllTable(req.body.OSP_idx, function(err,result){
           if(err) throw err;

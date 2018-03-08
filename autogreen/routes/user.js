@@ -1,11 +1,11 @@
 var express = require('express');
 var User = require('../models/user.js');
-var moment = require('moment'); // 날짜처리
+var moment = require('moment-timezone'); // 날짜처리
 var router = express.Router();
 
 //Difine variable for Pagination
 var totalUser = 0;
-var pageSize = 10;
+var pageSize = 20;
 var pageCount = 0;
 var start = 0;
 var currentPage = 1;
@@ -13,7 +13,6 @@ var uClass = 'a';
 
 /* 거래처 리스트 page. */
 router.get('/', function(req, res, next) {
-  console.log(req);
   if(!req.user){
     res.redirect('/login');
   }
@@ -21,8 +20,9 @@ router.get('/', function(req, res, next) {
   if (typeof req.query.class !== 'undefined') {
     uClass = req.query.class;
   }
-
+  console.log('User.userCount');
   User.userCount(uClass,function(err,result) {
+    console.log('err:',err);
     if(err) throw err;
     totalUser = result[0].total;
     pageCount = Math.ceil(totalUser/pageSize);
@@ -37,6 +37,7 @@ router.get('/', function(req, res, next) {
     if (parseInt(currentPage)>0) {
       start = (currentPage - 1) * pageSize;
     }
+    console.log('User.getUserList');
     User.getUserList({uClass: uClass,offset: start, limit: pageSize}, function(err,result){
       if(err){
         res.json(err);
@@ -114,13 +115,11 @@ router.post('/getNextPage', function(req, res, next) {
   var searchObject = {
     uClass: req.body.uClass || 'a',
     offset: Number(req.body.start) || 0,
-    limit: 10
+    limit: pageSize
   }
   console.log(req.body);
   var currentPage = req.body.start;
   User.userCount(searchObject.uClass, function(err, result) {
-
-    if (err) throw err;
     total = result[0].total;
     pageCount = Math.ceil(total / searchObject.limit);
     User.getUserList(searchObject, function(err, result) {
@@ -132,7 +131,7 @@ router.post('/getNextPage', function(req, res, next) {
           total: total,
           data: searchObject,
           pageCount: pageCount,
-          cList: result
+          uList: result || []
         });
       }
     });

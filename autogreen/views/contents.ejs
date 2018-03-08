@@ -269,6 +269,18 @@ $(document).on('click','.btn-delete',function(){
     success:function(data){
       if(data){
         trEle.remove();
+        var param = {
+          cp_name: $('#selectCp option:selected').val() || '0',
+          start: $('.active.page-item > .page-link').data().value
+        };
+        var num = $('.active.page-item > .page-link').text();
+        if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+          param.searchType = url.searchParams.get("searchType");
+        }
+        if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+          param.search = url.searchParams.get("search");
+        }
+        ajaxGetPageList(param,num);
       }
       else{
         alert("다시시도해주세요.");
@@ -338,7 +350,7 @@ function ajaxGetPageList(param,pageNum){
         }
         if(pageNum != data.pageCount && data.pageCount > 4) {
           html += '<li class="page-item">\
-                <a class="page-link" data-value=\"'+(Math.floor(597/10)*10)+'"\ aria-label="Next">&raquo;\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/10)*10)+'"\ aria-label="Next">&raquo;\
                   <span aria-hidden="true"></span>\
                   <span class="sr-only">Next</span>\
                 </a></li>';

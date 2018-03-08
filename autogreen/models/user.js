@@ -16,7 +16,6 @@ var User = {
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {
@@ -102,16 +101,17 @@ var User = {
   userCount : function(uClass,callback) {
     var sql = 'select count(1) as total from user_all_b where U_class=?';
     // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql, callback);
     var param = uClass;
     if(uClass == 'a'){
       sql = 'select count(1) as total from user_all_b';
-      connection.query(sql, callback);
       param = null;
     }
     var DBpromise = new promise(global.osp);
+    console.log(sql,param);
     DBpromise.query(sql,param)
     .then(rows => {
-
+      console.log(rows);
       return callback(null,rows);
     })
     .then(rows => {
