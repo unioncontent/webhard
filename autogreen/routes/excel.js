@@ -7,22 +7,13 @@ var xl = require('excel4node');
 var moment = require('moment');
 var router = express.Router();
 
-const aDir = 'C:/Users/user/Documents/webhard/autogreen/'
+const aDir = 'C:/Users/user/Documents/webhard/autogreen/';
+// const bDir = 'C:/gitProject/webhard/autogreen/';
 
 router.get('/', function(req, res, next) {
   req.body = {
     cp_name : '0'
   }
-  // var filepath = 'C:/gitProject/webhard/autogreen/test.xlsx';
-  // fs.unlink(filepath,function(err){
-  //   if(err) return console.log(err);
-  //   console.log('file deleted successfully');
-  // });
-  // res.setHeader('Content-Type', 'application/x-msdownload');
-	// res.setHeader("Content-Disposition", "attachment; filename=" + "1234.xls");
-  //
-  // var filestream = fs.createReadStream(filepath);
-  // filestream.pipe(res);
 });
 
 router.get('/contents', function(req, res, next) {
@@ -85,7 +76,7 @@ router.get('/contents', function(req, res, next) {
       ws.cell(row,6).string(key);
       ws.cell(row,7).date(new Date(item.CP_regdate));
     });
-    var filename = 'autogreen-'+moment().format('YYYYMMDD')+'.xlsx';
+    var filename = 'autogreen_contents_'+moment().format('YYYYMMDD')+'.xlsx';
     wb.write(filename,function(err,stats){
       if(err){
         console.log(err);
@@ -168,11 +159,9 @@ router.get('/filetering', function(req, res, next) {
       ws.cell(row,6).number(Number(item.price));
       ws.cell(row,7).date(new Date(item.createDate));
       ws.cell(row,8).date(new Date(item.csDate));
-      var status = (item.k_apply == '0')? 'M - ' : 'A - ';
-      status += (item.k_method == 'T')? '제휴' : (item.k_method == 'D')? '삭제' : '보류';
-      ws.cell(row,9).string(status);
+      ws.cell(row,9).string(((item.k_method == '0')? 'M - ' : 'A - ')+((item.k_apply == 'T')? '제휴' : (item.k_apply == 'D')? '삭제' : '보류'));
     });
-    var filename = 'autogreen-'+moment().format('YYYYMMDD')+'.xlsx';
+    var filename = 'autogreen_filtering_'+moment().format('YYYYMMDD')+'.xlsx';
     wb.write(filename,function(err,stats){
       if(err){
         console.log(err);

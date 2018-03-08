@@ -22,10 +22,11 @@ var Filtering = {
       param.push(item.offset,item.limit);
       sql += ' limit ?,?'
     }
-    
+
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,param,callback);
     var DBpromise = new promise(global.osp);
+    console.log(sql,param);
     DBpromise.query(sql,param)
     .then(rows => {
       return callback(null,rows);
