@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
   FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as TCount,\
   FORMAT(COUNT(IF(K_apply='D' and CS_state='1',1,null)),0) as DCount,\
   FORMAT(COUNT(IF(K_apply='P',1,null)),0) as PCount\
-  FROM dashboard where date(CS_regdate) = date(now()) ";
+  FROM dashboard where CS_regdate between date_add(now(), interval -24 hour) and now()";
   var promise = require('../db/db_promise.js');
   var DBpromise = new promise(global.osp);
   var countObj = null;
@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
     return DBpromise.query(sql)
   })
   .then(rows => {
-    sql += "and U_id_c=?";
+    sql += " and U_id_c=?";
     arr = [];
     rows.forEach(function(entry) {
       var result = DBpromise.query(sql,entry.U_name).then(rows => {
@@ -34,6 +34,11 @@ router.get('/', function(req, res, next) {
         return rows[0];
       });
       arr.push(result);
+    },err => {
+      res.render('dashBoard',{
+        count : [0,0,0,0],
+        countList : []
+      });
     });
     return arr;
   })
@@ -54,13 +59,22 @@ router.get('/', function(req, res, next) {
 
 router.post('/get24DataList', function(req, res, next) {
   console.log('get24DataList');
-  DashBoard.get24DataList(function(rows){
-    // if(err){
-    //   res.status(500).send('다시 시도해주세요.');
-    //   return false;
-    // }
-    console.log(rows);
-    res.send(rows);
+  DashBoard.get24DataList(function(err,rows){
+    if(err){
+      console.log(err);
+      res.status(500).send('다시 시도해주세요.');
+      return false;
+    }
+    // console.log(rows);
+    var result = [];
+    rows.forEach(function(item){
+      if(item[0] != undefined){
+        result.push(item[0]);
+      }
+    });
+
+    console.log(result);
+    res.send(result);
   });
 });
 
