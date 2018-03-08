@@ -54,7 +54,7 @@ router.get('/', function(req, res, next) {
       } else {
         res.render('contents', {
           data: searchObject,
-          cList: result,
+          cList: result || [],
           totalUser: totalUser,
           pageCount: pageCount,
           currentPage: currentPage
@@ -133,7 +133,7 @@ router.post('/delete', function(req, res, next) {
   if (!req.user) {
     res.redirect('/login');
   }
-  Keyword.deleteKeyword(req.body.n_idx_c, function(err, result) {
+  Keyword.deleteKeyword([req.body.n_idx_c,'c_idx'], function(err, result) {
     if (err) throw err;
     Contents.deleteContents(req.body.n_idx_c, function(err, result) {
       if (err) throw err;

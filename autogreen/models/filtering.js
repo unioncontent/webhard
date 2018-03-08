@@ -6,7 +6,7 @@ var Filtering = {
   getFilteringList : function(item,callback) {
     var sql = 'select * from filtering where search is not null';
     var param = [];
-    if(item.cp_name != '0'){
+    if(item.cp_name != '0' && item.cp_name != 'null'){
       sql = 'select * from filtering where cp_name=?';
       param.unshift(item.cp_name);
     }
@@ -22,13 +22,12 @@ var Filtering = {
       param.push(item.offset,item.limit);
       sql += ' limit ?,?'
     }
-    // console.log(sql,param);
+    
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,param,callback);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {
@@ -42,7 +41,7 @@ var Filtering = {
   filteringCount : function(item,callback) {
     var sql = 'select count(1) as total from filtering where search is not null';
     var param = [];
-    if(item.cp_name != '0'){
+    if(item.cp_name != '0' && item.cp_name != 'null'){
       sql = 'select count(1) as total from filtering where cp_name=?';
       param[0] = item.cp_name;
     }
@@ -58,7 +57,6 @@ var Filtering = {
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {

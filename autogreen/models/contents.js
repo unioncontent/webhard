@@ -6,7 +6,7 @@ var Contents = {
   getContentsList : function(item,callback) {
     var sql = 'select * from cnts_list where search is not null';
     var param = [];
-    if(item.cp_name != '0'){
+    if(item.cp_name != '0' && item.cp_name != 'null'){
       sql = 'select * from cnts_list where CP_name=?';
       param.unshift(item.cp_name);
     }
@@ -42,7 +42,7 @@ var Contents = {
     var sql = 'select count(1) as total from cnts_list where search is not null';
     var param = [];
     if('cp_name' in item){
-      if(item.cp_name != '0'){
+      if(item.cp_name != '0' && item.cp_name != 'null'){
         sql = 'select count(1) as total from cnts_list where CP_name=?';
         param[0] = item.cp_name;
       }
@@ -123,7 +123,6 @@ var Contents = {
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,item.CP_CntID)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {

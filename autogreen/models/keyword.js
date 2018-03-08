@@ -41,13 +41,19 @@ var Keyword = {
       return callback(err,null);
     });
   },
-  deleteKeyword: function(n_idx_c,callback){
-    var sql = 'delete from cnts_kwd_f where n_idx_c=?';
+  deleteKeyword: function(param,callback){
+    var sql = 'delete from cnts_kwd_f where';
+    if(param[1] == 'k_idx'){
+      sql += ' n_idx=?';
+    }
+    else{
+      sql += ' n_idx_c=?';
+    }
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,n_idx,callback);
     var DBpromise = new promise(global.osp);
-    console.log(sql,n_idx_c);
-    DBpromise.query(sql,n_idx_c)
+    console.log(sql,param[0]);
+    DBpromise.query(sql,param[0])
     .then(rows => {
       return callback(null,rows);
     })
