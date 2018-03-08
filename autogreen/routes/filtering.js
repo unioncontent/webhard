@@ -55,7 +55,7 @@ router.get('/', function(req, res, next) {
         res.render('filtering',{
           moment: moment,
           data: searchObject,
-          fList: result,
+          fList: result || [],
           totalUser: totalUser,
           pageCount: pageCount,
           currentPage: currentPage

@@ -44,7 +44,7 @@ router.get('/', function(req, res, next) {
         res.render('user',{
           moment: moment,
           uClass: uClass,
-          userData: result,
+          userData: result || [],
           totalUser: totalUser,
           minusCount: (currentPage - 1) * pageSize,
           pageCount: pageCount,

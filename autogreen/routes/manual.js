@@ -54,7 +54,7 @@ router.get('/', function(req, res, next) {
         res.render('manual',{
           moment: moment,
           data: searchObject,
-          mList: result,
+          mList: result || [],
           totalUser: totalUser,
           pageCount: pageCount,
           currentPage: currentPage

@@ -178,9 +178,9 @@ $(document).ready(function(){
     success:function(data){
       console.log(data);
       data.forEach(function(item){
-        var html = '<option value="'+item.U_name+'">'+item.U_name+'</option>'
-        if(c == item.U_name){
-          html = '<option value="'+item.U_name+'" selected>'+item.U_name+'</option>'
+        var html = '<option value="'+item.U_id+'">'+item.U_name+'</option>'
+        if(c == item.U_id){
+          html = '<option value="'+item.U_id+'" selected>'+item.U_name+'</option>'
         }
         $('#selectCp').append(html);
       });
@@ -190,14 +190,14 @@ $(document).ready(function(){
 
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()
-  var t = url.searchParams.get("searchType");
-  var s = url.searchParams.get("search");
-  if (t !== undefined && t != ''){
-    if (s !== undefined && s != ''){
-      link += '&searchType='+t+'&search='+s;
-    }
-  }
+  var link = '../manual?page=1&cp_name='+$("#selectCp option:selected").val();
+  // var t = url.searchParams.get("searchType");
+  // var s = url.searchParams.get("search");
+  // if (t !== undefined && t != ''){
+  //   if (s !== undefined && s != ''){
+  //     link += '&searchType='+t+'&search='+s;
+  //   }
+  // }
   location.href = link;
 });
 

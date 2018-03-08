@@ -27,7 +27,6 @@ router.get('/', function(req, res, next) {
 
 router.get('/contents', function(req, res, next) {
   Contents.getContentsList(req.query,function(err,result){
-
     if(err){
       res.status(500).send('다시 시도해주세요.\n'+err);
       return false;
@@ -108,10 +107,7 @@ router.get('/contents', function(req, res, next) {
 });
 
 router.get('/filetering', function(req, res, next) {
-  console.log('global.osp:',global.osp);
-  console.log('res.locals:',res.locals);
   Filtering.getFilteringList(req.query,function(err,result){
-
     if(err){
       res.status(500).send('다시 시도해주세요.\n'+err);
       return false;

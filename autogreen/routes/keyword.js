@@ -47,7 +47,6 @@ router.post('/add',function(req, res, next) {
       param.K_type = '0';
     }
     Keyword.insertKeyword(param,function(err, results, fields) {
-
       if(err){
         res.status(500).send('다시 입력해 주세요.');
         return false;
@@ -61,8 +60,7 @@ router.post('/delete',function(req, res, next){
   if(!req.user){
     res.redirect('/login');
   }
-  Keyword.deleteKeyword(req.body.n_idx, function(err,result){
-
+  Keyword.deleteKeyword([req.body.n_idx,'k_idx'], function(err,result){
     if(err) throw err;
     res.send(true);
   });
