@@ -14,7 +14,7 @@ var Manual = {
       switch (item.searchType) {
         case 'i': sql+=' and CP_CntID=\''+item.search+'\''; break;
         case 'c': sql+=' and OSP_idx=\''+item.search+'\''; break;
-        case 't': sql+=' and search like \'%'+item.search+'%\''; break;
+        case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
         case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
       }
     }
@@ -46,12 +46,13 @@ var Manual = {
       switch (item.searchType) {
         case 'i': sql+=' and CP_CntID=\'%'+item.search+'%\''; break;
         case 'c': sql+=' and OSP_idx=\'%'+item.search+'%\''; break;
-        case 't': sql+=' and search like \'%'+item.search+'%\''; break;
+        case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
         case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
       }
     }
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql, param, callback);
+    console.log(sql,param);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {
