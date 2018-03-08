@@ -4,9 +4,9 @@ const promise = require('../db/db_promise.js');
 
 var User = {
   getUserList : function(user,callback) {
-    var sql = 'select * from user_all_b where U_class=? order by U_regdate desc limit ?,?';
+    var sql = 'select * from user_all_b where U_class=? order by n_idx desc limit ?,?';
     if(user.uClass == 'a'){
-      sql = 'select * from user_all_b order by U_regdate desc limit ?,?';
+      sql = 'select * from user_all_b order by n_idx desc limit ?,?';
       delete user.uClass;
     }
     var param = Object.values(user);
@@ -28,13 +28,27 @@ var User = {
     });
   },
   getClassAllList : function(uClass,callback) {
-    var sql = 'select * from user_all_b where U_class=? order by U_regdate desc';
+    var sql = 'select * from user_all_b where U_class=? order by n_idx desc';
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,uClass,callback);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,uClass)
     .then(rows => {
-
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
+  getCpAllList : function(callback) {
+    var sql = 'select * from user_all_b where U_class=\'c\' order by U_name';
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql)
+    .then(rows => {
       return callback(null,rows);
     })
     .then(rows => {

@@ -104,7 +104,7 @@ router.post('/getCPList', function(req, res, next){
   if(!req.user){
     res.redirect('/login');
   }
-  User.getClassAllList('c',function(err,result){
+  User.getCpAllList(function(err,result){
     if(err) throw err;
     res.send(result);
   });
