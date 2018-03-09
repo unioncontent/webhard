@@ -10,6 +10,7 @@ var Filtering = {
       sql = 'select * from filtering where cp_name=?';
       param.unshift(item.cp_name);
     }
+
     if('searchType' in item){
       switch (item.searchType) {
         case 'i': sql+=' and osp_idx=\''+item.search+'\''; break;
@@ -17,6 +18,11 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
+    console.log(item);
+    if(('sDate' in item) && ('eDate' in item)){
+      sql+=' and csDate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
+    }
+
     sql += ' order by csDate desc ';
     if('offset' in item){
       param.push(item.offset,item.limit);
@@ -46,6 +52,7 @@ var Filtering = {
       sql = 'select count(1) as total from filtering where cp_name=?';
       param[0] = item.cp_name;
     }
+
     if('searchType' in item){
       switch (item.searchType) {
         case 'i': sql+=' and osp_idx=\''+item.search+'\''; break;
@@ -53,8 +60,13 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
+    console.log(item);
+    if(('sDate' in item) && ('eDate' in item)){
+      sql+=' and csDate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
+    }
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql, param, callback);
+    console.log(sql,param);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {

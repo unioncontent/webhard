@@ -150,7 +150,6 @@ var Manual = {
   },
   deleteAllTable: function(OSP_idx,callback){
     var sql = 'delete from cnts_all_a where OSP_idx=?';
-    // console.log(sql,OSP_idx);
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,OSP_idx,callback);
     console.log(sql,OSP_idx);

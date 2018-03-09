@@ -146,6 +146,7 @@ router.post('/update', function(req, res, next){
       //히스토리 테이블에서 게시물 저장
       Manual.insertHisData(param, function(err,result){
         if(err){
+          console.log(err);
           res.status(500).send('히스토리 테이블에서 게시물 저장 에러');
           return false;
         }
