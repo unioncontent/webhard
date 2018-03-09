@@ -22,7 +22,7 @@ app.set('layout extractStyles', true);
 
 /* set middlewares */
 app.use(expressLayouts);
-app.use(favicon(path.join(__dirname, 'public/assets/images/favicon', 'favicon.ico')));// uncomment after placing your favicon in /public
+app.use(favicon(path.join(__dirname, 'public/images/favicon', 'favicon.ico')));// uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
