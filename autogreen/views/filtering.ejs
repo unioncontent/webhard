@@ -138,6 +138,7 @@
     width: 117px;
   }
 </style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.21.0/min/moment-with-locales.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 // url 변경 후 파라미터값 가져오기
@@ -179,7 +180,10 @@ $('.alert-excel').on("click",function(){
     closeOnConfirm: false
   })
   .then((value) =>{
-    location.href = '/excel/filetering?cp_name='+c+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+    console.log(value);
+    if(value != null){
+      location.href = '/excel/filetering?cp_name='+c+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");  
+    }
   });
 });
 
