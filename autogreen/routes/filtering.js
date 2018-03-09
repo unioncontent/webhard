@@ -22,6 +22,7 @@ router.get('/', function(req, res, next) {
     offset: 0,
     limit: 10
   }
+  console.log('req.query :',req.query);
   if (typeof req.query.cp_name !== 'undefined') {
     searchObject.cp_name = req.query.cp_name;
   }
@@ -30,6 +31,12 @@ router.get('/', function(req, res, next) {
   }
   if (typeof req.query.search !== 'undefined') {
     searchObject.search = req.query.search;
+  }
+  if (typeof req.query.sDate !== 'undefined') {
+    if (typeof req.query.eDate !== 'undefined') {
+      searchObject.sDate = req.query.sDate;
+      searchObject.eDate = req.query.eDate;
+    }
   }
   Filtering.filteringCount(searchObject,function(err,result) {
     if(err) throw err;
@@ -48,7 +55,6 @@ router.get('/', function(req, res, next) {
     }
     console.log('3 : ',searchObject);
     Filtering.getFilteringList(searchObject, function(err,result){
-
       if(err){
         res.json(err);
       }else{
@@ -78,6 +84,10 @@ router.post('/getNextPage', function(req, res, next) {
   if('searchType' in req.body){
     searchObject.searchType = req.body.searchType;
     searchObject.search = req.body.search;
+  }
+  if ('sDate' in req.body && 'eDate' in req.body) {
+    searchObject.sDate = req.body.sDate;
+    searchObject.eDate = req.body.eDate;
   }
   var currentPage = req.body.start;
   Filtering.filteringCount(searchObject, function(err, result) {
