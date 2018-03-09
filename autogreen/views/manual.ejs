@@ -56,6 +56,8 @@
                       <th width="5%">금액</th>
                       <th width="5%">키워드</th>
                       <th width="5%">상태</th>
+                      <th width="5%">검출일</th>
+                      <th width="5%">처리일</th>
                       <th width="5%">관리상태</th>
                       <th width="10%">수정</th>
                     </tr>
@@ -64,13 +66,15 @@
                     <% for(var i=0; i < mList.length; i++) { %>
                     <tr>
                       <th><%= totalUser - i - data.offset %></th>
-                      <td><%= mList[i].cp_name %></td>
+                      <td><div class="cp_nobr"><%= mList[i].cp_name %></div></td>
                       <td><div class="cntId_nobr"><%= mList[i].CP_CntID %></div></td>
                       <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx=<%= mList[i].OSP_idx %>&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr"><%= mList[i].title %></div></a></td>
                       <td><%= mList[i].OSP_idx %></td>
                       <td><%= mList[i].OSP_price %></td>
                       <td><div class="keyword_nobr"><%= mList[i].K_keyword %></div></td>
                       <td>비제휴</td>
+                      <td><%= moment(mList[i].date).format('YYYY-MM-DD HH:mm:ss') %></td>
+                      <td><%= moment(mList[i].cs_date).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td>
                         <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">
                           <option value="P">보류</option>
@@ -94,7 +98,7 @@
                   <tfoot>
                     <% if(pageCount > 1) { %>
                     <tr>
-                      <td colspan="10">
+                      <td colspan="12">
                         <ul class="pagination float-right">
                           <%
                             var y = 1;
@@ -145,7 +149,7 @@
   </div>
 </div>
 <style type="text/css">
-  .cntId_nobr,.keyword_nobr,.title_nobr{
+  .cntId_nobr,.keyword_nobr,.title_nobr,.cp_nobr{
     font-size: 15px;
     padding-left: 3px;
     text-overflow: ellipsis;
@@ -153,12 +157,10 @@
     overflow: hidden;
   }
   .title_nobr{
-    width: 400px;
-  }
-  .keyword_nobr{
-    width: 100px;
+    width: 250px;
   }
 </style>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
 <script type="text/javascript">
 // url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
@@ -331,7 +333,7 @@ function ajaxGetPageList(param,pageNum){
       }
       $('tfoot').empty();
       if(data.pageCount > 1) {
-        var html = '<tr><td colspan="10"><ul class="pagination float-right">';
+        var html = '<tr><td colspan="12"><ul class="pagination float-right">';
         var y = 1;
         if(pageNum > 1  && data.pageCount > 4) {
           y = pageNum-1;
@@ -365,13 +367,15 @@ function ajaxGetPageList(param,pageNum){
       data.cList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
         $('tbody').append('<tr><th>'+numIdx+'</th>\
-          <td>'+(item.cp_name || '')+'</td>\
+          <td><div class="cp_nobr">'+(item.cp_name || '')+'</div></td>\
           <td><div class="cntId_nobr">'+(item.CP_CntID || '')+'</div></td>\
           <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.OSP_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+(item.title || '')+'</div></a></td>\
           <td>'+(item.OSP_idx || '')+'</td>\
           <td>'+(item.OSP_price || '')+'</td>\
           <td><div class="keyword_nobr">'+(item.K_keyword || '')+'</div></td>\
           <td>비제휴</td>\
+          <td>'+moment(item.date).format('YYYY-MM-DD HH:mm:ss')+'</td>\
+          <td>'+moment(item.cs_date).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>\
             <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">\
               <option value="P">보류</option>\
