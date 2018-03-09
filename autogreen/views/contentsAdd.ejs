@@ -215,6 +215,10 @@ function requiredMessage(target,msg){
 }
 
 $("#insertBtn2").on("click",function(){
+  if($('input[type=file]').val()==""){
+    alert('파일을 선택해주세요.');
+    return false;
+  }
   $("#uploadFrm").submit();
 });
 </script>
