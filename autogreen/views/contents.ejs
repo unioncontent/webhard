@@ -193,7 +193,10 @@ $('.alert-excel').on("click",function(){
     closeOnConfirm: false
   })
   .then((value) =>{
-    location.href = '/excel/contents?cp_name='+$("#selectCp option:selected").val()+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+    console.log(value);
+    if(value != null){
+      location.href = '/excel/contents?cp_name='+$("#selectCp option:selected").val()+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+    }
   });
 });
 
