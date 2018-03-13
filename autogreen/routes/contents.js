@@ -91,7 +91,7 @@ router.post('/getNextPage', function(req, res, next) {
           total: total,
           data: searchObject,
           pageCount: pageCount,
-          cList: result
+          cList: result || []
         });
       }
     });
@@ -117,14 +117,20 @@ router.post('/update', function(req, res, next) {
       req.body.K_apply = 'P';
     }
     Keyword.updateKeyword(req.body, function(err, result) {
-      if (err) throw err;
-      res.send('true');
+      if (err){
+        res.status(500).send('다시시도해주세요.');
+        throw err;
+      }
+      res.send(req.body);
     });
   } else if (req.body.type == 'all') {
     delete req.body.type;
     Keyword.updateAllKeyword(req.body, function(err, result) {
-      if (err) throw err;
-      res.send('true');
+      if (err){
+        res.status(500).send('다시시도해주세요.');
+        throw err;
+      }
+      res.send(req.body);
     });
   }
 });

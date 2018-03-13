@@ -210,7 +210,8 @@ $('#searchBtn').on('click',function(){
     return false;
   }
   location.href = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
-})
+});
+
 $('#keywordInput').on('keyup',function(event){
   if(event.keyCode == 13){
     $('#searchBtn').trigger('click');
@@ -354,7 +355,7 @@ function ajaxGetPageList(param,pageNum){
         }
         if(pageNum != data.pageCount && data.pageCount > 4) {
           html += '<li class="page-item">\
-                <a class="page-link" data-value=\"'+(Math.floor(597/10)*10)+'"\ aria-label="Next">&raquo;\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/10)*10)+'"\ aria-label="Next">&raquo;\
                   <span aria-hidden="true"></span>\
                   <span class="sr-only">Next</span>\
                 </a></li>';

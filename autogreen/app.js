@@ -80,7 +80,6 @@ app.use('/excel', excel);
 var dashBoard = require('./routes/dashBoard');
 app.use('/', dashBoard);
 app.use('/login', dashBoard);
-app.use('/test', dashBoard);
 
 // 통계
 var period = require('./routes/period');
@@ -94,6 +93,7 @@ app.use('/contents/add/:addType', contents);
 // 키워드
 var keyword = require('./routes/keyword');
 app.use('/keyword', keyword);
+app.use('/keyword/info', keyword);
 
 // 필터링현황
 var filtering = require('./routes/filtering');
