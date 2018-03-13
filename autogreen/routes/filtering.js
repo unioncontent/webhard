@@ -13,12 +13,13 @@ var currentPage = 1;
 var searchType = 'i';
 var search = '';
 
-router.get('/', function(req, res, next) {
+router.get('/:pType', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
   var searchObject = {
     cp_name: '0',
+    type: (req.params.pType == "auto") ? 'a':'m',
     offset: 0,
     limit: 10
   }
@@ -53,12 +54,13 @@ router.get('/', function(req, res, next) {
     if (parseInt(currentPage) > 0) {
       searchObject.offset = (currentPage - 1) * searchObject.limit;
     }
-    console.log('3 : ',searchObject);
+    console.log('searchObject : ',searchObject);
     Filtering.getFilteringList(searchObject, function(err,result){
       if(err){
         res.json(err);
       }else{
         res.render('filtering',{
+          pageName: (req.params.pType == "auto") ? '자동':'수동',
           moment: moment,
           data: searchObject,
           fList: result || [],
@@ -77,6 +79,7 @@ router.post('/getNextPage', function(req, res, next) {
   }
   var searchObject = {
     cp_name: req.body.cp_name || '0',
+    type: req.body.type || 'a',
     offset: Number(req.body.start) || 0,
     limit: 10
   }

@@ -98,6 +98,7 @@ app.use('/keyword/info', keyword);
 // 필터링현황
 var filtering = require('./routes/filtering');
 app.use('/filtering', filtering);
+app.use('/filtering/:pType', filtering);
 
 // 수동처리
 var manual = require('./routes/manual');

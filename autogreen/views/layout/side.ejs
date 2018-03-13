@@ -57,12 +57,28 @@
           <%}%>
         </ul>
       </li>
-      <li class="filtering">
-        <a href="../filtering" data-i18n="nav.advance-components.main">
+      <li class="pcoded-hasmenu filtering">
+        <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
           <span class="pcoded-micon"><i class="ti-filter"></i></span>
           <span class="pcoded-mtext">필터링현황</span>
           <span class="pcoded-mcaret"></span>
         </a>
+        <ul class="pcoded-submenu">
+          <li >
+            <a href="../filtering/auto" data-i18n="nav.advance-components.draggable">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext">자동처리현황</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li>
+            <a href="../filtering/manual" data-i18n="nav.advance-components.draggable">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext">수동처리현황</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
       </li>
       <%if (userCLASS == 'a'){%>
       <li class="manual">

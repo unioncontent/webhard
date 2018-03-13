@@ -2,7 +2,7 @@
   <div class="page-wrapper">
     <div class="page-header">
       <div class="page-header-title">
-        <h4>필터링현황</h4>
+        <h4><%=pageName%>처리현황</h4>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
@@ -12,6 +12,7 @@
             </a>
           </li>
           <li class="breadcrumb-item"><a href="#!">필터링현황</a></li>
+          <li class="breadcrumb-item"><a href="#!"><%=pageName%>처리현황</a></li>
         </ul>
       </div>
       <div class="page-body">
@@ -152,6 +153,7 @@
 // url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
 var url = new URL(url_string);
+var fType = url.pathname.replace('/filtering/','');
 var c = url.searchParams.get("cp_name");
 var sDateParams = url.searchParams.get("sDate");
 var eDateParams = url.searchParams.get("eDate");
@@ -201,16 +203,24 @@ $('.alert-excel').on("click",function(){
   .then((value) =>{
     console.log(value);
     if(value != null){
-      location.href = '/excel/filetering?cp_name='+c+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+      var type = (fType == 'auto') ? 'a':'m';
+      var link = '/excel/filetering?type='+type+'&cp_name='+c+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
+      var href = new URL(window.location.href);
+      var s = href.searchParams.get("sDate");
+      var e = href.searchParams.get("eDate");
+      if( s != null && e != null ){
+        link += '&sDate='+moment(new Date(s)).format('YYYY-MM-DD')+'&eDate='+moment(new Date(e)).format('YYYY-MM-DD');
+      }
+      location.href = link;
     }
   });
 });
 
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var href = new URL(window.location.href);
   var cpName = $("#selectCp option:selected").val();
-  var link = '../filtering?page=1&cp_name='+cpName;
+  var link = '../filtering/'+fType+'?page=1&cp_name='+cpName;
+  var href = new URL(window.location.href);
   var s = href.searchParams.get("sDate");
   var e = href.searchParams.get("eDate");
   if( s != null && e != null ){
@@ -226,7 +236,7 @@ $('#searchBtn').on('click',function(){
     return false;
   }
   var href = new URL(window.location.href);
-  link = '../filtering?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  link = '../filtering/'+fType+'?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
   var s = href.searchParams.get("sDate");
   var e = href.searchParams.get("eDate");
   if( s != null && e != null ){
@@ -246,6 +256,7 @@ $(document).on('click','.page-link',function(){
   var num = Number($(this).text()) || Number($(this).data().num);
   var param = {
     cp_name :  $('#selectCp option:selected').val() || '0',
+    type: (fType == 'auto') ? 'a':'m',
     start : Number($(this).data().value)
   };
   if(href.searchParams.get("searchType") != '' && href.searchParams.get("searchType") != null){
@@ -342,6 +353,7 @@ function searchDate(){
   var param = {
     cp_name :  $('#selectCp option:selected').val() || '0',
     start : 0,
+    type: (fType == 'auto') ? 'a':'m',
     sDate : start.format('YYYY-MM-DD'),
     eDate : end.format('YYYY-MM-DD')
   };
