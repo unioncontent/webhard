@@ -104,7 +104,7 @@ router.post('/getNextPage', function(req, res, next) {
           total: total,
           data: searchObject,
           pageCount: pageCount,
-          cList: result
+          cList: result || []
         });
       }
     });

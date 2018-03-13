@@ -1,0 +1,630 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>키워드설정 - <%= info[0] %> 콘텐츠리스트</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="icofont icofont-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
+          <li class="breadcrumb-item"><a href="#!">키워드설정</a></li>
+        </ul>
+      </div>
+      <div class="page-body">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="section section-info">
+                <div class="info-block">
+                  <dl>
+                    <dt><%= info[1] %></dt>
+                    <dd>자동검출</dd>
+                  </dl>
+                </div>
+                <div class="info-block last">
+                  <dl>
+                    <dt><%= info[2] %></dt>
+                    <dd>수동검출</dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="col-sm-3 input-group input-group-button input-group-inverse p-l-0 p-r-0 m-b-10 m-t-10  f-right btn-select">
+                <input id="keywordInput" type="text" class="form-control">
+                <span class="input-group-addon" id="basic-addon1">
+                  <button id="searchBtn" class=" btn btn-inverse">검색</button>
+                </span>
+              </div>
+              <select id="selectSearchType" name="select" class="col-sm-1 form-control form-control-inverse m-r-10 m-b-10 m-t-10 f-right search-select">
+                <option value="t">제목</option>
+                <option value="i">콘텐츠ID</option>
+              </select>
+            </div>
+            <div class="card-block table-border-style table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th width="1%">NO</th>
+                    <th width="7%">콘텐츠 제목</th>
+                    <th width="5%">콘텐츠 ID</th>
+                    <th width="5%">상태</th>
+                    <th width="5%">키워드 수정</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i < kcList.length; i++) { %>
+                  <tr>
+                    <input name="cntIdx" type="hidden" class="form-control" value="<%= kcList[i].n_idx_c %>"/>
+                    <th><%= total - i - data.offset %></th>
+                    <td><div class="title_nobr"><%= kcList[i].CP_title %></div></td>
+                    <td><div class="cp_nobr"><%= kcList[i].CP_CntID %></div></td>
+                    <td>
+                      <div class="form-radio">
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="D" name="k_apply<%= i %>" <%= (kcList[i].K_apply == 'D') ? 'checked' : '' %> disabled>
+                            <i class="helper"></i>삭제
+                          </label>
+                        </div>
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="T" name="k_apply<%= i %>" <%= (kcList[i].K_apply == 'T') ? 'checked' : '' %> disabled>
+                            <i class="helper"></i>제휴
+                          </label>
+                        </div>
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="P" name="k_apply<%= i %>" <%= (kcList[i].K_apply == 'P') ? 'checked' : '' %> disabled>
+                            <i class="helper"></i>보류
+                          </label>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+    								  <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">
+                        <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;">
+        								  <span class="icofont icofont-ui-delete"></span>
+        								</button>
+      							    <button type="button" class="btn-update btn btn-primary waves-effect waves-light">
+        								  <span class="icofont icofont-ui-edit"></span>
+        								</button>
+    								  </div>
+    								</td>
+                  </tr>
+                  <% }; %>
+                </tbody>
+                <tfoot>
+                  <% if(pageCount > 1) { %>
+                  <tr>
+                    <td colspan="5">
+                      <ul class="pagination float-right">
+                        <%
+                          var y = 1;
+                          if(currentPage > 1 && pageCount > 4) {
+                            y = currentPage-1;
+                        %>
+                          <li class="page-item">
+                            <a class="page-link" data-value="0" data-num="1" aria-label="Previous">
+                              &laquo;
+                              <span aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                          </li>
+                        <% } %>
+                        <% for (y; y <= pageCount; y++) { %>
+                          <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
+                            <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 10)).toString()%>" >
+                              <%= y %>
+                            </a>
+                          </li>
+                        <%
+                            if(parseInt(currentPage) + 3 == y) {
+                              break;
+                            }
+                          }
+                        %>
+                        <% if(currentPage != pageCount && pageCount > 4) { %>
+                          <li class="page-item">
+                            <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 10)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
+                              &raquo;
+                              <span aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </li>
+                        <% } %>
+                      </ul>
+                    </td>
+                  </tr>
+                  <% } %>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='keyword-Modal' role='dialog'>
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">콘텐츠 수정</h5>
+            </div>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <div class="table-responsive">
+                      <table class="table table-sm" id='modal-cnt'>
+                        <tbody>
+                          <input id="cntIdx_m" type="hidden" class="form-control" />
+                          <tr>
+                            <th class="b-r-1 text-left" width="30%">콘텐츠 제목</th>
+                            <td id="m_title" class="text-left"></td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">상태</th>
+                            <td>
+                              <div class="form-radio text-left">
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_key_m" class="k_key_m">
+                                    <i class="helper"></i>ON
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_key_m" class="k_key_m">
+                                    <i class="helper"></i>OFF
+                                  </label>
+                                </div>
+                                <input name="oK_key" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리방법</th>
+                            <td>
+                              <div class="form-radio text-left">
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_method_m" class="k_method_m">
+                                    <i class="helper"></i>자동
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_method_m" class="k_method_m">
+                                    <i class="helper"></i>수동
+                                  </label>
+                                </div>
+                                <input name="oK_method" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리방법</th>
+                            <td>
+                              <div class="form-radio text-left">
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="D" name="k_apply_m" class="k_apply_m">
+                                    <i class="helper"></i>삭제
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="T" name="k_apply_m" class="k_apply_m">
+                                    <i class="helper"></i>제휴
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="P" name="k_apply_m" class="k_apply_m">
+                                    <i class="helper"></i>보류
+                                  </label>
+                                </div>
+                                <input name="oK_apply" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-columned table-striped" id='modal-cntList'>
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>검색어</th>
+                          <th>제외검색어</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr id='inputKey'>
+                          <th scope="row" class="centerTh">입력</th>
+                          <td>
+                            <input type="text" class="form-control" id="pSearch">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td>
+                            <input type="text" class="form-control" id="dSearch">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="icofont icofont-plus" style="margin-right:0"></i></button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary mobtn" data-dismiss='modal' aria-label='Close' type="button">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+    </div>
+  </div>
+</div>
+<style>
+dl{
+  margin-bottom: 0.4rem;
+}
+.info-block{
+  margin: 5px;
+}
+.table td, .table th{
+  text-align:  center;
+  vertical-align: middle;
+}
+.section{
+  display: inline-block;
+  padding:  0px;
+}
+.title_nobr,.cp_nobr,.keyword_nobr{
+  font-size: 15px;
+  padding-left: 3px;
+  text-overflow: ellipsis;
+  width: 300px;
+  overflow: hidden;
+  margin: 0px auto;
+}
+.cp_nobr{
+  width: 150px;
+}
+.keyword_nobr{
+  width: 200px;
+}
+</style>
+<script>
+// url 변경 후 파라미터값 가져오기
+var url_string = window.location.href
+var url = new URL(url_string);
+
+//페이지 변경시
+$(document).on('click','.page-link',function(){
+  var num = Number($(this).text()) || Number($(this).data().num);
+  if(url.searchParams.get("cp") == '' || url.searchParams.get("cp") == null){
+    return false;
+  }
+  var param = {
+    cp : url.searchParams.get("cp"),
+    start : Number($(this).data().value)
+  };
+  if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+    param.searchType = url.searchParams.get("searchType");
+  }
+  if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+    param.search = url.searchParams.get("search");
+  }
+  ajaxGetPageList(param,num);
+});
+
+// 모달 수정
+$(document).on('change','.k_key_m, .k_apply_m, .k_method_m',function(){
+  if($('#modal-cntList > tbody tr').length > 1){
+    KeywordStatusUpdateAjax();
+  }
+  else{
+    $(this).parents('.form-radio').children().last().val(this.value);
+  }
+});
+
+// 모달 삭제 버튼 클릭시
+$(document).on("click",".remove_keyword",function(){
+  var idx = $(this).parents("tr").find(".n_idx_k").val();
+  $.ajax({
+    url: '../keyword/delete',
+    type: 'post',
+    data: {
+      'n_idx': idx
+    },
+    error:function(request,status,error){
+      alert("다시시도해주세요.");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        reloadKeyList($("#cntIdx_m").val());
+      }
+      else{
+        alert("다시시도해주세요.");
+      }
+    }
+  });
+});
+
+//키워드 추가
+$("#insertKeywordBtn").on("click",function(){
+  $.ajax({
+    url: '../keyword/add',
+    type: 'post',
+    data: {
+      'keyword': [$('#pSearch').val(),$('#dSearch').val()],
+      'n_idx_c': $("#cntIdx_m").val(),
+      'K_key': $("input[name ='oK_key']").val(),
+      'K_method': $("input[name ='oK_method']").val(),
+      'K_apply': $("input[name ='oK_apply']").val(),
+      'U_id_c': url.searchParams.get("cp"),
+    },
+    error:function(request,status,error){
+      alert("다시시도해주세요.");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        console.log(data);
+        alert("추가되었습니다.");
+        $('#pSearch').val("");
+        $('#dSearch').val("");
+        reloadKeyList(data.n_idx_c);
+      }
+    }
+  });
+});
+
+// 검색시
+$('#searchBtn').on('click',function(){
+  if($("#keywordInput").val() == ''){
+    alert('검색어를 넣어주세요.');
+    return false;
+  }
+  location.href = '/keyword/info?page=1&cp='+url.searchParams.get("cp")+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+});
+$('#keywordInput').on('keyup',function(event){
+  if(event.keyCode == 13){
+    $('#searchBtn').trigger('click');
+  };
+});
+
+// 수정 버튼 클릭시
+$(document).on('click','.btn-update',function(){
+  var trEle = $(this).closest("tr");
+  $("#m_title").text(trEle.find('td').eq(0).text());
+  reloadKeyList(trEle.find('input').val());
+  $("#keyword-Modal").modal('show');
+});
+
+// 삭제 버튼 클릭시
+$(document).on("click",".btn-delete",function(){
+  var idx = $(this).parents("tr").find("input").val();
+  $.ajax({
+    url: '../keyword/delete',
+    type: 'post',
+    data: {
+      'n_idx': idx,
+      'type': 'c_idx'
+    },
+    error:function(request,status,error){
+      alert("다시시도해주세요.");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      alert("삭제되었습니다.");
+      var param = {
+        cp : url.searchParams.get("cp"),
+        start : 0
+      };
+      var num = 1;
+      if($('li.page-item.active > a').data() != undefined){
+        param.start = $('li.page-item.active > a').data().value;
+        num = Number($('li.page-item.active > a').text());
+      }
+      if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+        param.searchType = url.searchParams.get("searchType");
+      }
+      if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+        param.search = url.searchParams.get("search");
+      }
+      ajaxGetPageList(param,num);
+    }
+  });
+});
+
+function KeywordStatusUpdateAjax(){
+  $.ajax({
+    url: '../contents/update',
+    type: 'post',
+    data: {
+      'K_method': $('input:radio[name=k_method_m]:checked').val(),
+      'K_key': $('input:radio[name=k_key_m]:checked').val(),
+      'K_apply': $('input:radio[name=k_apply_m]:checked').val(),
+      'n_idx_c': $("#cntIdx_m").val(),
+      'type': 'all'
+    },
+    error:function(request,status,error){
+      alert("다시 시도 해주세요.");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        // console.log(data);
+        $("input[name ='oK_key']").val(data.K_key);
+        $("input[name ='oK_method']").val(data.K_method);
+        $("input[name ='oK_apply']").val(data.K_apply);
+        $("#cntIdx_m").val(data.n_idx_c);
+        $("input:radio[name ='k_key_m']:input[value='"+data.K_key+"']").attr("checked", true);
+        $("input:radio[name ='k_method_m']:input[value='"+data.K_method+"']").attr("checked", true);
+        $("input:radio[name ='k_apply_m']:input[value='"+data.K_apply+"']").attr("checked", true);
+        alert("수정되었습니다.");
+      }
+    }
+  });
+}
+
+function reloadKeyList(cntIdx){
+  $("#cntIdx_m").val($('input[name=cntIdx]').val());
+  $.ajax({
+    url: '../keyword/searchKeyInfo',
+    type: 'post',
+    data : {'n_idx_c': cntIdx},
+    error:function(request,status,error){
+      // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert(request.responseText);
+    },
+    success:function(data){
+      // console.log(data);
+      $("#modal-cntList tbody tr").not("#inputKey").remove()
+      data.forEach(function(item, idx){
+        if(idx == 0){
+          $("input[name ='oK_key']").val(item.K_key);
+          $("input[name ='oK_method']").val(item.K_method);
+          $("input[name ='oK_apply']").val(item.K_apply);
+          $("input:radio[name ='k_key_m']:input[value='"+item.K_key+"']").attr("checked", true);
+          $("input:radio[name ='k_method_m']:input[value='"+item.K_method+"']").attr("checked", true);
+          $("input:radio[name ='k_apply_m']:input[value='"+item.K_apply+"']").attr("checked", true);
+        }
+        var html = '<tr><th scope="row" class="centerTh">'+(idx+1)+'</th>';
+        if(item.K_type != '0'){
+          html += '<td><div class="keyword_nobr">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td><td></td>';
+        }
+        else{
+          html += '<td></td><td><div class="keyword_nobr">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td>';
+        }
+        html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="icofont icofont-garbage" style="margin-right:0"></i></button></td></tr>';
+        $("#inputKey").after(html);
+      });
+    }
+  });
+}
+
+function ajaxGetPageList(param,pageNum){
+  $.ajax({
+    url: '/keyword/getNextPage',
+    type: 'post',
+    data: param,
+    error: function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert('새로고침해주세요~');
+    },
+    success: function(data){
+      // console.log(data);
+      pageNum = pageNum || data.pageCount;
+      if(typeof(history.pushState) == 'function'){
+        //현재 주소를 가져온다.
+        var renewURL = location.href;
+        //현재 주소 중 page 부분이 있다면 새로 부여될 페이지 번호를 할당한다.
+        renewURL = renewURL.replace(/\?page=([0-9]+)/ig,'?page='+pageNum);
+        if(renewURL.indexOf("?page=") == -1){
+          renewURL += '?page='+pageNum;
+        }
+        //페이지 갱신 실행!
+        history.pushState(null, null,renewURL);
+      }
+      $('.col-md-12 tfoot').empty();
+      if(data.pageCount > 1) {
+        var html = '<tr><td colspan="5"><ul class="pagination float-right">';
+        var y = 1;
+        if(pageNum > 1  && data.pageCount > 4) {
+          y = pageNum-1;
+          html += '<li class="page-item"><a class="page-link" data-value="0" data-num="1" aria-label="Previous">&laquo;\
+              <span aria-hidden="true"></span>\
+              <span class="sr-only">Previous</span>\
+            </a></li>';
+        }
+
+        for (y; y <= data.pageCount; y++) {
+          var active = (pageNum == y) ? "active" : "";
+          html += '<li class=\"'+active+' page-item">\
+            <a class="page-link" data-value=\"'+((y-1) * 10)+'"\ >'+y+'</a></li>'
+
+          if(parseInt(pageNum) + 3 == y) {
+            break;
+          }
+        }
+        if(pageNum != data.pageCount && data.pageCount > 4) {
+          html += '<li class="page-item">\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/10)*10)+'"\ aria-label="Next">&raquo;\
+                  <span aria-hidden="true"></span>\
+                  <span class="sr-only">Next</span>\
+                </a></li>';
+        }
+        html += '</ul></td></tr>';
+        $('.col-md-12 tfoot').append(html);
+      }
+
+      $('.col-md-12 tbody').empty();
+      // console.log(data.kcList);
+      data.kcList.forEach(function(item,idx){
+        var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
+        $('.col-md-12 tbody').append('<tr>\
+        <input name="cntIdx" type="hidden" class="form-control" value="'+item.n_idx_c+'"/>\
+        <th>'+numIdx+'</th>\
+          <td><div class="title_nobr">'+item.K_keyword+'</div></td>\
+          <td><div class="cp_nobr">'+item.CP_CntID+'</div></td>\
+          <td>\
+            <div class="form-radio">\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="D" name=\"k_apply'+idx+'\" '+((item.K_apply == 'D') ? 'checked' : '')+' disabled>\
+                  <i class="helper"></i>삭제\
+                </label>\
+              </div>\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="T" name=\"k_apply'+idx+'\" '+((item.K_apply == 'T') ? 'checked' : '')+' disabled>\
+                  <i class="helper"></i>제휴\
+                </label>\
+              </div>\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="P" name=\"k_apply'+idx+'\" '+((item.K_apply == 'P') ? 'checked' : '')+' disabled>\
+                  <i class="helper"></i>보류\
+                </label>\
+              </div>\
+            </div>\
+          </td>\
+          <td>\
+            <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">\
+              <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;">\
+                <span class="icofont icofont-ui-delete"></span>\
+              </button>\
+              <button type="button" class="btn-update btn btn-primary waves-effect waves-light">\
+                <span class="icofont icofont-ui-edit"></span>\
+              </button>\
+            </div>\
+          </td>\
+        </tr>');
+      });
+    }
+  });
+}
+</script>
