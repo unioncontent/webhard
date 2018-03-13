@@ -234,7 +234,9 @@ $(document).on('click','.btn-delete',function(){
     },
     success:function(data){
       if(data){
-        trEle.remove();
+        // trEle.remove();
+        alert("삭제 완료 되었습니다.");
+        tableReload();
       }
       else{
         alert("다시시도해주세요.");
@@ -284,7 +286,7 @@ $(document).on('click','.btn-update',function(){
       success:function(data){
         if(data){
           alert("수정 완료 되었습니다.");
-          trEle.remove();
+          tableReload();
         }
         else{
           alert("다시 시도 해주세요.");
@@ -293,6 +295,29 @@ $(document).on('click','.btn-update',function(){
     });
   }
 });
+
+function tableReload(){
+  var href = new URL(window.location.href);
+  var num = Number($('li.active.page-item>a').text());
+  var startNum = 0;
+  if(num == 0){
+    num = 1;
+  }
+  else{
+    var startNum = Number($('li.active.page-item>a').data().value);
+  }
+  var param = {
+    cp_name :  $('#selectCp option:selected').val() || '0',
+    start : startNum
+  };
+  if(href.searchParams.get("searchType") != '' && href.searchParams.get("searchType") != null){
+    param.searchType = href.searchParams.get("searchType");
+  }
+  if(href.searchParams.get("search") != '' && href.searchParams.get("search") != null){
+    param.search = href.searchParams.get("search");
+  }
+  ajaxGetPageList(param,num);
+}
 
 //페이지 변경시
 $(document).on('click','.page-link',function(){
