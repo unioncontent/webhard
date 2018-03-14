@@ -34,7 +34,7 @@ router.get('/info', function(req, res, next) {
   var searchObject = {
     cp: req.query.cp,
     offset: 0,
-    limit: 10
+    limit: 50
   }
   console.log('req.query -',req.query);
   if (typeof req.query.searchType !== 'undefined') {
@@ -60,7 +60,7 @@ router.get('/info', function(req, res, next) {
       searchObject.offset = (currentPage - 1) * searchObject.limit;
     }
     Keyword.getCPKeyword(searchObject, function(err,result,iResult){
-      console.log('getCPKeyword -',result,iResult);
+      console.log('getCPKeyword -',result.length,iResult);
       if(err){
         res.json(err);
       }else{
@@ -84,7 +84,7 @@ router.post('/getNextPage', function(req, res, next) {
   var searchObject = {
     cp: req.body.cp,
     offset: Number(req.body.start) || 0,
-    limit: 10
+    limit: 50
   }
   console.log(req.body);
   if('searchType' in req.body){
@@ -96,7 +96,7 @@ router.post('/getNextPage', function(req, res, next) {
     if (err) throw err;
     total = result[0].total;
     pageCount = Math.ceil(total / searchObject.limit);
-      Keyword.getCPKeyword(searchObject, function(err, result,iResult) {
+    Keyword.getCPKeyword(searchObject, function(err, result,iResult) {
       if (err) {
         throw err;
       } else {

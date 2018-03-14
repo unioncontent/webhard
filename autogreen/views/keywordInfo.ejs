@@ -57,6 +57,8 @@
                     <th width="1%">NO</th>
                     <th width="7%">콘텐츠 제목</th>
                     <th width="5%">콘텐츠 ID</th>
+                    <th width="2%">검색 키워드</th>
+                    <th width="2%">제외 키워드</th>
                     <th width="5%">상태</th>
                     <th width="5%">키워드 수정</th>
                   </tr>
@@ -68,6 +70,8 @@
                     <th><%= total - i - data.offset %></th>
                     <td><div class="title_nobr"><%= kcList[i].CP_title %></div></td>
                     <td><div class="cp_nobr"><%= kcList[i].CP_CntID %></div></td>
+                    <td><%= kcList[i].K_type_a %> 개</td>
+                    <td><%= kcList[i].K_type_d %> 개</td>
                     <td>
                       <div class="form-radio">
                         <div class="radio radio-inline">
@@ -106,7 +110,7 @@
                 <tfoot>
                   <% if(pageCount > 1) { %>
                   <tr>
-                    <td colspan="5">
+                    <td colspan="7">
                       <ul class="pagination float-right">
                         <%
                           var y = 1;
@@ -123,7 +127,7 @@
                         <% } %>
                         <% for (y; y <= pageCount; y++) { %>
                           <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
-                            <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 10)).toString()%>" >
+                            <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 50)).toString()%>" >
                               <%= y %>
                             </a>
                           </li>
@@ -135,7 +139,7 @@
                         %>
                         <% if(currentPage != pageCount && pageCount > 4) { %>
                           <li class="page-item">
-                            <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 10)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
+                            <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 50)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
                               &raquo;
                               <span aria-hidden="true"></span>
                               <span class="sr-only">Next</span>
@@ -551,7 +555,7 @@ function ajaxGetPageList(param,pageNum){
       }
       $('.col-md-12 tfoot').empty();
       if(data.pageCount > 1) {
-        var html = '<tr><td colspan="5"><ul class="pagination float-right">';
+        var html = '<tr><td colspan="7"><ul class="pagination float-right">';
         var y = 1;
         if(pageNum > 1  && data.pageCount > 4) {
           y = pageNum-1;
@@ -564,7 +568,7 @@ function ajaxGetPageList(param,pageNum){
         for (y; y <= data.pageCount; y++) {
           var active = (pageNum == y) ? "active" : "";
           html += '<li class=\"'+active+' page-item">\
-            <a class="page-link" data-value=\"'+((y-1) * 10)+'"\ >'+y+'</a></li>'
+            <a class="page-link" data-value=\"'+((y-1) * 50)+'"\ >'+y+'</a></li>'
 
           if(parseInt(pageNum) + 3 == y) {
             break;
@@ -572,7 +576,7 @@ function ajaxGetPageList(param,pageNum){
         }
         if(pageNum != data.pageCount && data.pageCount > 4) {
           html += '<li class="page-item">\
-                <a class="page-link" data-value=\"'+(Math.floor(data.total/10)*10)+'"\ aria-label="Next">&raquo;\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/50)*50)+'"\ aria-label="Next">&raquo;\
                   <span aria-hidden="true"></span>\
                   <span class="sr-only">Next</span>\
                 </a></li>';
@@ -582,7 +586,7 @@ function ajaxGetPageList(param,pageNum){
       }
 
       $('.col-md-12 tbody').empty();
-      // console.log(data.kcList);
+      // console.log(data);
       data.kcList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
         $('.col-md-12 tbody').append('<tr>\
@@ -590,6 +594,8 @@ function ajaxGetPageList(param,pageNum){
         <th>'+numIdx+'</th>\
           <td><div class="title_nobr">'+item.K_keyword+'</div></td>\
           <td><div class="cp_nobr">'+item.CP_CntID+'</div></td>\
+          <td>'+item.K_type_a+' 개</td>\
+          <td>'+item.K_type_d+' 개</td>\
           <td>\
             <div class="form-radio">\
               <div class="radio radio-inline">\
