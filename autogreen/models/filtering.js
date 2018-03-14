@@ -20,7 +20,6 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
-    console.log('item:',item);
     if(('sDate' in item) && ('eDate' in item)){
       sql+=' and csDate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
     }
@@ -64,7 +63,6 @@ var Filtering = {
         case 't': sql+=' and search like \'%'+item.search+'%\''; break;
       }
     }
-    console.log(item);
     if(('sDate' in item) && ('eDate' in item)){
       sql+=' and csDate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
     }

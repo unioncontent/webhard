@@ -22,12 +22,11 @@
           <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectCp">
             <option value='0'>CP사선택</option>
           </select>
-          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left select-left" id="selectApply" style="display:none;">
-            <option value="a">전체</option>
-            <option value="P">보류</option>
-            <option value="T">제휴</option>
-            <option value="D">삭제</option>
-          </select>
+          <div id="reportrange" class="col-md-2 form-control form-control-inverse f-left m-l-10 m-b-10">
+            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            <span></span>
+            <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
+          </div>
           <div class="col-sm-3 input-group input-group-button input-group-inverse p-l-0 p-r-0 m-b-10 f-right btn-select">
             <input id="keywordInput" type="text" class="form-control" placeholder="">
             <span class="input-group-addon" id="basic-addon1">
@@ -148,6 +147,10 @@
     </div>
   </div>
 </div>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <style type="text/css">
   .cntId_nobr,.keyword_nobr,.title_nobr,.cp_nobr{
@@ -167,9 +170,19 @@
 var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("cp_name");
+var sDateParams = url.searchParams.get("sDate");
+var eDateParams = url.searchParams.get("eDate");
 
-// cp 셀렉트 박스 옵션값 넣기
 $(document).ready(function(){
+  $('#reportrange').daterangepicker(optionSet1,cb);
+
+  if(sDateParams == null && eDateParams == null){
+    $('#reportrange span').html(moment().format('YYYY.MM.DD') + ' - ' + moment().format('YYYY.MM.DD'));
+  }
+  else{
+    $('#reportrange span').html(moment(new Date(sDateParams)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDateParams+' 23:59:59')).format('YYYY.MM.DD'));
+  }
+
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
     url: '../manual/getCPList',
@@ -193,14 +206,14 @@ $(document).ready(function(){
 
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../manual?page=1&cp_name='+$("#selectCp option:selected").val();
-  // var t = url.searchParams.get("searchType");
-  // var s = url.searchParams.get("search");
-  // if (t !== undefined && t != ''){
-  //   if (s !== undefined && s != ''){
-  //     link += '&searchType='+t+'&search='+s;
-  //   }
-  // }
+  var cpName = $("#selectCp option:selected").val();
+  var link = '../manual?page=1&cp_name='+cpName;
+  var href = new URL(window.location.href);
+  var s = href.searchParams.get("sDate");
+  var e = href.searchParams.get("eDate");
+  if( s != null && e != null ){
+    link += '&sDate='+moment(new Date(s)).format('YYYY-MM-DD')+'&eDate='+moment(new Date(e)).format('YYYY-MM-DD');
+  }
   location.href = link;
 });
 
@@ -210,9 +223,15 @@ $('#searchBtn').on('click',function(){
     alert('검색어를 넣어주세요.');
     return false;
   }
-  location.href = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  var href = new URL(window.location.href);
+  link = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  var s = href.searchParams.get("sDate");
+  var e = href.searchParams.get("eDate");
+  if( s != null && e != null ){
+    link += '&sDate='+moment(new Date(s)).format('YYYY-MM-DD')+'&eDate='+moment(new Date(e)).format('YYYY-MM-DD');
+  }
+  location.href = link;
 });
-
 $('#keywordInput').on('keyup',function(event){
   if(event.keyCode == 13){
     $('#searchBtn').trigger('click');
@@ -350,6 +369,7 @@ function tableReload(){
 
 //페이지 변경시
 $(document).on('click','.page-link',function(){
+  var href = new URL(window.location.href);
   var num = Number($(this).text()) || Number($(this).data().num);
   var param = {
     cp_name :  $('#selectCp option:selected').val() || '0',
@@ -361,9 +381,12 @@ $(document).on('click','.page-link',function(){
   if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
     param.search = url.searchParams.get("search");
   }
+  if(href.searchParams.get("sDate") != null && href.searchParams.get("eDate") != null ){
+    param.sDate = moment(href.searchParams.get("sDate")).format('YYYY-MM-DD');
+    param.eDate = moment(href.searchParams.get("eDate")).format('YYYY-MM-DD');
+  }
   ajaxGetPageList(param,num);
 });
-
 function ajaxGetPageList(param,pageNum){
   $.ajax({
     url: '../manual/getNextPage',
@@ -453,4 +476,81 @@ function ajaxGetPageList(param,pageNum){
     }
   });
 }
+
+//날짜 선택 시
+function searchDate(){
+  var href = new URL(window.location.href);
+  var dateArr = $("#reportrange span").text().split(' - ');
+  var start = moment(new Date(dateArr[0]));
+  var end = moment(new Date(dateArr[1]+' 23:59:59'));
+  var param = {
+    cp_name :  $('#selectCp option:selected').val() || '0',
+    start : 0,
+    sDate : start.format('YYYY-MM-DD'),
+    eDate : end.format('YYYY-MM-DD')
+  };
+  if(href.searchParams.get("searchType") != '' && href.searchParams.get("searchType") != null){
+    param.searchType = href.searchParams.get("searchType");
+  }
+  if(href.searchParams.get("search") != '' && href.searchParams.get("search") != null){
+    param.search = href.searchParams.get("search");
+  }
+
+  if(typeof(history.pushState) == 'function'){
+    var renewURL = location.href;
+    if(renewURL.indexOf("?page=") == -1){
+      renewURL += '?page=1&sDate='+param.sDate+'&eDate='+param.eDate;
+    }
+    else if(renewURL.indexOf("&sDate=") == -1 && renewURL.indexOf("&eDate=") == -1){
+      renewURL += '&sDate='+param.sDate+'&eDate='+param.eDate;
+    }
+    else{
+      renewURL = renewURL.replace(/\?page=([0-9]+)/ig,'?page=1');
+      renewURL = renewURL.replace(/\&sDate=(\d{4}-\d{2}-\d{2})/ig,'&sDate='+param.sDate);
+      renewURL = renewURL.replace(/\&eDate=(\d{4}-\d{2}-\d{2})/ig,'&eDate='+param.eDate);
+    }
+    //페이지 갱신 실행!
+    history.pushState(null, null,renewURL);
+  }
+
+  ajaxGetPageList(param,1);
+}
+$(document).on('click','.applyBtn',searchDate);
+
+//날짜 설정
+var cb = function(start, end, label) {
+  console.log('FUNC: cb',start.toISOString(), end.toISOString(), label);
+  $('#reportrange span').html(moment(new Date(start.toISOString())).format('YYYY.MM.DD') + ' - ' + moment(new Date(end.toISOString())).format('YYYY.MM.DD'));
+  searchDate();
+}
+var ranges = {
+  '당일': [moment(), moment()],
+  '전일': [moment().subtract(1, 'days'), moment()],
+  '최근 7일': [moment().subtract(6, 'days'), moment()],
+  '최근 30일': [moment().subtract(29, 'days'), moment()]
+};
+var optionSet1 = {
+  startDate: (sDateParams != null) ? moment(new Date(sDateParams)) : moment(),
+  endDate:  (eDateParams != null) ? moment(new Date(eDateParams+' 23:59:59')) : moment(),
+  dateLimit: {
+    days: 60
+  },
+  showDropdowns: true,
+  showRangeInputsOnCustomRangeOnly: false,
+  ranges: ranges,
+  opens: 'left',
+  buttonClasses: ['btn'],
+  applyClass: 'btn-small btn-primary',
+  cancelClass: 'btn-small',
+  format: 'YYYY.MM.DD',
+  separator: ' to ',
+  locale: {
+    applyLabel: '확인',
+    cancelLabel: '취소',
+    customRangeLabel: '직접선택',
+    daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
+    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    firstDay: 1
+  }
+};
 </script>
