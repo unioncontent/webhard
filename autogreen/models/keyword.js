@@ -135,23 +135,24 @@ var Keyword = {
     .then(rows => {
       var name = rows[0]['U_name'];
       sql = 'select FORMAT(COUNT(IF(K_method=\'1\',1,null)),0) as a,\
-      FORMAT(COUNT(IF(K_method=\'0\',1,null)),0) as m from (select * from keyword where U_id_c=? group by CP_CntID) as gTable';
+      FORMAT(COUNT(IF(K_method=\'0\',1,null)),0) as m from (select * from keyword where U_id_c=? group by n_idx_c) as gTable';
       console.log(sql,param[0]);
       DBpromise.query(sql,param[0]).then(rows => {
         return [name,rows[0].a,rows[0].m]
       }).then(rows => {
         var infoArr = rows;
         console.log('infoArr:',infoArr);
-        sql = 'SELECT * from keyword where U_id_c=?';
+        sql = 'SELECT n_idx_c, CP_CntID, U_id_c, U_name, CP_title, search, K_apply, K_method, K_key,\
+        FORMAT(COUNT(IF(K_type=\'1\',1,null)),0) as K_type_a, FORMAT(COUNT(IF(K_type=\'0\',1,null)),0) as K_type_d from keyword where U_id_c=?';
         if('searchType' in item){
           switch (item.searchType) {
             case 'i': sql+=' and CP_CntID=\''+item.search+'\''; break;
             case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
           }
         }
-        sql += ' group by CP_CntID order by n_idx_c desc limit ?,?';
+        sql += ' group by n_idx_c order by n_idx_c desc limit ?,?';
         console.log(sql,param);
-        DBpromise.query(sql,param).then(rows=> { console.log('rows:',rows); return callback(null,rows,infoArr); })
+        DBpromise.query(sql,param).then(rows=> { return callback(null,rows,infoArr); })
         .then(rows => {
           console.log('getCPKeyword DB끝냄');
           DBpromise.close();
@@ -168,15 +169,14 @@ var Keyword = {
     });
   },
   getCPKeywordPageTotal: function(item,callback){
-    // var sql = 'select count(1) as total from keyword where K_type=\'1\' and U_id_c=? group by CP_CntID';
-    var sql = 'select count(1) as total from (select CP_CntID from keyword where U_id_c=? '
+    var sql = 'select count(1) as total from (select n_idx_c from keyword where U_id_c=? '
     if('searchType' in item){
       switch (item.searchType) {
         case 'i': sql+=' and CP_CntID=\''+item.search+'\''; break;
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
       }
     }
-    sql += ' group by CP_CntID) as a';
+    sql += ' group by n_idx_c) as a';
     dbstart(sql,item.cp,callback);
   }
 }
