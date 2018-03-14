@@ -241,27 +241,32 @@ $('#keywordInput').on('keyup',function(event){
 $(document).on('click','.btn-update',function(event){
   var tdEle = $(event.target).closest("tr").find('td');
   var input = $(event.target).closest("tr").find('input');
-  $.ajax({
-    url: '../contents/update',
-    type: 'post',
-    data: {
-      'K_method': tdEle.eq(3).find('option:selected').val(),
-      'K_key': tdEle.eq(4).find('option:selected').val(),
-      'n_idx_k': input.eq(0).val()
-    },
-    error:function(request,status,error){
-      alert("다시시도해주세요.");
-      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-    },
-    success:function(data){
-      if(data){
-        window.location.reload();
-      }
-      else{
+  if(tdEle.eq(3).find('option:selected').val() == -1){
+    swal("수정불가!", "키워드 설정에서 키워드를 등록해주세요.", "error");
+  }
+  else{
+    $.ajax({
+      url: '../contents/update',
+      type: 'post',
+      data: {
+        'K_method': tdEle.eq(3).find('option:selected').val(),
+        'K_key': tdEle.eq(4).find('option:selected').val(),
+        'n_idx_k': input.eq(0).val()
+      },
+      error:function(request,status,error){
         alert("다시시도해주세요.");
+        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      },
+      success:function(data){
+        if(data){
+          window.location.reload();
+        }
+        else{
+          alert("다시시도해주세요.");
+        }
       }
-    }
-  });
+    });
+  }
 });
 
 //콘텐츠 삭제
