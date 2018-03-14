@@ -71,7 +71,7 @@
                       <td><div class="cp_nobr"><%= fList[i].cp_name %></div></td>
                       <td><%= fList[i].osp_idx %></td>
                       <td><%= fList[i].cnt_id %></td>
-                      <td><div class="title_nobr"><%= fList[i].title %></div></td>
+                      <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx=<%= fList[i].osp_idx %>&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr"><%= fList[i].title %></div></a></td>
                       <td><%= fList[i].price %></th>
                       <td><%= moment(fList[i].createDate).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td><%= moment(fList[i].csDate).format('YYYY-MM-DD HH:mm:ss') %></td>
@@ -333,7 +333,7 @@ function ajaxGetPageList(param,pageNum){
           <td><div class="cp_nobr">'+item.cp_name+'</div></td>\
           <td>'+item.osp_idx+'</td>\
           <td>'+item.cnt_id+'</td>\
-          <td><div class="title_nobr">'+item.title+'</div></td>\
+          <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.osp_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+item.title+'</div></a></td>\
           <td>'+item.price+'</th>\
           <td>'+moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>'+moment(item.csDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
