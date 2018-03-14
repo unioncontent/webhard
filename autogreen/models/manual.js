@@ -18,6 +18,10 @@ var Manual = {
         case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
       }
     }
+    console.log('item:',item);
+    if(('sDate' in item) && ('eDate' in item)){
+      sql+=' and cs_date between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
+    }
     // console.log(sql+' order by n_idx desc limit ?,?',param);
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql+' order by n_idx desc limit ?,?',param,callback);
@@ -50,13 +54,15 @@ var Manual = {
         case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
       }
     }
+    if(('sDate' in item) && ('eDate' in item)){
+      sql+=' and cs_date between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
+    }
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql, param, callback);
     console.log(sql,param);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {

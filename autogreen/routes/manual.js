@@ -31,6 +31,12 @@ router.get('/', function(req, res, next) {
   if (typeof req.query.search !== 'undefined') {
     searchObject.search = req.query.search;
   }
+  if (typeof req.query.sDate !== 'undefined') {
+    if (typeof req.query.eDate !== 'undefined') {
+      searchObject.sDate = req.query.sDate;
+      searchObject.eDate = req.query.eDate;
+    }
+  }
   Manual.manualCount(searchObject,function(err,result) {
     if(err) throw err;
     totalUser = result[0].total;
@@ -48,7 +54,6 @@ router.get('/', function(req, res, next) {
       searchObject.offset = (currentPage - 1) * searchObject.limit;
     }
     Manual.getManualList(searchObject, function(err,result){
-
       if(err){
         res.json(err);
       }else{
@@ -79,6 +84,10 @@ router.post('/getNextPage', function(req, res, next) {
     searchObject.searchType = req.body.searchType;
     searchObject.search = req.body.search;
   }
+  if ('sDate' in req.body && 'eDate' in req.body) {
+    searchObject.sDate = req.body.sDate;
+    searchObject.eDate = req.body.eDate;
+  }
   var currentPage = req.body.start;
   Manual.manualCount(searchObject, function(err, result) {
     if (err) throw err;
@@ -86,7 +95,6 @@ router.post('/getNextPage', function(req, res, next) {
     pageCount = Math.ceil(total / searchObject.limit);
 
     Manual.getManualList(searchObject, function(err, result) {
-
       if (err) {
         throw err;
       } else {

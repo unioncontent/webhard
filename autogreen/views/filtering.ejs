@@ -158,7 +158,6 @@ var c = url.searchParams.get("cp_name");
 var sDateParams = url.searchParams.get("sDate");
 var eDateParams = url.searchParams.get("eDate");
 
-// cp 셀렉트 박스 옵션값 넣기
 $(document).ready(function(){
   $('#reportrange').daterangepicker(optionSet1,cb);
 
@@ -383,7 +382,6 @@ function searchDate(){
 
   ajaxGetPageList(param,1);
 }
-
 $(document).on('click','.applyBtn',searchDate);
 
 //날짜 설정

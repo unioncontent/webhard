@@ -99,7 +99,6 @@ router.post('/getNextPage', function(req, res, next) {
     pageCount = Math.ceil(total / searchObject.limit);
 
     Filtering.getFilteringList(searchObject, function(err, result) {
-
       if (err) {
         throw err;
       } else {
