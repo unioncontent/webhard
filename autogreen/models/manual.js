@@ -15,7 +15,7 @@ var Manual = {
         case 'i': sql+=' and CP_CntID=\''+item.search+'\''; break;
         case 'c': sql+=' and OSP_idx=\''+item.search+'\''; break;
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
-        case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
+        case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
       }
     }
     console.log('item:',item);
@@ -51,7 +51,7 @@ var Manual = {
         case 'i': sql+=' and CP_CntID=\'%'+item.search+'%\''; break;
         case 'c': sql+=' and OSP_idx=\'%'+item.search+'%\''; break;
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
-        case 'k': sql+=' and K_keyword like \'%'+item.search+'%\''; break;
+        case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+item.search+'%\''; break;
       }
     }
     if(('sDate' in item) && ('eDate' in item)){

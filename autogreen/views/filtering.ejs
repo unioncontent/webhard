@@ -41,9 +41,10 @@
             </span>
           </div>
           <select id="selectSearchType" name="select" class="col-sm-1 form-control form-control-inverse m-r-10 m-b-10 f-right search-select">
+            <option value="t">제목</option>
+            <option value="k">키워드</option>
             <option value="i">게시물번호</option>
             <option value="c">콘텐츠ID</option>
-            <option value="t">제목</option>
           </select>
         </div>
         <div class="col-md-12">
@@ -57,6 +58,7 @@
                       <th width="5%">CP사</th>
                       <th width="5%">게시물번호</th>
                       <th width="5%">콘텐츠ID</th>
+                      <th width="5%">키워드</th>
                       <th width="25%">제목</th>
                       <th width="5%">금액</th>
                       <th width="10%">등록일</th>
@@ -70,22 +72,31 @@
                       <th><%= totalUser - i - data.offset %></th>
                       <td><div class="cp_nobr"><%= fList[i].cp_name %></div></td>
                       <td><%= fList[i].osp_idx %></td>
-                      <td><%= fList[i].cnt_id %></td>
+                      <td><div class="cntId_nobr"><%= fList[i].cnt_id %></div></td>
+                      <td><div class="kwd_nobr"><%= fList[i].K_keyword %></div></td>
                       <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx=<%= fList[i].osp_idx %>&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr"><%= fList[i].title %></div></a></td>
                       <td><%= fList[i].price %></th>
                       <td><%= moment(fList[i].createDate).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td><%= moment(fList[i].csDate).format('YYYY-MM-DD HH:mm:ss') %></td>
-                      <td><%= (fList[i].k_method == '1') ? 'A' : 'M' %> - <%= (fList[i].k_apply == 'D') ? '삭제' : (fList[i].k_apply == 'T') ? '제휴' : '보류' %></td>
+                      <td>
+                        <div class="label-main">
+                          <%= (fList[i].k_apply == 'D') ? '삭제' : (fList[i].k_apply == 'T') ? '제휴' : '보류' %>
+                          <label class="m-l-5 btn-cancelD label label-danger">복원 <i class="ti-reload"></i></label>
+                        </div>
+                      </td>
                     </tr>
                     <% }; %>
                   </tbody>
                   <tfoot>
                     <% if(pageCount > 1) { %>
                     <tr>
-                      <td colspan="9">
+                      <td colspan="10">
                         <ul class="pagination float-right">
                           <%
                             var y = 1;
+                            //if(parseInt(currentPage)/5 == 0) {
+                            //  y = currentPage-1;
+                            //}
                             if(currentPage > 1 && pageCount > 4) {
                               y = currentPage-1;
                           %>
@@ -104,6 +115,9 @@
                               </a>
                             </li>
                           <%
+                              //if(parseInt(y)/5 == 0) {
+                                //break;
+                              //}
                               if(parseInt(currentPage) + 3 == y) {
                                 break;
                               }
@@ -133,15 +147,18 @@
   </div>
 </div>
 <style type="text/css">
-  .title_nobr,.cp_nobr{
+  .title_nobr,.cp_nobr,.cntId_nobr,.kwd_nobr{
     font-size: 15px;
     padding-left: 3px;
     text-overflow: ellipsis;
     width: 400px;
     overflow: hidden;
   }
-  .cp_nobr{
+  .cp_nobr,.kwd_nobr{
     width: 117px;
+  }
+  .cntId_nobr{
+    width: 100px;
   }
 </style>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -249,6 +266,44 @@ $('#keywordInput').on('keyup',function(event){
   };
 });
 
+//삭제버튼 클릭시
+$(document).on('click','.btn-cancelD',function(){
+  swal({
+    title: "제재복원 하시겠습니까?",
+    text: "해당 게시물의 삭제제재가 취소됩니다.",
+    icon: "warning",
+    buttons: ["취소", true],
+    dangerMode: true,
+  })
+  .then((value) =>{
+    if(value != null){
+      var trEle = $(this).closest("tr");
+      var eles = trEle.find('td');
+      // $.ajax({
+      //   url: 'http://fileham.com/append/autoGreen/proc.php',
+      //   type: 'post',
+      //   data: {
+      //     'mode': 'R',
+      //     'idx': eles.eq(1).text()
+      //   },
+      //   error:function(request,status,error){
+      //     alert("다시시도해주세요.");
+      //     console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      //   },
+      //   success:function(data){
+      //     if(data){
+      //       alert("삭제제재가 취소되었습니다.");
+      //     }
+      //     else{
+      //       alert("다시시도해주세요.");
+      //     }
+      //   }
+      // });
+    }
+  });
+});
+
+
 //페이지 이동
 $(document).on('click','.page-link',function(){
   var href = new URL(window.location.href);
@@ -295,8 +350,11 @@ function ajaxGetPageList(param,pageNum){
       }
       $('tfoot').empty();
       if(data.pageCount > 1) {
-        var html = '<tr><td colspan="9"><ul class="pagination float-right">';
+        var html = '<tr><td colspan="10"><ul class="pagination float-right">';
         var y = 1;
+        // if(parseInt(pageNum)/5 == 0) {
+        //   y = pageNum-1;
+        // }
         if(pageNum > 1  && data.pageCount > 4) {
           y = pageNum-1;
           html += '<li class="page-item"><a class="page-link" data-value="0" data-num="1" aria-label="Previous">&laquo;\
@@ -331,12 +389,14 @@ function ajaxGetPageList(param,pageNum){
         $('tbody').append('<tr><th>'+numIdx+'</th>\
           <td><div class="cp_nobr">'+item.cp_name+'</div></td>\
           <td>'+item.osp_idx+'</td>\
-          <td>'+item.cnt_id+'</td>\
+          <td><div class="cntId_nobr">'+item.cnt_id+'</div></td>\
+          <td><div class="kwd_nobr">'+item.K_keyword+'</div></td>\
           <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.osp_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+item.title+'</div></a></td>\
           <td>'+item.price+'</th>\
           <td>'+moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>'+moment(item.csDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
-          <td>'+((item.k_method == '1') ? 'A' : 'M') +'-'+ ((item.k_apply == 'D') ? '삭제' : (item.k_apply == 'T') ? '제휴' : '보류')+'</td>\
+          <td><div class="label-main">'+((item.k_apply == 'D') ? '삭제' : (item.k_apply == 'T') ? '제휴' : '보류')+'<label class="m-l-5 btn-cancelD label label-danger">복원 <i class="ti-reload"></i></label></div>\
+          </td>\
         </tr>');
       });
     }
