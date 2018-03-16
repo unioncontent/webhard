@@ -70,6 +70,37 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post('/api', function(req, res, next) {
+  var request = require('request');
+  var apiInfo = require('../models/apiInfo.js')[global.osp];
+  var data = apiInfo.deletePost(req.body.mode,req.body.idx);
+
+  // 헤더 부분
+  var headers = {
+    'User-Agent': 'Super Agent/0.0.1',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
+  // 요청 세부 내용
+  var options = {
+    url: apiInfo.url,
+    method:'POST',
+    headers: headers,
+    form: data
+  }
+
+  request(options,
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var result = JSON.parse(body);
+        res.send(result['data']);
+      }
+      else{
+        res.send(false);
+      }
+    }
+  );
+});
+
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
     res.redirect('/login');

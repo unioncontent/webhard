@@ -281,11 +281,11 @@ $(document).on('click','.btn-cancelD',function(){
       var eles = trEle.find('td');
       var check = false;
       $.ajax({
-        url: 'http://fileham.com/append/autoGreen/proc.php',
+        url: '../manual/api',
         type: 'post',
         data: {
           'mode': 'R',
-          'idx': eles.eq(1).text()
+          'idx': Number(eles.eq(1).text())
         },
         error:function(request,status,error){
           swal("ERROR", "다시 시도 해주세요!", "error");
@@ -293,35 +293,40 @@ $(document).on('click','.btn-cancelD',function(){
         },
         success:function(data){
           if(data){
-            check=true;
+            console.log(data);
+            cancelUpdate(eles.eq(1).text());
+          }
+          else{
+            swal("ERROR", "다시 시도 해주세요!", "error");
           }
         }
       });
-      if(check){
-        $.ajax({
-          url: '../filtering/cancelDelete',
-          type: 'post',
-          data: {
-            'idx': eles.eq(1).text()
-          },
-          error:function(request,status,error){
-            swal("ERROR", "다시 시도 해주세요!", "error");
-            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-          },
-          success:function(data){
-            if(data){
-              swal("SUCCESS", "삭제제재가 취소되었습니다!", "success");
-              tableReload();
-            }
-            else{
-              swal("ERROR", "다시 시도 해주세요!", "error");
-            }
-          }
-        });
-      }
     }
   });
 });
+
+function cancelUpdate(idx){
+  $.ajax({
+    url: '../filtering/cancelDelete',
+    type: 'post',
+    data: {
+      'idx': idx
+    },
+    error:function(request,status,error){
+      swal("ERROR", "다시 시도 해주세요!", "error");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        swal("SUCCESS", "삭제제재가 취소되었습니다!", "success");
+        tableReload();
+      }
+      else{
+        swal("ERROR", "다시 시도 해주세요!", "error");
+      }
+    }
+  });
+}
 
 function tableReload(){
   var href = new URL(window.location.href);
