@@ -160,7 +160,7 @@ router.get('/filetering', function(req, res, next) {
       ws.cell(row,8).string(moment(item.csDate).format('YYYY-MM-DD HH:mm:ss'));
       // ws.cell(row,7).date(new Date(item.createDate).toLocaleString('ko-kr', {timeZone: 'asia/seoul'}));
       // ws.cell(row,8).date(new Date(item.csDate).toLocaleString('ko-kr', {timeZone: 'asia/seoul'}));
-      ws.cell(row,9).string(((item.k_method == '0')? 'M - ' : 'A - ')+((item.k_apply == 'T')? '제휴' : (item.k_apply == 'D')? '삭제' : '보류'));
+      ws.cell(row,9).string(((item.k_method == '0')? '수동 - ' : '자동 - ')+((item.k_apply == 'T')? '제휴' : (item.k_apply == 'D')? '삭제' : '보류'));
     });
     var filename = 'autogreen_filtering_'+moment().format('YYYYMMDD')+'.xlsx';
     wb.write(filename,function(err,stats){
