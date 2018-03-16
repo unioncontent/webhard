@@ -81,12 +81,18 @@ var Manual = {
     var DBpromise = new promise(global.osp);
     DBpromise.query('delete from cnts_all_a where OSP_idx=?;',OSP_idx)
     .then(rows => {
+      // console.log('delete from cnts_all_a where OSP_idx=?;',OSP_idx);
+      // console.log(rows);
       return DBpromise.query('delete from cnts_sort_e where OSP_idx=?;',OSP_idx);
     })
     .then(rows => {
+      // console.log('delete from cnts_sort_e where OSP_idx=?;',OSP_idx);
+      // console.log(rows);
       return DBpromise.query('delete from cnts_his_g where OSP_idx=?;',OSP_idx);
     })
     .then(rows => {
+      // console.log('delete from cnts_his_g where OSP_idx=?;',OSP_idx);
+      // console.log(rows);
       return callback(null,rows);
     })
     .then(rows => {

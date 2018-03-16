@@ -83,6 +83,77 @@ var Filtering = {
       DBpromise.close();
       return callback(err,null);
     });
+  },
+  getCntsAllList: function(item,callback) {
+    var sql = 'select * from cnts_all where search is not null';
+    var param = [item.offset,item.limit];
+    if('searchType' in item){
+      switch (item.searchType) {
+        case 'c': sql+=' and OSP_idx=\''+item.search+'\''; break;
+        case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
+        case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
+      }
+    }
+    if(('sDate' in item) && ('eDate' in item)){
+      sql+=' and OSP_regdate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
+    }
+    sql += ' order by n_idx desc limit ?,?';
+
+    var DBpromise = new promise('fileham');
+    console.log(sql,param);
+    DBpromise.query(sql,param)
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
+  CntsAllListCount : function(item,callback) {
+    var sql = 'select count(1) as total from cnts_all where search is not null';
+    var param = [];
+    if('searchType' in item){
+      switch (item.searchType) {
+        case 'c': sql+=' and OSP_idx=\''+item.search+'\''; break;
+        case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
+        case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
+      }
+    }
+    if(('sDate' in item) && ('eDate' in item)){
+      sql+=' and OSP_regdate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
+    }
+    var DBpromise = new promise('fileham');
+    DBpromise.query(sql,param)
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
+  cancelDelete: function(OSP_idx,callback){
+    var DBpromise = new promise(global.osp);
+    DBpromise.query('delete from cnts_sort_e where OSP_idx=?;',OSP_idx)
+    .then(rows => {
+      return DBpromise.query('delete from cnts_his_g where OSP_idx=?;',OSP_idx);
+    })
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      return callback(err,null);
+    });
   }
 }
 
