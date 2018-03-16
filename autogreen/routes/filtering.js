@@ -13,6 +13,63 @@ var currentPage = 1;
 var searchType = 'i';
 var search = '';
 
+router.get('/', function(req, res, next) {
+  if(!req.user){
+    res.redirect('/login');
+  }
+  var searchObject = {
+    offset: 0,
+    limit: 50
+  }
+  console.log('req.query :',req.query);
+  if (typeof req.query.cp_name !== 'undefined') {
+    searchObject.cp_name = req.query.cp_name;
+  }
+  if (typeof req.query.searchType !== 'undefined') {
+    searchObject.searchType = req.query.searchType;
+  }
+  if (typeof req.query.search !== 'undefined') {
+    searchObject.search = req.query.search;
+  }
+  if (typeof req.query.sDate !== 'undefined') {
+    if (typeof req.query.eDate !== 'undefined') {
+      searchObject.sDate = req.query.sDate;
+      searchObject.eDate = req.query.eDate;
+    }
+  }
+  Filtering.CntsAllListCount(searchObject,function(err,result) {
+    if(err) throw err;
+    totalUser = result[0].total;
+    pageCount = Math.ceil(totalUser/searchObject.limit);
+
+    if (typeof req.query.page !== 'undefined') {
+      currentPage = req.query.page;
+    }
+    else{
+      currentPage = 1
+    }
+
+    if (parseInt(currentPage) > 0) {
+      searchObject.offset = (currentPage - 1) * searchObject.limit;
+    }
+    console.log('searchObject : ',searchObject);
+    Filtering.getCntsAllList(searchObject, function(err,result){
+      if(err){
+        res.json(err);
+      }else{
+        res.render('filteringAll',{
+          moment: moment,
+          data: searchObject,
+          aList: result || [],
+          totalUser: totalUser,
+          pageCount: pageCount,
+          currentPage: currentPage
+        });
+      }
+    });
+  });
+});
+
 router.get('/:pType', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
@@ -113,11 +170,59 @@ router.post('/getNextPage', function(req, res, next) {
   });
 });
 
+router.post('/getNextPage2', function(req, res, next) {
+  if (!req.user) {
+    res.redirect('/login');
+  }
+  var searchObject = {
+    offset: Number(req.body.start) || 0,
+    limit: 50
+  }
+  console.log(req.body);
+  if('searchType' in req.body){
+    searchObject.searchType = req.body.searchType;
+    searchObject.search = req.body.search;
+  }
+  if ('sDate' in req.body && 'eDate' in req.body) {
+    searchObject.sDate = req.body.sDate;
+    searchObject.eDate = req.body.eDate;
+  }
+  var currentPage = req.body.start;
+  Filtering.CntsAllListCount(searchObject, function(err, result) {
+    if (err) throw err;
+    total = result[0].total;
+    pageCount = Math.ceil(total / searchObject.limit);
+
+    Filtering.getCntsAllList(searchObject, function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.send({
+          total: total,
+          data: searchObject,
+          pageCount: pageCount,
+          aList: result || []
+        });
+      }
+    });
+  });
+});
+
 router.post('/getCPList', function(req, res, next){
   if(!req.user){
     res.redirect('/login');
   }
   User.getCpAllList(function(err,result){
+    if(err) throw err;
+    res.send(result);
+  });
+});
+
+router.post('/cancelDelete', function(req, res, next){
+  if(!req.user){
+    res.redirect('/login');
+  }
+  Filtering.cancelDelete(req.body.idx,function(err,result){
     if(err) throw err;
     res.send(result);
   });

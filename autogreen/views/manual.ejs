@@ -289,30 +289,37 @@ $(document).on('click','.btn-update',function(){
       var trEle = $(this).closest("tr");
       var eles = trEle.find('td');
       var check = false;
-      console.log(eles.eq(3).text())
-      // $.ajax({
-      //   url: 'http://fileham.com/append/autoGreen/proc.php',
-      //   type: 'post',
-      //   data: {
-      //     'mode': 'D',
-      //     'idx': eles.eq(3).text()
-      //   },
-      //   error:function(request,status,error){
-      //     alert("다시시도해주세요.");
-      //     console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-      //   },
-      //   success:function(data){
-      //     if(data){
-      //       check = true;
-      //     }
-      //     else{
-      //       alert("다시시도해주세요.");
-      //     }
-      //   }
-      // });
-      ///테스트중///
-      check = true;
-      ///테스트중///
+      var sValue = eles.eq(9).children("select").children("option:selected").val();
+      if(sValue == "D"){
+        $.ajax({
+          url: 'http://fileham.com/append/autoGreen/proc.php',
+          type: 'post',
+          data: {
+            'mode': 'D',
+            'idx': Number(eles.eq(3).text())
+          },
+          error:function(request,status,error){
+            alert("다시 시도해 주세요.");
+            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+          },
+          success:function(data){
+            console.log(data);
+            if(data){
+              check = true;
+            }
+            else{
+              alert("다시 시도해 주세요.");
+            }
+          }
+        });
+      }
+      else if(sValue == "T"){
+        return false;
+      }
+      else if(sValue == "P"){
+        check = true;
+      }
+
       if(check){
         $.ajax({
           url: '../manual/update',
@@ -332,13 +339,10 @@ $(document).on('click','.btn-update',function(){
               tableReload();
             }
             else{
-              swal("ERROR!", "다시 시도해 주세요.", "error");
+              alert("다시 시도해 주세요.");
             }
           }
         });
-      }
-      else{
-        swal("ERROR!", "다시 시도해 주세요.", "error");
       }
     }
   });
@@ -363,6 +367,10 @@ function tableReload(){
   }
   if(href.searchParams.get("search") != '' && href.searchParams.get("search") != null){
     param.search = href.searchParams.get("search");
+  }
+  if(href.searchParams.get("sDate") != null && href.searchParams.get("eDate") != null ){
+    param.sDate = moment(href.searchParams.get("sDate")).format('YYYY-MM-DD');
+    param.eDate = moment(href.searchParams.get("eDate")).format('YYYY-MM-DD');
   }
   ajaxGetPageList(param,num);
 }

@@ -266,7 +266,7 @@ $('#keywordInput').on('keyup',function(event){
   };
 });
 
-//삭제버튼 클릭시
+//삭제복원버튼 클릭시
 $(document).on('click','.btn-cancelD',function(){
   swal({
     title: "제재복원 하시겠습니까?",
@@ -279,30 +279,76 @@ $(document).on('click','.btn-cancelD',function(){
     if(value != null){
       var trEle = $(this).closest("tr");
       var eles = trEle.find('td');
-      // $.ajax({
-      //   url: 'http://fileham.com/append/autoGreen/proc.php',
-      //   type: 'post',
-      //   data: {
-      //     'mode': 'R',
-      //     'idx': eles.eq(1).text()
-      //   },
-      //   error:function(request,status,error){
-      //     alert("다시시도해주세요.");
-      //     console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-      //   },
-      //   success:function(data){
-      //     if(data){
-      //       alert("삭제제재가 취소되었습니다.");
-      //     }
-      //     else{
-      //       alert("다시시도해주세요.");
-      //     }
-      //   }
-      // });
+      var check = false;
+      $.ajax({
+        url: 'http://fileham.com/append/autoGreen/proc.php',
+        type: 'post',
+        data: {
+          'mode': 'R',
+          'idx': eles.eq(1).text()
+        },
+        error:function(request,status,error){
+          swal("ERROR", "다시 시도 해주세요!", "error");
+          console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        },
+        success:function(data){
+          if(data){
+            check=true;
+          }
+        }
+      });
+      if(check){
+        $.ajax({
+          url: '../filtering/cancelDelete',
+          type: 'post',
+          data: {
+            'idx': eles.eq(1).text()
+          },
+          error:function(request,status,error){
+            swal("ERROR", "다시 시도 해주세요!", "error");
+            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+          },
+          success:function(data){
+            if(data){
+              swal("SUCCESS", "삭제제재가 취소되었습니다!", "success");
+              tableReload();
+            }
+            else{
+              swal("ERROR", "다시 시도 해주세요!", "error");
+            }
+          }
+        });
+      }
     }
   });
 });
 
+function tableReload(){
+  var href = new URL(window.location.href);
+  var num = Number($('li.active.page-item>a').text());
+  var startNum = 0;
+  if(num == 0){
+    num = 1;
+  }
+  else{
+    var startNum = Number($('li.active.page-item>a').data().value);
+  }
+  var param = {
+    type: (fType == 'auto') ? 'a':'m',
+    start : startNum
+  };
+  if(href.searchParams.get("searchType") != '' && href.searchParams.get("searchType") != null){
+    param.searchType = href.searchParams.get("searchType");
+  }
+  if(href.searchParams.get("search") != '' && href.searchParams.get("search") != null){
+    param.search = href.searchParams.get("search");
+  }
+  if(href.searchParams.get("sDate") != null && href.searchParams.get("eDate") != null ){
+    param.sDate = moment(href.searchParams.get("sDate")).format('YYYY-MM-DD');
+    param.eDate = moment(href.searchParams.get("eDate")).format('YYYY-MM-DD');
+  }
+  ajaxGetPageList(param,num);
+}
 
 //페이지 이동
 $(document).on('click','.page-link',function(){

@@ -140,11 +140,12 @@ router.get('/filetering', function(req, res, next) {
     ws.cell(1,2).string('CP사').style(tStyle);
     ws.cell(1,3).string('게시물번호').style(tStyle);
     ws.cell(1,4).string('콘텐츠ID').style(tStyle);
-    ws.cell(1,5).string('제목').style(tStyle);
-    ws.cell(1,6).string('금액').style(tStyle);
-    ws.cell(1,7).string('등록일').style(tStyle);
-    ws.cell(1,8).string('처리일').style(tStyle);
-    ws.cell(1,9).string('관리상태').style(tStyle);
+    ws.cell(1,5).string('키워드').style(tStyle);
+    ws.cell(1,6).string('제목').style(tStyle);
+    ws.cell(1,7).string('금액').style(tStyle);
+    ws.cell(1,8).string('등록일').style(tStyle);
+    ws.cell(1,9).string('처리일').style(tStyle);
+    ws.cell(1,10).string('관리상태').style(tStyle);
 
     var row = 0;
     console.log('FilteringList:',result);
@@ -154,13 +155,14 @@ router.get('/filetering', function(req, res, next) {
       ws.cell(row,2).string(item.cp_name);
       ws.cell(row,3).string(item.osp_idx);
       ws.cell(row,4).string(item.cnt_id);
-      ws.cell(row,5).string(item.title);
-      ws.cell(row,6).number(Number(item.price));
-      ws.cell(row,7).string(moment(item.createDate).format('YYYY-MM-DD HH:mm:ss'));
-      ws.cell(row,8).string(moment(item.csDate).format('YYYY-MM-DD HH:mm:ss'));
+      ws.cell(row,5).string(item.K_keyword);
+      ws.cell(row,6).string(item.title);
+      ws.cell(row,7).number(Number(item.price));
+      ws.cell(row,8).string(moment(item.createDate).format('YYYY-MM-DD HH:mm:ss'));
+      ws.cell(row,9).string(moment(item.csDate).format('YYYY-MM-DD HH:mm:ss'));
       // ws.cell(row,7).date(new Date(item.createDate).toLocaleString('ko-kr', {timeZone: 'asia/seoul'}));
       // ws.cell(row,8).date(new Date(item.csDate).toLocaleString('ko-kr', {timeZone: 'asia/seoul'}));
-      ws.cell(row,9).string(((item.k_method == '0')? '수동 - ' : '자동 - ')+((item.k_apply == 'T')? '제휴' : (item.k_apply == 'D')? '삭제' : '보류'));
+      ws.cell(row,10).string(((item.k_method == '0')? '수동 - ' : '자동 - ')+((item.k_apply == 'T')? '제휴' : (item.k_apply == 'D')? '삭제' : '보류'));
     });
     var filename = 'autogreen_filtering_'+moment().format('YYYYMMDD')+'.xlsx';
     wb.write(filename,function(err,stats){
