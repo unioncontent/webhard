@@ -292,61 +292,58 @@ $(document).on('click','.btn-update',function(){
       var sValue = eles.eq(9).children("select").children("option:selected").val();
       if(sValue == "D"){
         $.ajax({
-          url: 'http://fileham.com/append/autoGreen/proc.php',
+          url: '../manual/api',
           type: 'post',
           data: {
             'mode': 'D',
             'idx': Number(eles.eq(3).text())
           },
           error:function(request,status,error){
-            alert("다시 시도해 주세요.");
+            swal("ERROR", "다시 시도 해주세요!", "error");
             console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
           },
           success:function(data){
-            console.log(data);
             if(data){
-              check = true;
+              console.log(data);
+              ajaxUpdate(eles.find('select').find('option:selected').val(),eles.eq(3).text(),eles.eq(0).text());
             }
             else{
-              alert("다시 시도해 주세요.");
+              swal("ERROR", "다시 시도 해주세요!", "error");
             }
           }
         });
       }
-      else if(sValue == "T"){
+      else{
         return false;
-      }
-      else if(sValue == "P"){
-        check = true;
-      }
-
-      if(check){
-        $.ajax({
-          url: '../manual/update',
-          type: 'post',
-          data: {
-            'K_apply': eles.find('select').find('option:selected').val(),
-            'OSP_idx': eles.eq(3).text(),
-            'U_id_c': eles.eq(0).text()
-          },
-          error:function(request,status,error){
-            alert(request.responseText);
-            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-          },
-          success:function(data){
-            if(data){
-              alert("수정 완료 되었습니다.");
-              tableReload();
-            }
-            else{
-              alert("다시 시도해 주세요.");
-            }
-          }
-        });
       }
     }
   });
 });
+
+function ajaxUpdate(apply,idx,cpName){
+  $.ajax({
+    url: '../manual/update',
+    type: 'post',
+    data: {
+      'K_apply': apply,
+      'OSP_idx': idx,
+      'U_id_c': cpName
+    },
+    error:function(request,status,error){
+      swal("ERROR", "다시 시도 해주세요!", "error");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        swal("SUCCESS", "수정완료 되었습니다!", "success");
+        tableReload();
+      }
+      else{
+        swal("ERROR", "다시 시도 해주세요!", "error");
+      }
+    }
+  });
+}
 
 function tableReload(){
   var href = new URL(window.location.href);
