@@ -74,10 +74,6 @@ var Manual = {
     });
   },
   delete: function(OSP_idx,callback){
-    // var connection = mysql.createConnection(info.changeDB(global.osp));
-    // connection.query(sql+'cnts_all_a where OSP_idx=?',OSP_idx,callback);
-    // connection.query(sql+'cnts_sort_e where OSP_idx=?',OSP_idx,callback);
-    // connection.query(sql+'cnts_his_g where OSP_idx=?',OSP_idx,callback);
     var DBpromise = new promise(global.osp);
     DBpromise.query('delete from cnts_all_a where OSP_idx=?;',OSP_idx)
     .then(rows => {
