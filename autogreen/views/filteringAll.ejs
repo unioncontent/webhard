@@ -173,13 +173,13 @@
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="1" name="k_key" class="k_key">
+                                    <input type="radio" value="1" name="k_key" class="k_key" disabled>
                                     <i class="helper"></i>ON
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="0" name="k_key" class="k_key">
+                                    <input type="radio" value="0" name="k_key" class="k_key" disabled>
                                     <i class="helper"></i>OFF
                                   </label>
                                 </div>
@@ -193,13 +193,13 @@
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="1" name="k_method" class="k_method">
+                                    <input type="radio" value="1" name="k_method" class="k_method" disabled>
                                     <i class="helper"></i>자동
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="0" name="k_method" class="k_method">
+                                    <input type="radio" value="0" name="k_method" class="k_method" disabled>
                                     <i class="helper"></i>수동
                                   </label>
                                 </div>
@@ -213,19 +213,19 @@
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="D" name="k_apply" class="k_apply">
+                                    <input type="radio" value="D" name="k_apply" class="k_apply" disabled>
                                     <i class="helper"></i>삭제
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="T" name="k_apply" class="k_apply">
+                                    <input type="radio" value="T" name="k_apply" class="k_apply" disabled>
                                     <i class="helper"></i>제휴
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="P" name="k_apply" class="k_apply">
+                                    <input type="radio" value="P" name="k_apply" class="k_apply" disabled>
                                     <i class="helper"></i>보류
                                   </label>
                                 </div>
@@ -355,6 +355,12 @@ $(document).ready(function(){
   else{
     $('#reportrange span').html(moment(new Date(sDateParams)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDateParams+' 23:59:59')).format('YYYY.MM.DD'));
   }
+});
+
+//콘텐츠 검색 모달
+$('#keyword-Modal').on('hidden.bs.modal', function (e) {
+  console.log('콘텐츠 검색 모달  hidden.bs.modal');
+  $('body').addClass('modal-open');
 });
 
 // 키워드 등록 버튼 클릭시
