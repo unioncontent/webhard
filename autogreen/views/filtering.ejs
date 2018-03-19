@@ -81,11 +81,11 @@
                       <td>
                         <div class="label-main">
                           <%= (fList[i].k_apply == 'D') ? '삭제' : (fList[i].k_apply == 'T') ? '제휴' : '보류' %>
-                          <!-- <label class="m-l-5 btn-cancelD label label-danger">복원 <i class="ti-reload"></i></label> -->
+                          <label class="m-l-5 btn-cancelD label label-danger">복원 <i class="ti-reload"></i></label>
                         </div>
                       </td>
                     </tr>
-                    <% } %>
+                    <% }; %>
                   </tbody>
                   <tfoot>
                     <% if(pageCount > 1) { %>
@@ -446,10 +446,9 @@ function ajaxGetPageList(param,pageNum){
           <td>'+item.price+'</th>\
           <td>'+moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>'+moment(item.csDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
-          <td><div class="label-main">'+((item.k_apply == 'D') ? '삭제' : (item.k_apply == 'T') ? '제휴' : '보류')+'</div>\
+          <td><div class="label-main">'+((item.k_apply == 'D') ? '삭제' : (item.k_apply == 'T') ? '제휴' : '보류')+'<label class="m-l-5 btn-cancelD label label-danger">복원 <i class="ti-reload"></i></label></div>\
           </td>\
         </tr>');
-        // <label class="m-l-5 btn-cancelD label label-danger">복원 <i class="ti-reload"></i></label>
       });
     }
   });
