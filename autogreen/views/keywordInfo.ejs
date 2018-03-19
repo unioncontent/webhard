@@ -22,20 +22,83 @@
     </div>
     <div class="page-body">
       <div class="row">
+        <!-- <div class="col">
+          <div class="card social-widget-card">
+           <div class="card-block-big bg-inverse">
+             <h3 class="ng-tns-c9-10">1,194</h3>
+             <span class="m-t-10">전체 콘텐츠</span>
+             <i class="ti-world"></i>
+           </div>
+         </div>
+        </div>
+        <div class="col">
+         <div class="card social-widget-card">
+           <div class="card-block-big bg-facebook">
+             <h3 class="ng-tns-c9-10">236</h3>
+             <span class="m-t-10">검출 콘텐츠</span>
+             <i class="ti-check"></i>
+           </div>
+         </div>
+       </div>
+        <div class="col">
+         <div class="card social-widget-card">
+           <div class="card-block-big bg-linkein">
+             <h3 class="ng-tns-c9-10">236</h3>
+             <span class="m-t-10">자동검출 콘텐츠</span>
+             <i class="ti-server"></i>
+           </div>
+         </div>
+       </div>
+        <div class="col">
+         <div class="card social-widget-card">
+           <div class="card-block-big bg-twitter">
+             <h3 class="ng-tns-c9-10">957</h3>
+             <span class="m-t-10">수동검출 콘텐츠</span>
+             <i class="ti-pencil-alt"></i>
+           </div>
+         </div>
+       </div>
+        <div class="col">
+         <div class="card social-widget-card">
+           <div class="card-block-big bg-danger">
+             <h3 class="ng-tns-c9-10">957</h3>
+             <span class="m-t-10">제외 콘텐츠</span>
+             <i class="ti-na"></i>
+           </div>
+         </div>
+       </div> -->
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
               <div class="section section-info">
-                <div class="info-block">
+                <div class="info-block last">
                   <dl>
                     <dt><%= info[1] %></dt>
+                    <dd>전체</dd>
+                  </dl>
+                </div>
+                <div class="info-block last">
+                  <dl>
+                    <dt><%= info[4] %></dt>
+                    <dd>검출</dd>
+                  </dl>
+                </div>
+                <div class="info-block">
+                  <dl>
+                    <dt><%= info[2] %></dt>
                     <dd>자동검출</dd>
                   </dl>
                 </div>
                 <div class="info-block last">
                   <dl>
-                    <dt><%= info[2] %></dt>
+                    <dt><%= info[3] %></dt>
                     <dd>수동검출</dd>
+                  </dl>
+                </div>
+                <div class="info-block last">
+                  <dl>
+                    <dt><%= info[5] %></dt>
+                    <dd>제외</dd>
                   </dl>
                 </div>
               </div>
@@ -196,7 +259,7 @@
                             </td>
                           </tr>
                           <tr>
-                            <th class="b-r-1 text-left">관리방법</th>
+                            <th class="b-r-1 text-left">관리현황</th>
                             <td>
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">

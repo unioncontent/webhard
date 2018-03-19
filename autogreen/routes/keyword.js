@@ -4,13 +4,6 @@ var Contents = require('../models/contents.js');
 var User = require('../models/user.js');
 var router = express.Router();
 
-// router.get('/', function(req, res, next) {
-//   if(!req.user){
-//     res.redirect('/login');
-//   }
-//   res.render('keyword');
-// });
-
 router.get('/', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');

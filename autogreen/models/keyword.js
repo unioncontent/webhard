@@ -112,11 +112,15 @@ var Keyword = {
     DBpromise.query(sql,param[0])
     .then(rows => {
       var name = rows[0]['U_name'];
-      sql = 'select FORMAT(COUNT(IF(K_method=\'1\',1,null)),0) as a,\
-      FORMAT(COUNT(IF(K_method=\'0\',1,null)),0) as m from (select * from keyword where U_id_c=? group by n_idx_c) as gTable';
+      sql = 'select FORMAT(COUNT(*),0) as total,\
+      FORMAT(COUNT(IF(K_method=\'1\',1,null)),0) as a,\
+      FORMAT(COUNT(IF(K_method=\'0\',1,null)),0) as m,\
+      FORMAT(COUNT(IF(K_key=\'1\',1,null)),0) as n,\
+      FORMAT(COUNT(IF(K_key=\'0\',1,null)),0) as f\
+      from (select * from keyword where U_id_c=? group by n_idx_c) as gTable';
       console.log(sql,param[0]);
       DBpromise.query(sql,param[0]).then(rows => {
-        return [name,rows[0].a,rows[0].m]
+        return [name,rows[0].total,rows[0].a,rows[0].m,rows[0].n,rows[0].f]
       }).then(rows => {
         var infoArr = rows;
         console.log('infoArr:',infoArr);
