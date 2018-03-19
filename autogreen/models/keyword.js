@@ -4,28 +4,6 @@ const promise = require('../db/db_promise.js');
 
 var Keyword = {
   updateKeyword: function(item,callback){
-    var sql = 'update cnts_kwd_f set K_method=?, K_key=? where n_idx_c=?';
-    var param = [item.K_method,item.K_key,item.n_idx_k];
-    console.log(sql,param);
-    dbstart(sql,param,callback);
-    // var connection = mysql.createConnection(info.changeDB(global.osp));
-    // connection.query(sql,param,callback);
-    // var DBpromise = new promise(global.osp);
-    // console.log(sql,param);
-    // DBpromise.query(sql,param)
-    // .then(rows => {
-    //
-    //   return callback(null,rows);
-    // })
-    // .then(rows => {
-    //   DBpromise.close();
-    // })
-    // .catch(function (err) {
-    //   DBpromise.close();
-    //   return callback(err,null);
-    // });
-  },
-  updateAllKeyword: function(item,callback){
     var sql = 'update cnts_kwd_f set K_method=?, K_key=?, K_apply=? where n_idx_c=?';
     var param = Object.values(item);
     console.log(sql,param);

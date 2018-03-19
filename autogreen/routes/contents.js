@@ -112,27 +112,13 @@ router.post('/update', function(req, res, next) {
   if (!req.user) {
     res.redirect('/login');
   }
-  if (req.body.type === undefined) {
-    if (req.body.K_method == '0') {
-      req.body.K_apply = 'P';
+  Keyword.updateKeyword(req.body, function(err, result) {
+    if (err){
+      res.status(500).send('다시시도해주세요.');
+      throw err;
     }
-    Keyword.updateKeyword(req.body, function(err, result) {
-      if (err){
-        res.status(500).send('다시시도해주세요.');
-        throw err;
-      }
-      res.send(req.body);
-    });
-  } else if (req.body.type == 'all') {
-    delete req.body.type;
-    Keyword.updateAllKeyword(req.body, function(err, result) {
-      if (err){
-        res.status(500).send('다시시도해주세요.');
-        throw err;
-      }
-      res.send(req.body);
-    });
-  }
+    res.send(req.body);
+  });
 });
 
 router.post('/delete', function(req, res, next) {
