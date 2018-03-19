@@ -39,15 +39,16 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-block table-border-style  table-responsive">
-              <table class="table table-bordered table-sm">
+              <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th width="1%">NO</th>
                     <th width="5%">CP사</th>
                     <th width="5%">CP관리ID</th>
                     <th width="15%">제목</th>
-                    <th width="5%">관리현황</th>
                     <th width="5%">상태</th>
+                    <th width="5%">관리현황</th>
+                    <th width="5%">관리방법</th>
                     <th width="1%">수정</th>
                     <th width="1%">삭제</th>
                   </tr>
@@ -61,6 +62,16 @@
                     <td><div class='cntId_nobr'><%= cList[i].CP_cntID %></div></td>
                     <td><div class='title_nobr'><%= cList[i].CP_title %></div></td>
                     <td>
+                      <select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectKey">
+                        <% if(cList[i].K_method == null) { %>
+                          <option value="-1">없음</option>
+                        <% }else{%>
+                          <option value="1" <%= (cList[i].K_key == '1') ? 'selected' : '' %>>검출</option>
+                          <option value="0" <%= (cList[i].K_key == '0') ? 'selected' : '' %>>제외</option>
+                        <% } %>
+                      </select>
+                    </td>
+                    <td>
                       <select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectMethod">
                         <% if(cList[i].K_method == null) { %>
                           <option value="-1">없음</option>
@@ -71,12 +82,13 @@
                       </select>
                     </td>
                     <td>
-                      <select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectKey">
+                      <select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectApply">
                         <% if(cList[i].K_method == null) { %>
                           <option value="-1">없음</option>
                         <% }else{%>
-                          <option value="1" <%= (cList[i].K_key == '1') ? 'selected' : '' %>>검출</option>
-                          <option value="0" <%= (cList[i].K_key == '0') ? 'selected' : '' %>>제외</option>
+                          <option value="D" <%= (cList[i].K_apply == 'D') ? 'selected' : '' %>>삭제</option>
+                          <option value="T" <%= (cList[i].K_apply == 'T') ? 'selected' : '' %>>제휴</option>
+                          <option value="P" <%= (cList[i].K_apply == 'P') ? 'selected' : '' %>>보류</option>
                         <% } %>
                       </select>
                     </td>
@@ -160,6 +172,9 @@
   .cntId_nobr{
     width: 134px;
   }
+  .swal-text{
+    text-align: center;
+  }
 </style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
@@ -196,13 +211,10 @@ $('.alert-excel').on("click",function(){
     title: "엑셀출력 하시겠습니까?",
     text: "현재 리스트가 엑셀출력 됩니다.",
     icon: "warning",
-    showCancelButton: true,
-    confirmButtonClass: "btn-danger",
-    confirmButtonText: "YES",
-    closeOnConfirm: false
+    buttons: ["취소", true],
+    dangerMode: true,
   })
   .then((value) =>{
-    console.log(value);
     if(value != null){
       location.href = '/excel/contents?cp_name='+$("#selectCp option:selected").val()+'&searchType='+url.searchParams.get("searchType")+'&search='+url.searchParams.get("search");
     }
@@ -239,69 +251,91 @@ $('#keywordInput').on('keyup',function(event){
 
 //콘텐츠 업데이트
 $(document).on('click','.btn-update',function(event){
-  var tdEle = $(event.target).closest("tr").find('td');
-  var input = $(event.target).closest("tr").find('input');
-  if(tdEle.eq(3).find('option:selected').val() == -1){
-    swal("수정불가!", "키워드 설정에서 키워드를 등록해주세요.", "error");
-  }
-  else{
-    $.ajax({
-      url: '../contents/update',
-      type: 'post',
-      data: {
-        'K_method': tdEle.eq(3).find('option:selected').val(),
-        'K_key': tdEle.eq(4).find('option:selected').val(),
-        'n_idx_k': input.eq(0).val()
-      },
-      error:function(request,status,error){
-        alert("다시시도해주세요.");
-        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-      },
-      success:function(data){
-        if(data){
-          window.location.reload();
-        }
-        else{
-          alert("다시시도해주세요.");
-        }
+  var trEle = $(this).closest("tr");
+  var tdEle = trEle.find('td');
+  var input = trEle.find('input');
+  swal({
+    title: "콘텐츠 업데이트 하시겠습니까?",
+    text: "\'"+tdEle.eq(2).text()+"\'"+"\n콘텐츠가 업데이트됩니다.",
+    icon: "warning",
+    buttons: ["취소", true],
+    dangerMode: true,
+  })
+  .then((value) =>{
+    if(value != null){
+      if(tdEle.eq(3).find('option:selected').val() == -1){
+        swal("수정불가!", "키워드 설정에서 키워드를 등록해주세요.", "error");
       }
-    });
-  }
+      else{
+        $.ajax({
+          url: '../contents/update',
+          type: 'post',
+          data: {
+            'K_method': tdEle.eq(4).find('option:selected').val(),
+            'K_key': tdEle.eq(3).find('option:selected').val(),
+            'K_apply': tdEle.eq(5).find('option:selected').val(),
+            'n_idx_c': input.eq(0).val()
+          },
+          error:function(request,status,error){
+            alert("다시시도해주세요.");
+            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+          },
+          success:function(data){
+            if(!data){
+              alert("다시시도해주세요.");
+            }
+          }
+        });
+      }
+    }
+  });
 });
 
 //콘텐츠 삭제
 $(document).on('click','.btn-delete',function(){
   var trEle = $(this).closest("tr");
+  var tdEle = trEle.find('td');
   var input = trEle.find('input');
-  $.ajax({
-    url: '../contents/delete',
-    type: 'post',
-    data: {
-      'n_idx_c': input.eq(0).val()
-    },
-    error:function(request,status,error){
-      alert(request.responseText);
-      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-    },
-    success:function(data){
-      if(data){
-        trEle.remove();
-        var param = {
-          cp_name: $('#selectCp option:selected').val() || '0',
-          start: $('.active.page-item > .page-link').data().value
-        };
-        var num = $('.active.page-item > .page-link').text();
-        if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
-          param.searchType = url.searchParams.get("searchType");
+  swal({
+    title: "콘텐츠 삭제 하시겠습니까?",
+    text: "\'"+tdEle.eq(2).text()+"\'"+"\n콘텐츠가 삭제 됩니다.",
+    icon: "warning",
+    buttons: ["취소", true],
+    dangerMode: true,
+  })
+  .then((value) =>{
+    if(value != null){
+      $.ajax({
+        url: '../contents/delete',
+        type: 'post',
+        data: {
+          'n_idx_c': input.eq(0).val()
+        },
+        error:function(request,status,error){
+          alert(request.responseText);
+          console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        },
+        success:function(data){
+          if(data){
+            trEle.remove();
+            var param = {
+              cp_name: $('#selectCp option:selected').val() || '0',
+              start: $('.active.page-item > .page-link').data().value
+            };
+            var num = $('.active.page-item > .page-link').text();
+            if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+              param.searchType = url.searchParams.get("searchType");
+            }
+            if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+              param.search = url.searchParams.get("search");
+            }
+            ajaxGetPageList(param,num);
+          }
+          else{
+            alert("다시시도해주세요.");
+          }
         }
-        if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
-          param.search = url.searchParams.get("search");
-        }
-        ajaxGetPageList(param,num);
-      }
-      else{
-        alert("다시시도해주세요.");
-      }
+      });
     }
   });
 });
@@ -383,20 +417,29 @@ function ajaxGetPageList(param,pageNum){
         <td><div class="cp_nobr">'+item.CP_name+'</div></td>\
         <td><div class="cntId_nobr">'+item.CP_cntID+'</div></td>\
         <td><div class="title_nobr">'+item.CP_title+'</div></td>\
-        <td><select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectMethod">';
-        if(item.K_method != null){
-          html += '<option value="1" '+((item.K_method == '1') ? 'selected' : '')+'>자동</option><option value="0" '+((item.K_method == '0') ? 'selected' : '')+'>수동</option>'
-        }
-        else{
-          html += '<option value="-1" >없음</option>'
-        }
-        html += '</select></td><td><select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectKey">'
+        <td><select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectKey">';
         if(item.K_key != null){
           html += '<option value="1" '+((item.K_key == '1') ? 'selected' : '')+'>검출</option>\
           <option value="0" '+((item.K_key == '0') ? 'selected' : '')+'>제외</option>'
         }
         else{
           html += '<option value="-1" >없음</option>'
+        }
+        html += '</select></td><td><select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectMethod">'
+        if(item.K_method != null){
+          html += '<option value="1" '+((item.K_method == '1') ? 'selected' : '')+'>자동</option><option value="0" '+((item.K_method == '0') ? 'selected' : '')+'>수동</option>'
+        }
+        else{
+          html += '<option value="-1" >없음</option>'
+        }
+        html += '</select></td><td><select name="select" class="col form-control form-control-inverse m-b-0 m-l-0 f-left select-left" id="selectApply">';
+        if(item.K_method == null) {
+          '<option value="-1">없음</option>'
+        }
+        else{
+          html += '<option value="D" '+((item.K_apply == 'D') ? 'selected' : '')+'>삭제</option>'
+          +'<option value="T" '+((item.K_apply == 'T') ? 'selected' : '')+'>제휴</option>'
+          +'<option value="P" '+((item.K_apply == 'P') ? 'selected' : '')+'>보류</option>';
         }
         html += '</select></td>\
           <td class="text-center">\

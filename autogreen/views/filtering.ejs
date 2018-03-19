@@ -211,10 +211,8 @@ $('.alert-excel').on("click",function(){
     title: "엑셀출력 하시겠습니까?",
     text: "현재 리스트가 엑셀출력 됩니다.",
     icon: "warning",
-    showCancelButton: true,
-    confirmButtonClass: "btn-danger",
-    confirmButtonText: "YES",
-    closeOnConfirm: false
+    buttons: ["취소", true],
+    dangerMode: true,
   })
   .then((value) =>{
     console.log(value);
