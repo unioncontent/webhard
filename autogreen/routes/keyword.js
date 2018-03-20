@@ -132,11 +132,15 @@ router.post('/add',function(req, res, next) {
   req.body.keyword.forEach(function(item, idx){
     console.log("param.keyword:",item);
     if(item == ""){
+      if(idx == 1){
+        res.send(req.body);
+      }
       return;
     }
     param.keyword = item;
     param.K_type = '1';
     if(idx == 1){
+      req.body.endIdx = idx;
       param.K_type = '0';
     }
     Keyword.insertKeyword(param,function(err, results, fields) {
@@ -144,9 +148,11 @@ router.post('/add',function(req, res, next) {
         res.status(500).send('다시 입력해 주세요.');
         return false;
       }
+      if(req.body.endIdx == 1){
+        res.send(req.body);
+      }
     });
   });
-  res.send(req.body);
 });
 
 router.post('/delete',function(req, res, next){

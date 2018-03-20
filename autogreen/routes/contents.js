@@ -206,12 +206,13 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
       var DBpromise = new promise(global.osp);
       result.forEach(function(item){
         var param = {
-          'U_id_c': item["cpid"],
+          'CP_name': item["cpName"],
           'CP_title': item["title"],
           'CP_title_eng': item["engtitle"],
           'OSP_id': item["ospid"],
           'K_method': item["method"],
           'K_apply': item["apply"],
+          'delay_time': item["delay_time"],
           'CP_hash': item["hash"],
           'CP_price': (item["price"] == "") ? 0 : item["price"],
           'keyword': (item["keyword"] == "") ? item["title"] : item["keyword"]
@@ -246,22 +247,23 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
 });
 
 function addContents(data,DBpromise){
-  // console.log("1 CP ID확인\n","select * from user_all where U_id=? and U_class=?",[data.U_id_c,'c']);
-  DBpromise.userQuery("select * from user_all where U_id=? and U_class=?",[data.U_id_c,'c'])
+  // console.log("1 CP사 확인\n","select * from user_all_b where U_id=? and U_class=?",[data.CP_name,'c']);
+  DBpromise.query("select * from user_all_b where U_name=? and U_class=?",[data.CP_name,'c'])
     .then(rows => {
-      // console.log("2 OSP ID확인\n","select * from user_all where U_id=? and U_class=?",[data.OSP_id,'o']);
+      // console.log("2 OSP ID확인\n","select * from user_all_b where U_id=? and U_class=?",[data.OSP_id,'o']);
       if(rows == null){
         // console.log('row==null');
         throw new Error('error');
       }
-      return DBpromise.userQuery("select * from user_all where U_id=? and U_class=?",[data.OSP_id,'o'])
+      return DBpromise.query("select U_id, U_pw, U_class, U_name, U_state,\'"+rows[0].U_id+"\' as CP_id from user_all_b where U_id=? and U_class=?",[data.OSP_id,'o'])
     }).catch(handleError)
     .then(rows => {
       if(rows == -1){
         throw new Error('error');
       }
-      // console.log("3 콘텐츠 추가");
+      // console.log("3 콘텐츠 추가\n","select U_id, U_pw, U_class, U_name, U_state,\'"+rows[0].U_id+"\' as CP_id from user_all_b where U_id=? and U_class=?",[data.OSP_id,'o']);
       var rNum = getRandomInt();
+      data.U_id_c = rows[0].CP_id;
       data.CP_CntID = data.U_id_c + '-' + data.OSP_id + '-' + (rNum+1);
       var param = [data.CP_CntID,data.U_id_c,data.CP_title,data.CP_title_eng,data.CP_price,data.CP_hash];
       var sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
@@ -271,7 +273,7 @@ function addContents(data,DBpromise){
       if(rows == -1){
         throw new Error('error');
       }
-      // console.log("4 콘텐츠 확인");
+      console.log("4 콘텐츠 확인");
       sql = 'select * from cnts_list_c where CP_title=? order by CP_regdate desc';
       // console.log(sql,data.CP_title);
       return DBpromise.query(sql,data.CP_title);
@@ -280,18 +282,18 @@ function addContents(data,DBpromise){
       if(rows == -1){
         throw new Error('error');
       }
-      // console.log("5 키워드 추가");
+      console.log("5 키워드 추가");
       if(data.CP_CntID == rows[0].CP_CntID){
         data.n_idx_c = rows[0].n_idx;
         data.K_key = '1';
         data.K_type = '1';
-        var param = [data.n_idx_c,data.U_id_c,data.keyword,data.K_apply,data.K_method,data.K_key,data.K_type];
-        var sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, K_regdate) values(?,?,?,?,?,?,?,now())';
+        var param = [data.n_idx_c,data.U_id_c,data.keyword,data.K_apply,data.K_method,data.K_key,data.K_type,data.delay_time];
+        var sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, delay_time, K_regdate) values(?,?,?,?,?,?,?,?,now())';
         return DBpromise.query(sql,param);
       }
     }).catch(handleError)
     .then(rows => {
-      console.log('끝끝');
+      console.log('콘텐츠 키워드 insert 끝');
       count+=1;
       // console.log(count);
       // console.log(totalCount);

@@ -96,6 +96,12 @@
                 </div>
               </div>
               <div class="form-group row">
+                <label class="col-sm-2 col-form-label">DELAY 시간(분)</label>
+                <div class="col-sm-5">
+                  <input name="delay_time" id="delay_time" type="number" class="form-control" placeholder="0">
+                </div>
+              </div>
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label">금액</label>
                 <div class="col-sm-5">
                   <input name="CP_price" id="CP_price" type="number" class="form-control" step="500" placeholder="0">
@@ -124,7 +130,7 @@
           <div class="card">
             <div class="card-header">
               <h5>일괄등록</h5>
-              <span>* 엑셀양식 : CP사(cpId) / 제목(title) / 영문제목(engTitle) / OSP관리ID(ospId) / 관리방법(method) / 관리현황(apply) / HASH값(hash) / 가격(price) / 기본검색어(keyword) </span>
+              <span>* 엑셀양식 : CP사(cpName) / 제목(title) / 영문제목(engTitle) / OSP관리ID(ospId) / 관리방법(method) / 관리현황(apply) / Delay시간(delay_time) / HASH값(hash) / 가격(price) / 기본검색어(keyword) </span>
             </div>
             <div class="card-block">
               <form action='/contents/add/upload' id='uploadFrm' method="post" enctype="multipart/form-data">
@@ -148,12 +154,13 @@
 $("#insertBtn").on("click",function(){
   var check=true;
   var param = {
-    'U_id_c': $('input[name=CP_name]').val(),
+    'CP_name': $('input[name=CP_name]').val(),
     'CP_title': $("input[name=CP_title]").val(),
     'CP_title_eng': $("input[name=CP_title_eng]").val(),
     'OSP_id': $('input[name=OSP_id]').val(),
     'K_method': $("input:radio[name=K_method]:checked").val(),
     'K_apply': $("input:radio[name=K_apply]:checked").val(),
+    'delay_time': '0',
     'CP_hash': '',
     'CP_price': '0',
     'keyword': $("input[name=CP_title]").val()
@@ -175,6 +182,9 @@ $("#insertBtn").on("click",function(){
   }
 
   if(check){
+    if($("#delay_time").val() != ""){
+      param.delay_time = $("#delay_time").val();
+    }
     if($("#CP_hash").val() != ""){
       param.CP_hash = $("#CP_hash").val();
     }

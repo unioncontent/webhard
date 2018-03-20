@@ -4,7 +4,11 @@ const promise = require('../db/db_promise.js');
 
 var Keyword = {
   updateKeyword: function(item,callback){
-    var sql = 'update cnts_kwd_f set K_method=?, K_key=?, K_apply=? where n_idx_c=?';
+    var sql = 'update cnts_kwd_f set K_method=?, K_key=?, K_apply=?';;
+    if('delay_time' in item){
+      sql += ', delay_time=?';
+    }
+    sql += ' where n_idx_c=?';
     var param = Object.values(item);
     console.log(sql,param);
     dbstart(sql,param,callback);
@@ -53,8 +57,8 @@ var Keyword = {
     // });
   },
   insertKeyword: function(item,callback) {
-    var param = [item.n_idx_c,item.U_id_c,item.keyword,item.K_apply,item.K_method,item.K_key,item.K_type];
-    var sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, K_regdate) values(?,?,?,?,?,?,?,now())';
+    var param = [item.n_idx_c,item.U_id_c,item.keyword,item.K_apply,item.K_method,item.K_key,item.K_type,item.delay_time];
+    var sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, delay_time, K_regdate) values(?,?,?,?,?,?,?,?,now())';
     console.log(sql,param);
     dbstart(sql,param,callback);
     // var connection = mysql.createConnection(info.changeDB(global.osp));

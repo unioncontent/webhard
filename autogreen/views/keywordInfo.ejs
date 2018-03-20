@@ -304,6 +304,17 @@
                               </div>
                             </td>
                           </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">작업 Delay시간(분)</th>
+                            <td>
+                              <div class="row">
+                                <div class="col-sm-7">
+                                  <input name="delay_time" id="delay_time" type="number" class="form-control" placeholder="0">
+                                  <input name="oDelay_time" type="hidden" class="form-control">
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -450,6 +461,7 @@ $("#insertKeywordBtn").on("click",function(){
       'K_key': $("input[name ='oK_key']").val(),
       'K_method': $("input[name ='oK_method']").val(),
       'K_apply': $("input[name ='oK_apply']").val(),
+      'delay_time': $('input[name=delay_time]').val(),
       'U_id_c': url.searchParams.get("cp"),
     },
     error:function(request,status,error){
@@ -526,6 +538,17 @@ $(document).on("click",".btn-delete",function(){
   });
 });
 
+//작업Delay시간 수정시
+$( "#delay_time" ).blur(function(){
+  if($('input[name=oDelay_time]').val() != $('#delay_time').val()){
+    if($('#delay_time').val() == ''){
+      $('#delay_time').val('0');
+    }
+    KeywordStatusUpdateAjax();
+    console.log( "작업Delay시간 수정" );
+  }
+});
+
 function KeywordStatusUpdateAjax(){
   $.ajax({
     url: '../contents/update',
@@ -534,6 +557,7 @@ function KeywordStatusUpdateAjax(){
       'K_method': $('input:radio[name=k_method_m]:checked').val(),
       'K_key': $('input:radio[name=k_key_m]:checked').val(),
       'K_apply': $('input:radio[name=k_apply_m]:checked').val(),
+      'delay_time': $('input[name=delay_time]').val(),
       'n_idx_c': $("#cntIdx_m").val()
     },
     error:function(request,status,error){
@@ -542,9 +566,12 @@ function KeywordStatusUpdateAjax(){
     },
     success:function(data){
       if(data){
+        // console.log(data);
         $("input[name ='oK_key']").val(data.K_key);
         $("input[name ='oK_method']").val(data.K_method);
         $("input[name ='oK_apply']").val(data.K_apply);
+        $("input[name ='oDelay_time']").val(data.delay_time);
+        $("#delay_time").val(data.delay_time);
         $("#cntIdx_m").val(data.n_idx_c);
         $("input:radio[name ='k_key_m']:input[value='"+data.K_key+"']").prop("checked", true);
         $("input:radio[name ='k_method_m']:input[value='"+data.K_method+"']").prop("checked", true);
@@ -573,6 +600,8 @@ function reloadKeyList(cntIdx){
           $("input[name ='oK_key']").val(item.K_key);
           $("input[name ='oK_method']").val(item.K_method);
           $("input[name ='oK_apply']").val(item.K_apply);
+          $("input[name ='oDelay_time']").val(data.delay_time);
+          $("input[name ='delay_time']").val(item.delay_time);
           $("input:radio[name ='k_key_m']:input[value='"+item.K_key+"']").prop("checked", true);
           $("input:radio[name ='k_method_m']:input[value='"+item.K_method+"']").prop("checked", true);
           $("input:radio[name ='k_apply_m']:input[value='"+item.K_apply+"']").prop("checked", true);

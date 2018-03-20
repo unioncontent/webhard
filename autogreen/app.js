@@ -109,6 +109,10 @@ var user = require('./routes/user');
 app.use('/user', user);
 app.use('/user/add', user);
 
+// 딜레이
+var delay = require('./routes/delay');
+app.use('/delay', delay);
+
 /* set error */
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
