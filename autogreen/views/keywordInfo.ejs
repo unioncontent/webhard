@@ -542,14 +542,13 @@ function KeywordStatusUpdateAjax(){
     },
     success:function(data){
       if(data){
-        // console.log(data);
         $("input[name ='oK_key']").val(data.K_key);
         $("input[name ='oK_method']").val(data.K_method);
         $("input[name ='oK_apply']").val(data.K_apply);
         $("#cntIdx_m").val(data.n_idx_c);
-        $("input:radio[name ='k_key_m']:input[value='"+data.K_key+"']").attr("checked", true);
-        $("input:radio[name ='k_method_m']:input[value='"+data.K_method+"']").attr("checked", true);
-        $("input:radio[name ='k_apply_m']:input[value='"+data.K_apply+"']").attr("checked", true);
+        $("input:radio[name ='k_key_m']:input[value='"+data.K_key+"']").prop("checked", true);
+        $("input:radio[name ='k_method_m']:input[value='"+data.K_method+"']").prop("checked", true);
+        $("input:radio[name ='k_apply_m']:input[value='"+data.K_apply+"']").prop("checked", true);
         alert("수정되었습니다.");
       }
     }
@@ -557,7 +556,7 @@ function KeywordStatusUpdateAjax(){
 }
 
 function reloadKeyList(cntIdx){
-  $("#cntIdx_m").val($('input[name=cntIdx]').val());
+  $("#cntIdx_m").val(cntIdx);
   $.ajax({
     url: '../keyword/searchKeyInfo',
     type: 'post',
@@ -574,9 +573,9 @@ function reloadKeyList(cntIdx){
           $("input[name ='oK_key']").val(item.K_key);
           $("input[name ='oK_method']").val(item.K_method);
           $("input[name ='oK_apply']").val(item.K_apply);
-          $("input:radio[name ='k_key_m']:input[value='"+item.K_key+"']").attr("checked", true);
-          $("input:radio[name ='k_method_m']:input[value='"+item.K_method+"']").attr("checked", true);
-          $("input:radio[name ='k_apply_m']:input[value='"+item.K_apply+"']").attr("checked", true);
+          $("input:radio[name ='k_key_m']:input[value='"+item.K_key+"']").prop("checked", true);
+          $("input:radio[name ='k_method_m']:input[value='"+item.K_method+"']").prop("checked", true);
+          $("input:radio[name ='k_apply_m']:input[value='"+item.K_apply+"']").prop("checked", true);
         }
         var html = '<tr><th scope="row" class="centerTh">'+(idx+1)+'</th>';
         if(item.K_type != '0'){
