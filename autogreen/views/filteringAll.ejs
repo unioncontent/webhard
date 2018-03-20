@@ -188,7 +188,7 @@
                             </td>
                           </tr>
                           <tr>
-                            <th class="b-r-1 text-left">관리방법</th>
+                            <th class="b-r-1 text-left">관리현황</th>
                             <td>
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
@@ -230,6 +230,16 @@
                                   </label>
                                 </div>
                                 <input name="oK_apply" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left" width="30%">작업 Delay시간(분)</th>
+                            <td>
+                              <div class="row">
+                                <div class="col-sm-7">
+                                  <input name="delay_time" id="delay_time" type="number" class="form-control" placeholder="0" readonly>
+                                </div>
                               </div>
                             </td>
                           </tr>
@@ -424,6 +434,7 @@ function openKeywordList(idx){
           $("input[name ='oK_method']").val(item.K_method);
           $("input[name ='oK_apply']").val(item.K_apply);
           $("input[name ='cp_name']").val(item.U_id_c);
+          $("input[name ='delay_time']").val(item.delay_time);
 
           $("input:radio[name ='k_key']:input[value='"+item.K_key+"']").prop("checked", true);
           $("input:radio[name ='k_method']:input[value='"+item.K_method+"']").prop("checked", true);
@@ -484,6 +495,7 @@ $("#insertKeywordBtn").on("click",function(){
       'K_method': $("input[name ='oK_method']").val(),
       'K_apply': $("input[name ='oK_apply']").val(),
       'U_id_c': $("input[name ='cp_name']").val(),
+      'delay_time': $('input[name=delay_time]').val()
     },
     error:function(request,status,error){
       alert("다시시도해주세요.");

@@ -75,11 +75,16 @@
                       <td><%= moment(mList[i].date).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td><%= moment(mList[i].cs_date).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td>
-                        <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">
-                          <option value="P">보류</option>
-                          <option value="T">제휴</option>
-                          <option value="D">삭제</option>
-                        </select>
+                        <%if(mList[i].delay_state != null){%>
+                          <p class="text-danger text-center m-b-0"><strong>Delay 처리중</strong></p>
+                        <%} else{%>
+                          <input id="delayTime" type="hidden" value="<%= mList[i].delay_time %>"/>
+                          <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">
+                            <option value="P">보류</option>
+                            <option value="T">제휴</option>
+                            <option value="D">삭제</option>
+                          </select>
+                        <%}%>
                       </td>
                       <td class="text-center">
       								  <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">
@@ -278,6 +283,14 @@ $(document).on('click','.btn-delete',function(){
 
 //수정버튼 클릭시
 $(document).on('click','.btn-update',function(){
+  var trEle = $(this).closest("tr");
+  var eles = trEle.find('td');
+  var check = false;
+  var delayMsg = eles.eq(9).children("p").text()
+  if(delayMsg != ""){
+    swal("ERROR", "Delay 처리중입니다!", "error");
+    return false
+  }
   swal({
     title: "수정 하시겠습니까?",
     text: "선택하신 관리상태로 처리됩니다.",
@@ -286,11 +299,9 @@ $(document).on('click','.btn-update',function(){
   })
   .then((value) =>{
     if(value != null){
-      var trEle = $(this).closest("tr");
-      var eles = trEle.find('td');
-      var check = false;
       var sValue = eles.eq(9).children("select").children("option:selected").val();
-      if(sValue == "D"){
+      var dValue = eles.eq(9).children("input").val()
+      if(sValue == "D" && dValue == ""){
         $.ajax({
           url: '../manual/api',
           type: 'post',
@@ -306,6 +317,29 @@ $(document).on('click','.btn-update',function(){
             if(data){
               console.log(data);
               ajaxUpdate(eles.find('select').find('option:selected').val(),eles.eq(3).text(),eles.eq(0).text());
+            }
+            else{
+              swal("ERROR", "다시 시도 해주세요!", "error");
+            }
+          }
+        });
+      }
+      else if(sValue != "P" && dValue != ""){
+        $.ajax({
+          url: '../delay/insert',
+          type: 'post',
+          data: {
+            'apply': sValue,
+            'delay': dValue,
+            'idx': Number(eles.eq(3).text())
+          },
+          error:function(request,status,error){
+            swal("ERROR", "다시 시도 해주세요!", "error");
+            console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+          },
+          success:function(data){
+            if(data){
+              tableReload();
             }
             else{
               swal("ERROR", "다시 시도 해주세요!", "error");
@@ -449,7 +483,7 @@ function ajaxGetPageList(param,pageNum){
       $('tbody').empty();
       data.cList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
-        $('tbody').append('<tr><th>'+numIdx+'</th>\
+        var html = '<tr><th>'+numIdx+'</th>\
           <td><div class="cp_nobr">'+(item.cp_name || '')+'</div></td>\
           <td><div class="cntId_nobr">'+(item.CP_CntID || '')+'</div></td>\
           <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.OSP_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+(item.title || '')+'</div></a></td>\
@@ -459,14 +493,19 @@ function ajaxGetPageList(param,pageNum){
           <td>비제휴</td>\
           <td>'+moment(item.date).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>'+moment(item.cs_date).format('YYYY-MM-DD HH:mm:ss')+'</td>\
-          <td>\
-            <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">\
-              <option value="P">보류</option>\
-              <option value="T">제휴</option>\
-              <option value="D">삭제</option>\
-            </select>\
-          </td>\
-          <td class="text-center">\
+          <td>';
+        if(item.delay_state != null){
+          html += '<p class="text-danger text-center m-b-0"><strong>Delay 처리중</strong></p>'
+        }
+        else{
+          html += '<input id="delayTime" type="hidden" value=\"'+item.delay_time+'\"/>\
+          <select name="select" class="selectApply m-l-0 form-control form-control-inverse select-left">\
+          <option value="P">보류</option>\
+          <option value="T">제휴</option>\
+          <option value="D">삭제</option>\
+          </select>'
+        }
+        html += '</td><td class="text-center">\
             <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">\
               <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;">\
                 <span class="icofont icofont-ui-delete"></span>\
@@ -476,7 +515,8 @@ function ajaxGetPageList(param,pageNum){
               </button>\
             </div>\
           </td>\
-        </tr>');
+        </tr>';
+        $('tbody').append(html);
       });
     }
   });
