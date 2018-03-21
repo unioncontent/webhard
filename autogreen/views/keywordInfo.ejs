@@ -8,7 +8,7 @@
         <ul class="breadcrumb-title">
           <li class="breadcrumb-item">
             <a href="/">
-              <i class="icofont icofont-home"></i>
+              <i class="fas fa-home"></i>
             </a>
           </li>
           <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
@@ -197,10 +197,10 @@
                     <td>
     								  <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">
                         <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;">
-        								  <span class="icofont icofont-ui-delete"></span>
+        								  <span class="far fa-trash-alt"></span>
         								</button>
       							    <button type="button" class="btn-update btn btn-primary waves-effect waves-light">
-        								  <span class="icofont icofont-ui-edit"></span>
+        								  <span class="far fa-edit"></span>
         								</button>
     								  </div>
     								</td>
@@ -381,7 +381,7 @@
                             <input type="text" class="form-control" id="dSearch">
                             <span class="messages"><p class="text-danger error m-b-0"></p></span>
                           </td>
-                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="icofont icofont-plus" style="margin-right:0"></i></button></td>
+                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="fas fa-plus" style="margin-right:0"></i></button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -685,7 +685,7 @@ function reloadKeyList(cntIdx){
         else{
           html += '<td></td><td><div class="keyword_nobr">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td>';
         }
-        html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="icofont icofont-garbage" style="margin-right:0"></i></button></td></tr>';
+        html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="fas fa-minus" style="margin-right:0"></i></button></td></tr>';
         $("#inputKey").after(html);
       });
     }
@@ -818,10 +818,10 @@ function ajaxGetPageList(param,pageNum){
           <td>\
             <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">\
               <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;">\
-                <span class="icofont icofont-ui-delete"></span>\
+                <span class="far fa-trash-alt"></span>\
               </button>\
               <button type="button" class="btn-update btn btn-primary waves-effect waves-light">\
-                <span class="icofont icofont-ui-edit"></span>\
+                <span class="far fa-edit"></span>\
               </button>\
             </div>\
           </td>\
