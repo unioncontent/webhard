@@ -348,7 +348,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
 <script type="text/javascript">
 // url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
@@ -653,7 +652,7 @@ function ajaxGetPageList(param,pageNum){
           <td>'+item.OSP_idx+'</td>\
           <td><div class="kwd_nobr">'+((item.K_keyword == null) ? '' : item.K_keyword)+'</div></td>\
           <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.OSP_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+item.OSP_title+'</div></a></td>\
-          <td>'+item.OSP_price+'</th>\
+          <td>'+item.OSP_price+'</td>\
           <td>'+moment(item.OSP_regdate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
         </tr>');
       });

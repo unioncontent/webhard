@@ -13,7 +13,9 @@ router.get('/', function(req, res, next) {
   }
   var sql = "SELECT FORMAT(COUNT(*),0) AS totalCount,\
   FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as TCount,\
+  FORMAT(COUNT(IF(K_apply='T' and CS_state='0',1,null)),0) as TdCount,\
   FORMAT(COUNT(IF(K_apply='D' and CS_state='1',1,null)),0) as DCount,\
+  FORMAT(COUNT(IF(K_apply='D' and CS_state='0',1,null)),0) as DdCount,\
   FORMAT(COUNT(IF(K_apply='P',1,null)),0) as PCount\
   FROM dashboard where CS_regdate between date_add(now(), interval -24 hour) and now()";
   var promise = require('../db/db_promise.js');
