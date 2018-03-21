@@ -419,6 +419,9 @@ $(document).on('click','.page-link',function(){
 // 모달 수정
 $(document).on('change','.k_key_m, .k_apply_m, .k_method_m',function(){
   if($('#modal-cntList > tbody tr').length > 1){
+    if($('input[name=oDelay_time]').val() == ''){
+      $('#delay_time').val('0');
+    }
     KeywordStatusUpdateAjax();
   }
   else{
