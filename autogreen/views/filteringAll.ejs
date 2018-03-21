@@ -8,7 +8,7 @@
         <ul class="breadcrumb-title">
           <li class="breadcrumb-item">
             <a href="/">
-              <i class="icofont icofont-home"></i>
+              <i class="fas fa-home"></i>
             </a>
           </li>
           <li class="breadcrumb-item"><a href="#!">필터링현황</a></li>
@@ -24,7 +24,7 @@
       <div class="row" id="listTable">
         <div class="col-md-12">
           <div id="reportrange" class="col-md-2 form-control form-control-inverse f-left m-b-10">
-            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            <i class="glyphicon glyphicon-calendar far fa-calendar-alt"></i>
             <span></span>
             <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
           </div>
@@ -272,7 +272,7 @@
                             <input type="text" class="form-control" id="dSearch">
                             <span class="messages"><p class="text-danger error m-b-0"></p></span>
                           </td>
-                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="icofont icofont-plus" style="margin-right:0"></i></button></td>
+                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="fas fa-plus" style="margin-right:0"></i></button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -344,7 +344,6 @@
     width: 300px;
   }
 </style>
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
@@ -446,7 +445,7 @@ function openKeywordList(idx){
         else{
           html += '<td></td><td><div class="keyword">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td>';
         }
-        html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="icofont icofont-garbage" style="margin-right:0"></i></button></td></tr>';
+        html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="fas fa-minus" style="margin-right:0"></i></button></td></tr>';
         $("#inputKey").after(html);
       });
       console.log("data : ",data);
