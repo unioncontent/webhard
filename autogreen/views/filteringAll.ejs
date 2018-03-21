@@ -495,7 +495,7 @@ $("#insertKeywordBtn").on("click",function(){
       'K_method': $("input[name ='oK_method']").val(),
       'K_apply': $("input[name ='oK_apply']").val(),
       'U_id_c': $("input[name ='cp_name']").val(),
-      'delay_time': $('input[name=delay_time]').val()
+      'delay_time': $('input[name=delay_time]').val() || '0'
     },
     error:function(request,status,error){
       alert("다시시도해주세요.");
