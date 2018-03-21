@@ -121,6 +121,19 @@ router.post('/update', function(req, res, next) {
   });
 });
 
+router.post('/updateOne', function(req, res, next) {
+  if (!req.user) {
+    res.redirect('/login');
+  }
+  Keyword.updateOneKeyword(req.body, function(err, result) {
+    if (err){
+      res.status(500).send('다시시도해주세요.');
+      throw err;
+    }
+    res.send(req.body);
+  });
+});
+
 router.post('/delete', function(req, res, next) {
   if (!req.user) {
     res.redirect('/login');

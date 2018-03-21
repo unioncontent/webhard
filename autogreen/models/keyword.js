@@ -3,6 +3,25 @@ const promise = require('../db/db_promise.js');
 // const info = require('../db/db_con.js');
 
 var Keyword = {
+  updateOneKeyword: function(item,callback){
+    var sql = 'update cnts_kwd_f set ';
+    sql += item['type'] + '=? where n_idx_c=?';
+    delete  item['type'];
+    var param = Object.values(item);
+    var DBpromise = new promise(global.osp);
+    console.log(sql,param);
+    DBpromise.query(sql,param)
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
   updateKeyword: function(item,callback){
     var sql = 'update cnts_kwd_f set K_method=?, K_key=?, K_apply=?';;
     if('delay_time' in item){
