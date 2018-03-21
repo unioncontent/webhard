@@ -143,7 +143,7 @@ router.post('/add',function(req, res, next) {
       req.body.endIdx = idx;
       param.K_type = '0';
     }
-    Keyword.insertKeyword(param,function(err, results, fields) {
+    Keyword.insertKeyword(param,function(err, results) {
       if(err){
         res.status(500).send('다시 입력해 주세요.');
         return false;
