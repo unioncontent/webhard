@@ -3,6 +3,41 @@ const promise = require('../db/db_promise.js');
 // const info = require('../db/db_con.js');
 
 var Delay = {
+  getDelayList : function(item,callback) {
+    var sql = 'select * from delay';
+    var param = [item.offset,item.limit];
+    if('offset' in item){
+      sql += ' limit ?,?'
+    }
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,param)
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
+  delayCount : function(item,callback) {
+    var sql = 'select count(1) as total from delay';
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql)
+    .then(rows => {
+      console.log(rows);
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
   insertDelay : function(item,callback){
     console.log('insertDelay');
     console.log('item : ',item);

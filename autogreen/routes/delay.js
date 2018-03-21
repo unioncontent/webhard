@@ -1,17 +1,76 @@
 var express = require('express');
 var Delay = require('../models/delay.js');
 var User = require('../models/user.js');
+var moment = require('moment-timezone');
 var router = express.Router();
-
-// 페이징
-var totalUser = 0;
-var pageCount = 0;
-var currentPage = 1;
 
 router.get('/', function(req, res, next) {
   if(!req.user){
     res.redirect('/login');
   }
+  var searchObject = {
+    offset: 0,
+    limit: 50
+  }
+  Delay.delayCount(searchObject, function(err, result) {
+    if (err) throw err;
+    var totalDelay = result[0].total;
+    var pageCount = Math.ceil(totalDelay / searchObject.limit);
+    var currentPage = 1;
+
+    if (typeof req.query.page !== 'undefined') {
+      currentPage = req.query.page;
+    } else {
+      currentPage = 1;
+    }
+
+    if (parseInt(currentPage) > 0) {
+      searchObject.offset = (currentPage - 1) * searchObject.limit;
+    }
+
+    Delay.getDelayList(searchObject, function(err, result) {
+      if (err) {
+        res.json(err);
+      } else {
+        res.render('delay', {
+          moment: moment,
+          data: searchObject,
+          dList: result || [],
+          totalDelay: totalDelay,
+          pageCount: pageCount,
+          currentPage: currentPage
+        });
+      }
+    });
+  });
+});
+
+router.post('/getNextPage', function(req, res, next) {
+  if (!req.user) {
+    res.redirect('/login');
+  }
+  var searchObject = {
+    offset: Number(req.body.start) || 0,
+    limit: 10
+  }
+  var currentPage = req.body.start;
+  Delay.delayCount(searchObject, function(err, result) {
+    if (err) throw err;
+    total = result[0].total;
+    pageCount = Math.ceil(total / searchObject.limit);
+    Delay.getDelayList(searchObject, function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.send({
+          total: total,
+          data: searchObject,
+          pageCount: pageCount,
+          dList: result || []
+        });
+      }
+    });
+  });
 });
 
 router.post('/insert', function(req, res, next) {
