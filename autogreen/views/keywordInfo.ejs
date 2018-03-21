@@ -464,7 +464,7 @@ $("#insertKeywordBtn").on("click",function(){
       'K_key': $("input[name ='oK_key']").val(),
       'K_method': $("input[name ='oK_method']").val(),
       'K_apply': $("input[name ='oK_apply']").val(),
-      'delay_time': $('input[name=delay_time]').val(),
+      'delay_time': $('input[name=delay_time]').val() || '0',
       'U_id_c': url.searchParams.get("cp"),
     },
     error:function(request,status,error){
