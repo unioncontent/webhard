@@ -114,7 +114,7 @@
               </select>
             </div>
             <div class="card-block table-border-style table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered table-list">
                 <thead>
                   <tr>
                     <th width="1%">NO</th>
@@ -123,6 +123,8 @@
                     <th width="2%">검색 키워드</th>
                     <th width="2%">제외 키워드</th>
                     <th width="5%">상태</th>
+                    <th width="5%">관리현황</th>
+                    <th width="5%">관리방법</th>
                     <th width="5%">키워드 수정</th>
                   </tr>
                 </thead>
@@ -139,22 +141,57 @@
                       <div class="form-radio">
                         <div class="radio radio-inline">
                           <label>
-                            <input type="radio" value="D" name="k_apply<%= i %>" <%= (kcList[i].K_apply == 'D') ? 'checked' : '' %> disabled>
+                            <input type="radio" value="1" name="K_key<%= i %>" class="listRadio" <%= (kcList[i].K_key == '1') ? 'checked' : '' %>>
+                            <i class="helper"></i>검출
+                          </label>
+                        </div>
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="0" name="K_key<%= i %>" class="listRadio" <%= (kcList[i].K_key == '0') ? 'checked' : '' %>>
+                            <i class="helper"></i>제외
+                          </label>
+                        </div>
+                        <input name="oK_key<%= i %>" value="<%= kcList[i].K_key%>" type="hidden" class="form-control">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-radio">
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="1" name="K_method<%= i %>" class="listRadio" <%= (kcList[i].K_method == '1') ? 'checked' : '' %>>
+                            <i class="helper"></i>자동
+                          </label>
+                        </div>
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="0" name="K_method<%= i %>" class="listRadio" <%= (kcList[i].K_method == '0') ? 'checked' : '' %>>
+                            <i class="helper"></i>수동
+                          </label>
+                        </div>
+                        <input name="oK_method<%= i %>" value="<%= kcList[i].K_method%>" type="hidden" class="form-control">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-radio">
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" value="D" name="K_apply<%= i %>" class="listRadio" <%= (kcList[i].K_apply == 'D') ? 'checked' : '' %>>
                             <i class="helper"></i>삭제
                           </label>
                         </div>
                         <div class="radio radio-inline">
                           <label>
-                            <input type="radio" value="T" name="k_apply<%= i %>" <%= (kcList[i].K_apply == 'T') ? 'checked' : '' %> disabled>
+                            <input type="radio" value="T" name="K_apply<%= i %>" class="listRadio" <%= (kcList[i].K_apply == 'T') ? 'checked' : '' %>>
                             <i class="helper"></i>제휴
                           </label>
                         </div>
                         <div class="radio radio-inline">
                           <label>
-                            <input type="radio" value="P" name="k_apply<%= i %>" <%= (kcList[i].K_apply == 'P') ? 'checked' : '' %> disabled>
+                            <input type="radio" value="P" name="K_apply<%= i %>" class="listRadio" <%= (kcList[i].K_apply == 'P') ? 'checked' : '' %>>
                             <i class="helper"></i>보류
                           </label>
                         </div>
+                        <input name="oK_apply<%= i %>" value="<%= kcList[i].K_apply%>" type="hidden" class="form-control">
                       </div>
                     </td>
                     <td>
@@ -173,7 +210,7 @@
                 <tfoot>
                   <% if(pageCount > 1) { %>
                   <tr>
-                    <td colspan="7">
+                    <td colspan="9">
                       <ul class="pagination float-right">
                         <%
                           var y = 1;
@@ -254,7 +291,7 @@
                                     <i class="helper"></i>OFF
                                   </label>
                                 </div>
-                                <input name="oK_key" type="hidden" class="form-control">
+                                <input name="oK_key_m" type="hidden" class="form-control">
                               </div>
                             </td>
                           </tr>
@@ -274,7 +311,7 @@
                                     <i class="helper"></i>수동
                                   </label>
                                 </div>
-                                <input name="oK_method" type="hidden" class="form-control">
+                                <input name="oK_method_m" type="hidden" class="form-control">
                               </div>
                             </td>
                           </tr>
@@ -300,7 +337,7 @@
                                     <i class="helper"></i>보류
                                   </label>
                                 </div>
-                                <input name="oK_apply" type="hidden" class="form-control">
+                                <input name="oK_apply_m" type="hidden" class="form-control">
                               </div>
                             </td>
                           </tr>
@@ -381,15 +418,18 @@ dl{
   font-size: 15px;
   padding-left: 3px;
   text-overflow: ellipsis;
-  width: 300px;
+  width: 232px;
   overflow: hidden;
   margin: 0px auto;
 }
 .cp_nobr{
-  width: 150px;
+  width: 113px;
 }
 .keyword_nobr{
   width: 200px;
+}
+.radio-inline{
+  margin-right: 14px;
 }
 </style>
 <script>
@@ -429,6 +469,35 @@ $(document).on('change','.k_key_m, .k_apply_m, .k_method_m',function(){
   }
 });
 
+// list radio 변경시
+$(document).on('change','.listRadio',function(){
+  var trInputEle = $(this).closest("tr").find('input');
+  var param = {
+    'type': $(this).attr("name").replace(/[0-9]/g, ""),
+    'value': $(this).val(),
+    'n_idx_c': trInputEle.eq(0).val()
+  };
+  KeywordStatusOneUpdateAjax(param,$(this));
+});
+
+function KeywordStatusOneUpdateAjax(param,target){
+  $.ajax({
+    url: '../contents/updateOne',
+    type: 'post',
+    data: param,
+    error:function(request,status,error){
+      alert("다시 시도 해주세요.");
+      location.reload();
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        console.log(data);
+        target.closest("td").find("input[type=hidden]").val(data.value);
+      }
+    }
+  });
+}
 // 모달 삭제 버튼 클릭시
 $(document).on("click",".remove_keyword",function(){
   var idx = $(this).parents("tr").find(".n_idx_k").val();
@@ -461,9 +530,9 @@ $("#insertKeywordBtn").on("click",function(){
     data: {
       'keyword': [$('#pSearch').val(),$('#dSearch').val()],
       'n_idx_c': $("#cntIdx_m").val(),
-      'K_key': $("input[name ='oK_key']").val(),
-      'K_method': $("input[name ='oK_method']").val(),
-      'K_apply': $("input[name ='oK_apply']").val(),
+      'K_key': $("input[name ='oK_key_m']").val(),
+      'K_method': $("input[name ='oK_method_m']").val(),
+      'K_apply': $("input[name ='oK_apply_m']").val(),
       'delay_time': $('input[name=delay_time]').val() || '0',
       'U_id_c': url.searchParams.get("cp"),
     },
@@ -570,9 +639,9 @@ function KeywordStatusUpdateAjax(){
     success:function(data){
       if(data){
         // console.log(data);
-        $("input[name ='oK_key']").val(data.K_key);
-        $("input[name ='oK_method']").val(data.K_method);
-        $("input[name ='oK_apply']").val(data.K_apply);
+        $("input[name ='oK_key_m']").val(data.K_key);
+        $("input[name ='oK_method_m']").val(data.K_method);
+        $("input[name ='oK_apply_m']").val(data.K_apply);
         $("input[name ='oDelay_time']").val(data.delay_time);
         $("#delay_time").val(data.delay_time);
         $("#cntIdx_m").val(data.n_idx_c);
@@ -596,13 +665,13 @@ function reloadKeyList(cntIdx){
       alert(request.responseText);
     },
     success:function(data){
-      // console.log(data);
+      console.log('reloadKeyList:',data);
       $("#modal-cntList tbody tr").not("#inputKey").remove()
       data.forEach(function(item, idx){
         if(idx == 0){
-          $("input[name ='oK_key']").val(item.K_key);
-          $("input[name ='oK_method']").val(item.K_method);
-          $("input[name ='oK_apply']").val(item.K_apply);
+          $("input[name ='oK_key_m']").val(item.K_key);
+          $("input[name ='oK_method_m']").val(item.K_method);
+          $("input[name ='oK_apply_m']").val(item.K_apply);
           $("input[name ='oDelay_time']").val(data.delay_time);
           $("input[name ='delay_time']").val(item.delay_time);
           $("input:radio[name ='k_key_m']:input[value='"+item.K_key+"']").prop("checked", true);
@@ -648,7 +717,7 @@ function ajaxGetPageList(param,pageNum){
       }
       $('.col-md-12 tfoot').empty();
       if(data.pageCount > 1) {
-        var html = '<tr><td colspan="7"><ul class="pagination float-right">';
+        var html = '<tr><td colspan="9"><ul class="pagination float-right">';
         var y = 1;
         if(pageNum > 1  && data.pageCount > 4) {
           y = pageNum-1;
@@ -693,22 +762,57 @@ function ajaxGetPageList(param,pageNum){
             <div class="form-radio">\
               <div class="radio radio-inline">\
                 <label>\
-                  <input type="radio" value="D" name=\"k_apply'+idx+'\" '+((item.K_apply == 'D') ? 'checked' : '')+' disabled>\
+                  <input type="radio" value="1" name=\"K_key'+idx+'\" class="listRadio" '+((item.K_key == '1') ? 'checked' : '')+'>\
+                  <i class="helper"></i>검출\
+                </label>\
+              </div>\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="0" name=\"K_key'+idx+'\" class="listRadio" '+((item.K_key == '0') ? 'checked' : '')+'>\
+                  <i class="helper"></i>제외\
+                </label>\
+              </div>\
+              <input name=\"oK_key'+idx+'\" value=\"'+item.K_key+'\" type="hidden" class="form-control">\
+            </div>\
+          </td>\
+          <td>\
+            <div class="form-radio">\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="1" name=\"K_method'+idx+'\" class="listRadio" '+((item.K_method == '1') ? 'checked' : '')+'>\
+                  <i class="helper"></i>자동\
+                </label>\
+              </div>\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="0" name=\"K_method'+idx+'\" class="listRadio" '+((item.K_method == '0') ? 'checked' : '')+'>\
+                  <i class="helper"></i>수동\
+                </label>\
+              </div>\
+              <input name=\"oK_method'+idx+'\" value=\"'+item.K_method+'\" type="hidden" class="form-control">\
+            </div>\
+          </td>\
+          <td>\
+            <div class="form-radio">\
+              <div class="radio radio-inline">\
+                <label>\
+                  <input type="radio" value="D" name=\"K_apply'+idx+'\" class="listRadio" '+((item.K_apply == 'D') ? 'checked' : '')+'>\
                   <i class="helper"></i>삭제\
                 </label>\
               </div>\
               <div class="radio radio-inline">\
                 <label>\
-                  <input type="radio" value="T" name=\"k_apply'+idx+'\" '+((item.K_apply == 'T') ? 'checked' : '')+' disabled>\
+                  <input type="radio" value="T" name=\"K_apply'+idx+'\" class="listRadio" '+((item.K_apply == 'T') ? 'checked' : '')+'>\
                   <i class="helper"></i>제휴\
                 </label>\
               </div>\
               <div class="radio radio-inline">\
                 <label>\
-                  <input type="radio" value="P" name=\"k_apply'+idx+'\" '+((item.K_apply == 'P') ? 'checked' : '')+' disabled>\
+                  <input type="radio" value="P" name=\"K_apply'+idx+'\" class="listRadio" '+((item.K_apply == 'P') ? 'checked' : '')+'>\
                   <i class="helper"></i>보류\
                 </label>\
               </div>\
+              <input name=\"oK_apply'+idx+'\" value=\"'+item.K_apply+'\" type="hidden" class="form-control">\
             </div>\
           </td>\
           <td>\
