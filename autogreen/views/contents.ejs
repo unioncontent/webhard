@@ -182,9 +182,14 @@
 var url_string = window.location.href
 var url = new URL(url_string);
 var c = url.searchParams.get("cp_name");
+var searchTypeParams = url.searchParams.get("searchType");
+var searchParams = url.searchParams.get("search");
 
-//cp 리스트 가져오기
 $(document).ready(function(){
+  if(searchTypeParams != null && searchParams != null){
+    $("#selectSearchType").val(searchTypeParams).prop("selected", true);
+    $("#keywordInput").val(searchParams);
+  }
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
     url: '../contents/getCPList',
