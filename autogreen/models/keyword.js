@@ -116,14 +116,18 @@ var Keyword = {
     // });
   },
   getCPKeywordCount: function(callback){
-    var sql = 'SELECT a.U_name,a.U_id,FORMAT(count(distinct c.CP_title),0) as CCount,\
-    FORMAT(COUNT(IF(b.K_type=\'1\',1,null)),0) as TCount,FORMAT(COUNT(IF(b.K_type=\'0\',1,null)),0) as DCount \
+    var sql = 'SELECT STRAIGHT_JOIN a.U_name,a.U_id,\
+    FORMAT(IF(CCount is null,0,CCount),0) as CCount,\
+    FORMAT(COUNT(IF(k.K_type=\'1\',1,null)),0) as TCount,\
+    FORMAT(COUNT(IF(k.K_type=\'0\',1,null)),0) as DCount\
     FROM user_all_b as a\
-    left join cnts_list as c\
-    on a.n_idx = c.CP_id\
-    left join cnts_kwd_f as b\
-    on c.n_idx_c = b.n_idx_c\
-    where U_class = \'c\' group by a.U_name';
+    left join  cnts_kwd_f as k\
+    on a.U_id = k.U_id_c\
+    left join (SELECT STRAIGHT_JOIN \
+    U_id_c,count(distinct CP_title) as CCount\
+    FROM cnts_list_c as c group by U_id_c) as c\
+    on a.U_id = c.U_id_c\
+    where a.U_class = \'c\' group by a.U_name';
     dbstart(sql,null,callback);
   },
   getCPKeyword: function(item,callback){
@@ -140,22 +144,21 @@ var Keyword = {
       FORMAT(COUNT(IF(K_method=\'0\',1,null)),0) as m,\
       FORMAT(COUNT(IF(K_key=\'1\',1,null)),0) as n,\
       FORMAT(COUNT(IF(K_key=\'0\',1,null)),0) as f\
-      from (select * from keyword where U_id_c=? group by n_idx_c) as gTable';
+      from (select * from cnts_kwd_f where U_id_c=? group by n_idx_c) as gTable';
       console.log(sql,param[0]);
       DBpromise.query(sql,param[0]).then(rows => {
         return [name,rows[0].total,rows[0].a,rows[0].m,rows[0].n,rows[0].f]
       }).then(rows => {
         var infoArr = rows;
         console.log('infoArr:',infoArr);
-        sql = 'SELECT n_idx_c, CP_CntID, U_id_c, U_name, CP_title, search, K_apply, K_method, K_key,\
-        FORMAT(COUNT(IF(K_type=\'1\',1,null)),0) as K_type_a, FORMAT(COUNT(IF(K_type=\'0\',1,null)),0) as K_type_d from keyword where U_id_c=?';
+        sql = 'SELECT * from keyword where U_id_c=?';
         if('searchType' in item){
           switch (item.searchType) {
             case 'i': sql+=' and CP_CntID=\''+item.search+'\''; break;
             case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
           }
         }
-        sql += ' group by n_idx_c order by n_idx_c desc limit ?,?';
+        sql += ' limit ?,?';
         console.log(sql,param);
         DBpromise.query(sql,param).then(rows=> { return callback(null,rows,infoArr); })
         .then(rows => {
@@ -181,7 +184,7 @@ var Keyword = {
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
       }
     }
-    sql += ' group by n_idx_c) as a';
+    sql += ' ) as a';
     dbstart(sql,item.cp,callback);
   }
 }
