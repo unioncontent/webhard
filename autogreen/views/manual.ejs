@@ -170,7 +170,6 @@
     width: 250px;
   }
 </style>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
 <script type="text/javascript">
 // url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
@@ -178,6 +177,8 @@ var url = new URL(url_string);
 var c = url.searchParams.get("cp_name");
 var sDateParams = url.searchParams.get("sDate");
 var eDateParams = url.searchParams.get("eDate");
+var searchTypeParams = url.searchParams.get("searchType");
+var searchParams = url.searchParams.get("search");
 
 $(document).ready(function(){
   $('#reportrange').daterangepicker(optionSet1,cb);
@@ -187,6 +188,10 @@ $(document).ready(function(){
   }
   else{
     $('#reportrange span').html(moment(new Date(sDateParams)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDateParams+' 23:59:59')).format('YYYY.MM.DD'));
+  }
+  if(searchTypeParams != null && searchParams != null){
+    $("#selectSearchType").val(searchTypeParams).prop("selected", true);
+    $("#keywordInput").val(searchParams);
   }
 
   // cp 셀렉트 박스 옵션값 넣기

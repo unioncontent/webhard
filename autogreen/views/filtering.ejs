@@ -170,9 +170,12 @@
 var url_string = window.location.href
 var url = new URL(url_string);
 var fType = url.pathname.replace('/filtering/','');
+
 var c = url.searchParams.get("cp_name");
 var sDateParams = url.searchParams.get("sDate");
 var eDateParams = url.searchParams.get("eDate");
+var searchTypeParams = url.searchParams.get("searchType");
+var searchParams = url.searchParams.get("search");
 
 $(document).ready(function(){
   $('#reportrange').daterangepicker(optionSet1,cb);
@@ -184,6 +187,10 @@ $(document).ready(function(){
     $('#reportrange span').html(moment(new Date(sDateParams)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDateParams+' 23:59:59')).format('YYYY.MM.DD'));
   }
 
+  if(searchTypeParams != null && searchParams != null){
+    $("#selectSearchType").val(searchTypeParams).prop("selected", true);
+    $("#keywordInput").val(searchParams);
+  }
   $.ajax({
     url: '../filtering/getCPList',
     type: 'post',

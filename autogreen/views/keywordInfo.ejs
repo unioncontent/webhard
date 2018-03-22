@@ -436,6 +436,15 @@ dl{
 // url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
 var url = new URL(url_string);
+var searchTypeParams = url.searchParams.get("searchType");
+var searchParams = url.searchParams.get("search");
+
+$(document).ready(function(){
+  if(searchTypeParams != null && searchParams != null){
+    $("#selectSearchType").val(searchTypeParams).prop("selected", true);
+    $("#keywordInput").val(searchParams);
+  }
+});
 
 //페이지 변경시
 $(document).on('click','.page-link',function(){
