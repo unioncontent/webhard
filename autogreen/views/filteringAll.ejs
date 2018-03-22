@@ -151,7 +151,6 @@
                     <div class="table-responsive">
                       <table class="table table-sm" id='modal-cnt'>
                         <tbody>
-                          <input id="cntIdx_m" type="hidden" class="form-control" />
                           <tr>
                             <th class="b-r-1 text-left" width="30%">콘텐츠 제목</th>
                             <td id="m_title" class="text-left">
@@ -173,13 +172,13 @@
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="1" name="k_key" class="k_key" disabled>
+                                    <input type="radio" value="1" name="k_key" class="k_key" >
                                     <i class="helper"></i>ON
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="0" name="k_key" class="k_key" disabled>
+                                    <input type="radio" value="0" name="k_key" class="k_key" >
                                     <i class="helper"></i>OFF
                                   </label>
                                 </div>
@@ -193,13 +192,13 @@
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="1" name="k_method" class="k_method" disabled>
+                                    <input type="radio" value="1" name="k_method" class="k_method" >
                                     <i class="helper"></i>자동
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="0" name="k_method" class="k_method" disabled>
+                                    <input type="radio" value="0" name="k_method" class="k_method" >
                                     <i class="helper"></i>수동
                                   </label>
                                 </div>
@@ -213,19 +212,19 @@
                               <div class="form-radio text-left">
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="D" name="k_apply" class="k_apply" disabled>
+                                    <input type="radio" value="D" name="k_apply" class="k_apply" >
                                     <i class="helper"></i>삭제
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="T" name="k_apply" class="k_apply" disabled>
+                                    <input type="radio" value="T" name="k_apply" class="k_apply" >
                                     <i class="helper"></i>제휴
                                   </label>
                                 </div>
                                 <div class="radio radio-inline">
                                   <label>
-                                    <input type="radio" value="P" name="k_apply" class="k_apply" disabled>
+                                    <input type="radio" value="P" name="k_apply" class="k_apply" >
                                     <i class="helper"></i>보류
                                   </label>
                                 </div>
@@ -238,7 +237,8 @@
                             <td>
                               <div class="row">
                                 <div class="col-sm-7">
-                                  <input name="delay_time" id="delay_time" type="number" class="form-control" placeholder="0" readonly>
+                                  <input name="delay_time" id="delay_time" type="number" class="form-control" placeholder="0">
+                                  <input name="oDelay_time" type="hidden" class="form-control">
                                 </div>
                               </div>
                             </td>
@@ -347,6 +347,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- sweetalert -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 // url 변경 후 파라미터값 가져오기
 var url_string = window.location.href
@@ -365,7 +367,7 @@ $(document).ready(function(){
   }
 });
 
-//콘텐츠 검색 모달
+//콘텐츠 검색 모달 완료시
 $('#keyword-Modal').on('hidden.bs.modal', function (e) {
   console.log('콘텐츠 검색 모달  hidden.bs.modal');
   $('body').addClass('modal-open');
@@ -375,84 +377,22 @@ $('#keyword-Modal').on('hidden.bs.modal', function (e) {
 $(".btn-keyword").on("click",function(){
   $('#modal-cnt input:not(input[type=radio])').val('');
   $('#modal-cnt input').filter(':radio').prop('checked',false);
+  $("#modal-cnt tbody tr#updateTr").remove();
   $("#modal-cntList tbody tr:not(#inputKey)").remove();
   $("#keywordInfo-Modal").modal('show');
 });
 
-$('#search_cnt_name').on('keyup',function(event){
-  if(event.keyCode == 13){
-    $('#btn-searchCnt').trigger('click');
-  };
-});
 // 콘텐츠 검색버튼 클릭시
 $('#cnt_name').on('keyup',function(event){
   if(event.keyCode == 13){
     $('#contentsBtn').trigger('click');
   };
 });
-
 $("#contentsBtn").on("click",function(){
   $("#search_cnt_name").val($("#cnt_name").val());
   searchCnt($("#search_cnt_name").val());
   $("#keyword-Modal").modal('show');
 });
-
-$("#btn-searchCnt").on("click",function(){
-  searchCnt($("#search_cnt_name").val());
-});
-
-$(document).on("click",".btn-cnt",function(event){
-  var title = $(event.target).parents("tr").find(".contents").text().split(" ] ")[1];
-  var idx = $(event.target).parents("tr").find(".n_idx_c").val();
-  $("#keyword-Modal tbody").empty();
-  $("#keyword-Modal").modal('hide');
-  $("#keyword-Modal tbody").empty();
-  $("#search_cnt_name").val("");
-  $("input[name=contentsID]").val(idx);
-  $("#cnt_title").text(title);
-  $("#cnt_name").val(title);
-  openKeywordList(idx);
-});
-
-function openKeywordList(idx){
-  $.ajax({
-    url: '../keyword/searchKeyInfo',
-    type: 'post',
-    data : {'n_idx_c': idx},
-    datatype : 'json',
-    error:function(request,status,error){
-      // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-      alert(request.responseText);
-    },
-    success:function(data){
-      $("#modal-cntList tbody tr:not(#inputKey)").remove();
-      data.forEach(function(item, idx){
-        if(idx == 0){
-          $("input[name ='oK_key']").val(item.K_key);
-          $("input[name ='oK_method']").val(item.K_method);
-          $("input[name ='oK_apply']").val(item.K_apply);
-          $("input[name ='cp_name']").val(item.U_id_c);
-          $("input[name ='delay_time']").val(item.delay_time);
-
-          $("input:radio[name ='k_key']:input[value='"+item.K_key+"']").prop("checked", true);
-          $("input:radio[name ='k_method']:input[value='"+item.K_method+"']").prop("checked", true);
-          $("input:radio[name ='k_apply']:input[value='"+item.K_apply+"']").prop("checked", true);
-        }
-        var html = '<tr><th scope="row" class="centerTh">'+(idx+1)+'</th>';
-        if(item.K_type != '0'){
-          html += '<td><div class="keyword">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td><td></td>';
-        }
-        else{
-          html += '<td></td><td><div class="keyword">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td>';
-        }
-        html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="fas fa-minus" style="margin-right:0"></i></button></td></tr>';
-        $("#inputKey").after(html);
-      });
-      console.log("data : ",data);
-    }
-  });
-}
-
 function searchCnt(name){
   if($('#search_cnt_name').val() == ""){
     alert("검색어를 넣어주세요.");
@@ -482,6 +422,19 @@ function searchCnt(name){
   });
 }
 
+// 콘텐츠 선택버튼 클릭시
+$(document).on("click",".btn-cnt",function(event){
+  var title = $(event.target).parents("tr").find(".contents").text().split(" ] ")[1];
+  var idx = $(event.target).parents("tr").find(".n_idx_c").val();
+  $("#keyword-Modal tbody").empty();
+  $("#keyword-Modal").modal('hide');
+  $("#keyword-Modal tbody").empty();
+  $("#search_cnt_name").val("");
+  $("input[name=contentsID]").val(idx);
+  $("#cnt_title").text(title);
+  $("#cnt_name").val(title);
+  openKeywordList(idx);
+});
 $("#insertKeywordBtn").on("click",function(){
   $.ajax({
     url: '../keyword/add',
@@ -493,7 +446,7 @@ $("#insertKeywordBtn").on("click",function(){
       'K_method': $("input[name ='oK_method']").val(),
       'K_apply': $("input[name ='oK_apply']").val(),
       'U_id_c': $("input[name ='cp_name']").val(),
-      'delay_time': $('input[name=delay_time]').val() || '0'
+      'delay_time': $('input[name=oDelay_time]').val() || '0'
     },
     error:function(request,status,error){
       alert("다시시도해주세요.");
@@ -509,7 +462,6 @@ $("#insertKeywordBtn").on("click",function(){
     }
   });
 });
-
 $(document).on("click",".remove_keyword",function(){
   var idx = $(this).parents("tr").find(".n_idx_k").val();
   $.ajax({
@@ -531,6 +483,108 @@ $(document).on("click",".remove_keyword",function(){
       }
     }
   });
+});
+function openKeywordList(idx){
+  $.ajax({
+    url: '../keyword/searchKeyInfo',
+    type: 'post',
+    data : {'n_idx_c': idx},
+    datatype : 'json',
+    error:function(request,status,error){
+      // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert(request.responseText);
+    },
+    success:function(data){
+      $("#modal-cntList tbody tr:not(#inputKey)").remove();
+      data.forEach(function(item, idx){
+        if(idx == 0){
+          $("input[name ='oK_key']").val(item.K_key);
+          $("input[name ='oK_method']").val(item.K_method);
+          $("input[name ='oK_apply']").val(item.K_apply);
+          $("input[name ='oDelay_time']").val(item.delay_time);
+          $("input[name ='cp_name']").val(item.U_id_c);
+
+          $('input[name=delay_time]').val(item.delay_time);
+          $("input:radio[name ='k_key']:input[value='"+item.K_key+"']").prop("checked", true);
+          $("input:radio[name ='k_method']:input[value='"+item.K_method+"']").prop("checked", true);
+          $("input:radio[name ='k_apply']:input[value='"+item.K_apply+"']").prop("checked", true);
+
+          if($("#modal-cnt tbody tr#updateTr").length == 0){
+            var updateBtnHtml = '<tr id="updateTr"><th></th><td><button id="updateBtn" type="button" class="btn btn-inverse">수정</button></td></tr>';
+            $("#modal-cnt tbody").append(updateBtnHtml);
+          }
+        }
+        var html = '<tr><th scope="row" class="centerTh">'+(idx+1)+'</th>';
+          if(item.K_type != '0'){
+            html += '<td><div class="keyword">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td><td></td>';
+          }
+          else{
+            html += '<td></td><td><div class="keyword">'+item.K_keyword+'</div><input type="hidden" class="n_idx_k" value="'+item.n_idx+'"/></td>';
+          }
+          html += '<td><button class="remove_keyword btn btn-danger btn-sm"><i class="fas fa-minus" style="margin-right:0"></i></button></td></tr>';
+          $("#inputKey").after(html);
+        });
+      }
+    });
+  }
+
+// 콘텐츠 상태 수정시
+$(document).on('click','#updateBtn',function(){
+  swal({
+    title: "위 상태로 수정하시겠습니까?",
+    text: "\'"+$("#cnt_name").val()+"\' 콘텐츠의 상태가 수정됩니다.",
+    icon: "warning",
+    buttons: ["취소", true],
+    dangerMode: true,
+  })
+  .then((value) =>{
+    if(value != null){
+      var param = {
+        'K_method': $('input:radio[name=k_method]:checked').val(),
+        'K_key': $('input:radio[name=k_key]:checked').val(),
+        'K_apply': $('input:radio[name=k_apply]:checked').val(),
+        'delay_time': $('input[name=delay_time]').val() || '0',
+        'n_idx_c': $('input[name=contentsID]').val()
+      };
+      // console.log(param);
+      KeywordStatusUpdateAjax(param);
+    }
+  });
+});
+function KeywordStatusUpdateAjax(param){
+  $.ajax({
+    url: '../contents/update',
+    type: 'post',
+    data: param,
+    error:function(request,status,error){
+      swal("ERROR!", "다시 시도 해주세요.", "error");
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      if(data){
+        $("input[name ='oK_key']").val(data.K_key);
+        $("input[name ='oK_method']").val(data.K_method);
+        $("input[name ='oK_apply']").val(data.K_apply);
+        $("input[name ='oDelay_time']").val(data.delay_time);
+        $("#delay_time").val(data.delay_time);
+
+        $("input:radio[name ='k_key']:input[value='"+data.K_key+"']").prop("checked", true);
+        $("input:radio[name ='k_method']:input[value='"+data.K_method+"']").prop("checked", true);
+        $("input:radio[name ='k_apply']:input[value='"+data.K_apply+"']").prop("checked", true);
+        swal("SUCCESS!", "수정되었습니다.", "success");
+      }
+    }
+  });
+}
+
+// 리스트 검색버튼 클릭시
+$('#search_cnt_name').on('keyup',function(event){
+  if(event.keyCode == 13){
+    $('#btn-searchCnt').trigger('click');
+  };
+});
+$("#btn-searchCnt").on("click",function(){
+  searchCnt($("#search_cnt_name").val());
 });
 
 // 검색시
