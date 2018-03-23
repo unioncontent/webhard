@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
   DBpromise.query(sql).then(rows => {
     countObj = rows[0];
     var sql = 'select U_name from user_all_b where U_class=\'c\' and U_state= \'1\'';
-    return DBpromise.query(sql)
+    return DBpromise.query(sql+' order by U_name')
   })
   .then(rows => {
     sql += " and U_id_c=?";
