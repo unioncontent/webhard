@@ -109,8 +109,12 @@ router.post('/searchKeyInfo',function(req, res, next){
     res.redirect('/login');
   }
   Keyword.getKeyInfo(req.body.n_idx_c, function(err,result){
-    console.log(result);
-    res.send(result || []);
+    if (err) {
+      res.status(500).send('새로고침 후 다시 시도해주세요.');
+    } else {
+      console.log(result);
+      res.send(result || []);
+    }
   });
 });
 
@@ -119,7 +123,11 @@ router.post('/searchCnt',function(req, res, next) {
     res.redirect('/login');
   }
   Contents.getSearchCnt(req.body.CP_title, function(err,result){
-    res.send(result);
+    if (err) {
+      res.status(500).send('새로고침 후 다시 시도해주세요.');
+    } else {
+      res.send(result);
+    }
   });
 });
 
