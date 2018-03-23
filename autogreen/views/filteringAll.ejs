@@ -337,7 +337,7 @@
     overflow: hidden;
   }
   .kwd_nobr{
-    width: 117px;
+    width: 146px;
   }
   .contents_nobr{
     font-size: 14px;
@@ -397,7 +397,6 @@ $('#cnt_name').on('keyup',function(event){
 $("#contentsBtn").on("click",function(){
   $("#search_cnt_name").val($("#cnt_name").val());
   searchCnt($("#search_cnt_name").val());
-  $("#keyword-Modal").modal('show');
 });
 function searchCnt(name){
   if($('#search_cnt_name').val() == ""){
@@ -424,6 +423,7 @@ function searchCnt(name){
         <td><button type="submit" class="btn-cnt btn btn-primary m-b-0">선택</button></td></tr>'
         $("#keyword-Modal tbody").append(html);
       });
+      $("#keyword-Modal").modal('show');
     }
   });
 }
