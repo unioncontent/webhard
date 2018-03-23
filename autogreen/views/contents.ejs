@@ -327,7 +327,7 @@ $(document).on('click','.btn-delete',function(){
               cp_name: $('#selectCp option:selected').val() || '0',
               start: $('.active.page-item > .page-link').data().value
             };
-            var num = $('.active.page-item > .page-link').text();
+            var num = Number($('.active.page-item > .page-link').text());
             if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
               param.searchType = url.searchParams.get("searchType");
             }
