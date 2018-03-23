@@ -89,9 +89,10 @@ var Filtering = {
     var param = [item.offset,item.limit];
     if('searchType' in item){
       switch (item.searchType) {
-        case 'c': sql+=' and OSP_idx=\''+item.search+'\''; break;
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
         case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
+        case 'c': sql+=' and cp_name=\''+item.search+'\''; break;
+        case 'n': sql+=' and OSP_idx=\''+item.search+'\''; break;
       }
     }
     if(('sDate' in item) && ('eDate' in item)){
@@ -118,9 +119,10 @@ var Filtering = {
     var param = [];
     if('searchType' in item){
       switch (item.searchType) {
-        case 'c': sql+=' and OSP_idx=\''+item.search+'\''; break;
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
         case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
+        case 'c': sql+=' and cp_name=\''+item.search+'\''; break;
+        case 'n': sql+=' and OSP_idx=\''+item.search+'\''; break;
       }
     }
     if(('sDate' in item) && ('eDate' in item)){
