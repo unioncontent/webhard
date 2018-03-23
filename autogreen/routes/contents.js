@@ -159,16 +159,65 @@ router.post('/add', function(req, res, next) {
     res.redirect('/login');
   }
 
-  var DBpromise = new promise(global.osp);
-  Promise.all([addContents(req.body,DBpromise)])
-    .then(function(data){
-      totalCount = data.length;
-      res.send('콘텐츠 등록 완료.');
-    })
-    .catch(function(err){
-      res.status(500).send('다시시도해주세요.');
-    });
+  var aData = req.body;
+  aData.CP_CntID = aData.U_id_c + '-' + aData.OSP_id + '-' + (getRandomInt()+1);
+  var sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
+  var param = [aData.CP_CntID,aData.U_id_c,aData.CP_title,aData.CP_title_eng,aData.CP_price,aData.CP_hash];
 
+  console.log("1. 콘텐츠 추가");
+  console.log(sql,param);
+  var DBpromise = new promise(global.osp);
+  DBpromise.query(sql,param)
+    .then(rows => {
+      if(rows == null){
+        res.status(500).send('콘텐츠 등록이 실패했습니다.');
+        throw new Error('error');
+      }
+      sql = 'select * from cnts_list_c where CP_title=? order by CP_regdate desc';
+      console.log("2. 콘텐츠 확인");
+      console.log(sql,param);
+      return DBpromise.query(sql,aData.CP_title);
+    }).catch(handleError)
+    .then(rows => {
+      if(rows == -1){
+        res.status(500).send('키워드 등록 중 에러가 났습니다.');
+        throw new Error('error');
+      }
+      if(aData.CP_CntID == rows[0].CP_CntID){
+        aData.n_idx_c = rows[0].n_idx;
+        aData.K_key = '1';
+        aData.K_type = '1';
+        param = [aData.n_idx_c,aData.U_id_c,aData.keyword,aData.K_apply,aData.K_method,aData.K_key,aData.K_type,aData.delay_time];
+        sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, delay_time, K_regdate) values(?,?,?,?,?,?,?,?,now())';
+        console.log("3. 키워드 추가");
+        console.log(sql,param);
+        return DBpromise.query(sql,param);
+      }
+    }).catch(handleError)
+    .then(rows => {
+      if(rows == -1){
+        res.status(500).send('키워드 추가가 실패했습니다.');
+        throw new Error('error');
+      }
+      res.send('콘텐츠등록이 완료되었습니다.');
+    }).catch(handleError);
+
+});
+
+router.post('/add/cpCheck', function(req, res, next) {
+  if(!req.user){
+    res.redirect('/login');
+  }
+  User.checkName([req.body.CP_name,'c'],function(err,result){
+    if(err){
+      res.status(500).send('cp사 확인 중 에러가 났습니다.');
+    }
+    if(result != []){
+      res.send(result);
+    } else{
+      res.status(500).send('해당 cp사가 등록되지 않았습니다.');
+    }
+  });
 });
 
 var xlstojson = require("xls-to-json-lc");
