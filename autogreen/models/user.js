@@ -126,7 +126,11 @@ var User = {
     var DBpromise = new promise('webhard');
     DBpromise.query(sql,param)
     .then(rows => {
-      return callback(null,rows);
+      var result = rows;
+      if(result != null){
+        result = rows[0];
+      }
+      return callback(null,result);
     })
     .then(rows => {
       DBpromise.close();

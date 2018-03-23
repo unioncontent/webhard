@@ -80,7 +80,7 @@ router.post('/get24DataList', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login', {layout: false});
+  res.render('login', {layout: false,message : req.flash('loginMessage')});
 });
 
 /* set passport*/
@@ -91,7 +91,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   /* db 에서 id를 이용하여 user를 얻어서 done을 호출합니다 */
   User.checkId(id, function(err, results) {
-    var user = results[0];
+    var user = results;
     user.U_pw = bcrypt.hashSync(user.U_pw)
     done(err, user);
   });
@@ -99,18 +99,19 @@ passport.deserializeUser(function(id, done) {
 
 passport.use(new LocalStrategy({
   usernameField: 'username',
-  passwordField: 'password'
-}, function(username, password, done) {
+  passwordField: 'password',
+  passReqToCallback: true
+}, function(req, username, password, done) {
   User.checkId(username, function(err, results) {
     if (err) {
       return done(err);
     }
-    var user = results[0];
+    var user = results;
     if (!user) {
-      return done(null, false, { message: '아이디가 맞지 않습니다.' });
+      return done(null, false, req.flash('loginMessage', '아이디가 존재하지 않습니다.'));
     }
     if (user.U_pw !== password) {
-      return done(null, false, { message: '비밀번호가 맞지 않습니다.' });
+      return done(null, false, req.flash('loginMessage', '비밀번호가 맞지 않습니다.'));
     }
     return done(null, user);
   });
