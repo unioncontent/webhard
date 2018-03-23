@@ -7,7 +7,7 @@ var Delay = {
     var sql = 'select * from delay';
     var param = [item.offset,item.limit];
     if('offset' in item){
-      sql += ' order by OSP_delaydate limit ?,?'
+      sql += ' order by OSP_delaydate desc limit ?,?'
     }
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
