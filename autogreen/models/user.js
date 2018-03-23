@@ -76,17 +76,13 @@ var User = {
       return callback(err,null);
     });
   },
-  checkOCId : function(item,callback) {
-    console.log('checkOCId');
-    var sql = 'select * from user_all_b where U_id=? and U_class=\'o\'';
-    if(item[0] == 'c'){
-      sql = 'select * from user_all_b where U_id=? and U_class=\'c\'';
-    }
-    console.log(sql,item[1]);
+  checkName : function(item,callback) {
+    var sql = 'select * from user_all_b where U_name=? and U_class=?';
     // var connection = mysql.createConnection(info.changeDB(global.osp));
     // connection.query(sql,item[1],callback);
     var DBpromise = new promise(global.osp);
-    DBpromise.query(sql,item[1])
+    console.log(sql,item);
+    DBpromise.query(sql,item)
     .then(rows => {
       return callback(null,rows);
     })
@@ -123,8 +119,8 @@ var User = {
     });
   },
   checkId: function(id,callback) {
-    var sql = 'select * from user_all where U_id=? and U_state=?';
-    var param = [id,'1'];
+    var sql = 'select * from user_all where U_id=? and U_state=? and U_class!=?';
+    var param = [id,'1','c'];
     // var connection = mysql.createConnection(info.changeDB('webhard'));
     // connection.query(,id, callback);
     var DBpromise = new promise('webhard');
