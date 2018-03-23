@@ -158,7 +158,7 @@ var Keyword = {
             case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
           }
         }
-        sql += ' limit ?,?';
+        sql += ' ORDER BY CP_regdate DESC limit ?,?';
         console.log(sql,param);
         DBpromise.query(sql,param).then(rows=> { return callback(null,rows,infoArr); })
         .then(rows => {
