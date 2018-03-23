@@ -33,7 +33,7 @@ app.use(session({
   resave: false, //세션 아이디를 접속할때마다 새롭게 발급하지 않음
   saveUninitialized: true, //세션 아이디를 실제 사용하기전에는 발급하지 않음
   cookie: {
-    maxAge: 1000 * 60 * 60 // 쿠키 유효기간 1시간
+    maxAge: 1000 * 60 * (60*3) // 쿠키 유효기간 3시간
   }
 }));
 app.use(flash()); // flash message
