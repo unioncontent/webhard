@@ -22,9 +22,9 @@
           <div class="card">
             <div class="card-block">
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">* CP사</label>
+                <label class="col-sm-2 col-form-label">* CP사명</label>
                 <div class="col-sm-5">
-                  <input name="CP_name" id="CP_name" type="text" class="form-control" placeholder="거래처">
+                  <input name="CP_name" id="CP_name" type="text" class="form-control" placeholder="CP사명">
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
@@ -45,7 +45,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">* OSP관리ID</label>
                 <div class="col-sm-5">
-                  <input name="OSP_id" id="OSP_id" type="text" class="form-control" placeholder="OSP관리ID">
+                  <input name="OSP_id" id="OSP_id" type="text" class="form-control" value="<%=userID.replace('_admin','')%>" disabled>
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
@@ -122,7 +122,7 @@
               <div class="row">
                 <label class="col-sm-2"></label>
                 <div class="col-sm-10">
-                    <button id="insertBtn" type="submit" class="btn btn-primary m-b-0">등록</button>
+                    <button id="insertBtn" type="submit" class="btn btn-inverse m-b-0">등록</button>
                 </div>
               </div>
             </div>
@@ -166,13 +166,10 @@ $("#insertBtn").on("click",function(){
     'keyword': $("input[name=CP_title]").val()
   };
   if($("#CP_name").val() == ""){
-    check = requiredMessage("CP_name","거래처명을 입력해주세요.");
+    check = requiredMessage("CP_name","CP사명을 입력해주세요.");
   }
   if($("#CP_title").val() == ""){
     check = requiredMessage("CP_title","대표제목를 입력해주세요.");
-  }
-  if($("#OSP_id").val() == ""){
-    check = requiredMessage("OSP_id","OSP관리ID를 입력해주세요.");
   }
   if($("input:radio[name=K_method]:checked").val() == ""){
     check = requiredMessage("method","관리방법을 선택해주세요.");
@@ -180,38 +177,54 @@ $("#insertBtn").on("click",function(){
   if($("input:radio[name=K_apply]:checked").val() == ""){
     check = requiredMessage("apply","관리현황을 선택해주세요.");
   }
-
-  if(check){
-    if($("#delay_time").val() != ""){
-      param.delay_time = $("#delay_time").val();
-    }
-    if($("#CP_hash").val() != ""){
-      param.CP_hash = $("#CP_hash").val();
-    }
-    if($("#CP_price").val() != ""){
-      param.CP_price = $("#CP_price").val();
-    }
-    if($("#keyword").val() != ""){
-      param.keyword = $("#keyword").val();
-    }
-    $.ajax({
-      url: './add',
-      type: 'post',
-      data : param,
-      datatype : 'json',
-      error:function(request,status,error){
-        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-        alert(request.responseText);
-      },
-      success:function(data){
-        // alert(data);
-        window.location.reload();
+  $.ajax({
+    url: './add/cpCheck',
+    type: 'post',
+    data : {'CP_name': $('input[name=CP_name]').val()},
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      check = requiredMessage("CP_name","해당 CP사가 없습니다.");
+    },
+    success:function(data){
+      if(data){
+        param['U_id_c'] = data[0].U_id;
+        insertContents(param);
       }
-    });
-  }
-
-  return check;
+      else{
+        check = requiredMessage("CP_name","해당 CP사가 없습니다.");
+      }
+    }
+  });
 });
+function insertContents(param){
+  if($("#delay_time").val() != ""){
+    param.delay_time = $("#delay_time").val();
+  }
+  if($("#CP_hash").val() != ""){
+    param.CP_hash = $("#CP_hash").val();
+  }
+  if($("#CP_price").val() != ""){
+    param.CP_price = $("#CP_price").val();
+  }
+  if($("#keyword").val() != ""){
+    param.keyword = $("#keyword").val();
+  }
+  $.ajax({
+    url: './add',
+    type: 'post',
+    data : param,
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert(request.responseText);
+    },
+    success:function(data){
+      alert('등록되었습니다.');
+      window.location.reload();
+    }
+  });
+}
 
 $("input, select").on("focus",function(){
   $(this).removeClass("form-control-danger");
