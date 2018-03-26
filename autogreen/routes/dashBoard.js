@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
     return DBpromise.query(sql+' order by U_name')
   })
   .then(rows => {
-    sql += " and U_id_c=?";
+    sql += " and U_name=?";
     arr = [];
     rows.forEach(function(entry) {
       var result = DBpromise.query(sql,entry.U_name).then(rows => {
