@@ -6,7 +6,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Keyword.getCPKeywordCount(function(err,result){
     res.render('keyword',{
@@ -22,7 +22,7 @@ var currentPage = 1;
 
 router.get('/info', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp: req.query.cp,
@@ -72,7 +72,7 @@ router.get('/info', function(req, res, next) {
 
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp: req.body.cp,
@@ -106,7 +106,7 @@ router.post('/getNextPage', function(req, res, next) {
 
 router.post('/searchKeyInfo',function(req, res, next){
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Keyword.getKeyInfo(req.body.n_idx_c, function(err,result){
     if (err) {
@@ -120,7 +120,7 @@ router.post('/searchKeyInfo',function(req, res, next){
 
 router.post('/searchCnt',function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Contents.getSearchCnt(req.body.CP_title, function(err,result){
     if (err) {
@@ -133,7 +133,7 @@ router.post('/searchCnt',function(req, res, next) {
 
 router.post('/add',function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var param = req.body;
   console.log("param:",param);
@@ -165,7 +165,7 @@ router.post('/add',function(req, res, next) {
 
 router.post('/delete',function(req, res, next){
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var type = 'k_idx';
   var value = req.body.n_idx;

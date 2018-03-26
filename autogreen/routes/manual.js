@@ -15,7 +15,7 @@ var search = '';
 
 router.get('/', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp_name: '0',
@@ -103,7 +103,7 @@ router.post('/api', function(req, res, next) {
 
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp_name: req.body.cp_name || '0',
@@ -142,7 +142,7 @@ router.post('/getNextPage', function(req, res, next) {
 
 router.post('/getCPList', function(req, res, next){
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   User.getCpAllList(function(err,result){
     if(err) throw err;

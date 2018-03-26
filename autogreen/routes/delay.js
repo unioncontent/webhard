@@ -6,7 +6,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     offset: 0,
@@ -47,7 +47,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     offset: Number(req.body.start) || 0,
@@ -75,7 +75,7 @@ router.post('/getNextPage', function(req, res, next) {
 
 router.post('/insert', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   console.log('Delay.insertDela');
   Delay.insertDelay(req.body, function(err, result) {
