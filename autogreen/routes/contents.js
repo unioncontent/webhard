@@ -16,7 +16,7 @@ var search = '';
 
 router.get('/', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp_name: '0',
@@ -66,7 +66,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp_name: req.body.cp_name || '0',
@@ -100,7 +100,7 @@ router.post('/getNextPage', function(req, res, next) {
 
 router.post('/getCPList', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   User.getCpAllList(function(err, result) {
     if (err) throw err;
@@ -110,7 +110,7 @@ router.post('/getCPList', function(req, res, next) {
 
 router.post('/update', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Keyword.updateKeyword(req.body, function(err, result) {
     if (err){
@@ -123,7 +123,7 @@ router.post('/update', function(req, res, next) {
 
 router.post('/updateOne', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Keyword.updateOneKeyword(req.body, function(err, result) {
     if (err){
@@ -136,7 +136,7 @@ router.post('/updateOne', function(req, res, next) {
 
 router.post('/delete', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Keyword.deleteKeyword([req.body.n_idx_c,'c_idx'], function(err, result) {
     if (err) throw err;
@@ -149,14 +149,14 @@ router.post('/delete', function(req, res, next) {
 
 router.get('/add', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   res.render('contentsAdd');
 });
 
 router.post('/add', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
 
   var aData = req.body;
@@ -206,7 +206,7 @@ router.post('/add', function(req, res, next) {
 
 router.post('/add/cpCheck', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   User.checkName([req.body.CP_name,'c'],function(err,result){
     if(err){

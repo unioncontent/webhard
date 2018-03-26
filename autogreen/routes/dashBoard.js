@@ -9,7 +9,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if(!req.user || !global.osp){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var sql = "SELECT FORMAT(COUNT(*),0) AS totalCount,\
   FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as TCount,\

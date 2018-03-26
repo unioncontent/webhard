@@ -14,7 +14,7 @@ var uClass = 'a';
 /* 거래처 리스트 page. */
 router.get('/', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
 
   if (typeof req.query.class !== 'undefined') {
@@ -60,7 +60,7 @@ router.get('/', function(req, res, next) {
 /* 거래처 정보 업데이트 */
 router.post('/', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var param = Object.values(req.body);
   if(param[0] == '' || param[2] == '' || param[3] == ''){
@@ -85,13 +85,13 @@ router.post('/', function(req, res, next) {
 /* 거래처 등록 page. */
 router.get('/add', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   res.render('userAdd');
 });
 router.post('/add', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var param = Object.values(req.body);
   var promise = require('../db/db_promise.js');
@@ -110,7 +110,7 @@ router.post('/add', function(req, res, next) {
 /* 거래처 page 이동. */
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     uClass: req.body.uClass || 'a',
@@ -141,7 +141,7 @@ router.post('/getNextPage', function(req, res, next) {
 /* 거래처 아이디 중복체크 */
 router.post('/idCheck', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var id = req.body.id;
   User.checkId(id, function(err, results) {

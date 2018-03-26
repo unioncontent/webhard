@@ -28,7 +28,6 @@ var Manual = {
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql+' order by n_idx desc limit ?,?',param)
     .then(rows => {
-
       return callback(null,rows);
     })
     .then(rows => {
