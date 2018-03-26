@@ -205,9 +205,9 @@ $(document).ready(function(){
     success:function(data){
       console.log(data);
       data.forEach(function(item){
-        var html = '<option value="'+item.U_id+'">'+item.U_name+'</option>'
-        if(c == item.U_id){
-          html = '<option value="'+item.U_id+'" selected>'+item.U_name+'</option>'
+        var html = '<option value="'+item.U_name+'">'+item.U_name+'</option>'
+        if(c == item.U_name){
+          html = '<option value="'+item.U_name+'" selected>'+item.U_name+'</option>'
         }
         $('#selectCp').append(html);
       });
