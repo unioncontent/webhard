@@ -51,7 +51,7 @@ router.post('/getNextPage', function(req, res, next) {
   }
   var searchObject = {
     offset: Number(req.body.start) || 0,
-    limit: 10
+    limit: 50
   }
   var currentPage = req.body.start;
   Delay.delayCount(searchObject, function(err, result) {
