@@ -66,7 +66,7 @@
                   <tfoot>
                     <% if(pageCount > 1) { %>
                     <tr>
-                      <td colspan="9">
+                      <td colspan="10">
                         <ul class="pagination float-right">
                           <%
                             var pageSize = 5;
@@ -181,7 +181,7 @@ function ajaxGetPageList(param,pageNum){
       }
       $('tfoot').empty();
       if(data.pageCount > 1) {
-        var html = '<tr><td colspan="9"><ul class="pagination float-right">';
+        var html = '<tr><td colspan="10"><ul class="pagination float-right">';
         var pageSize = 5;
         var pRCnt = parseInt(pageNum / pageSize);
         if(pageNum % pageSize == 0){
