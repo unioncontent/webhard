@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
   FORMAT(COUNT(IF(K_apply='D' and CS_state='1',1,null)),0) as DCount,\
   FORMAT(COUNT(IF(K_apply='D' and CS_state='0',1,null)),0) as DdCount,\
   FORMAT(COUNT(IF(K_apply='P',1,null)),0) as PCount\
-  FROM dashboard where CS_regdate between date_add(now(), interval -24 hour) and now()";
+  FROM dashboard where date(CS_regdate)=curdate()";
   var promise = require('../db/db_promise.js');
   var DBpromise = new promise(global.osp);
   var countObj = null;
