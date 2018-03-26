@@ -87,11 +87,14 @@ var Filtering = {
   getCntsAllList: function(item,callback) {
     var sql = 'select * from cnts_all where search is not null';
     var param = [item.offset,item.limit];
+    if(item.cp_name != '0'){
+      sql = 'select * from cnts_all where cp_name=?';
+      param.unshift(item.cp_name);
+    }
     if('searchType' in item){
       switch (item.searchType) {
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
         case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
-        case 'c': sql+=' and cp_name=\''+item.search+'\''; break;
         case 'n': sql+=' and OSP_idx=\''+item.search+'\''; break;
       }
     }
@@ -117,11 +120,14 @@ var Filtering = {
   CntsAllListCount : function(item,callback) {
     var sql = 'select count(1) as total from cnts_all where search is not null';
     var param = [];
+    if(item.cp_name != '0'){
+      sql = 'select count(1) as total from cnts_all where cp_name=?';
+      param.unshift(item.cp_name);
+    }
     if('searchType' in item){
       switch (item.searchType) {
         case 't': sql+=' and search like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
         case 'k': sql+=' and replace(K_keyword,\' \',\'\') like \'%'+(item.search.replace(/ /gi, ""))+'%\''; break;
-        case 'c': sql+=' and cp_name=\''+item.search+'\''; break;
         case 'n': sql+=' and OSP_idx=\''+item.search+'\''; break;
       }
     }
