@@ -15,9 +15,10 @@ var search = '';
 
 router.get('/', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
+    cp_name: '0',
     offset: 0,
     limit: 50
   }
@@ -72,7 +73,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/:pType', function(req, res, next) {
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp_name: '0',
@@ -132,7 +133,7 @@ router.get('/:pType', function(req, res, next) {
 
 router.post('/getNextPage', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
     cp_name: req.body.cp_name || '0',
@@ -172,9 +173,10 @@ router.post('/getNextPage', function(req, res, next) {
 
 router.post('/getNextPage2', function(req, res, next) {
   if (!req.user) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   var searchObject = {
+    cp_name: req.body.cp_name || '0',
     offset: Number(req.body.start) || 0,
     limit: 50
   }
@@ -210,7 +212,7 @@ router.post('/getNextPage2', function(req, res, next) {
 
 router.post('/getCPList', function(req, res, next){
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   User.getCpAllList(function(err,result){
     if(err) throw err;
@@ -220,7 +222,7 @@ router.post('/getCPList', function(req, res, next){
 
 router.post('/cancelDelete', function(req, res, next){
   if(!req.user){
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   Filtering.cancelDelete(req.body.idx,function(err,result){
     if(err) throw err;
