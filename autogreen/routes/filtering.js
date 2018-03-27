@@ -22,7 +22,8 @@ router.get('/', function(req, res, next) {
     offset: 0,
     limit: 50
   }
-  console.log('req.query :',req.query);
+  // console.log('global.osp :',global.osp);
+  // console.log('req.query :',req.query);
   if (typeof req.query.cp_name !== 'undefined') {
     searchObject.cp_name = req.query.cp_name;
   }

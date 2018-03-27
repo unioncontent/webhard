@@ -103,7 +103,7 @@ var Filtering = {
     }
     sql += ' order by n_idx desc limit ?,?';
 
-    var DBpromise = new promise('fileham');
+    var DBpromise = new promise(global.osp);
     console.log(sql,param);
     DBpromise.query(sql,param)
     .then(rows => {
@@ -134,7 +134,7 @@ var Filtering = {
     if(('sDate' in item) && ('eDate' in item)){
       sql+=' and OSP_regdate between \''+item.sDate+' 00:00:00\' and \''+item.eDate+' 23:59:59\'';
     }
-    var DBpromise = new promise('fileham');
+    var DBpromise = new promise(global.osp);
     DBpromise.query(sql,param)
     .then(rows => {
       return callback(null,rows);

@@ -20,7 +20,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-inverse">
-              <h3><%=count.totalCount%></h3>
+              <h3><%=count.totalCount || 0%></h3>
               <span class="m-t-10">전체데이터</span>
               <i class="fas fa-search"></i>
             </div>
@@ -29,7 +29,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-primary">
-              <h3><%=count.TCount%><small class="f-16"> / <%=count.TdCount%></small></h3>
+              <h3><%=count.TCount || 0%><small class="f-16"> / <%=count.TdCount || 0%></small></h3>
               <span class="m-t-10">제휴처리<small> / 지연처리</small></span>
               <i class="fas fa-clipboard-check"></i>
             </div>
@@ -38,7 +38,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-danger">
-              <h3><%=count.DCount%><small class="f-16"> / <%=count.DdCount%></small></h3>
+              <h3><%=count.DCount || 0%><small class="f-16"> / <%=count.DdCount || 0%></small></h3>
               <span class="m-t-10">삭제처리<small> / 지연처리</small></span>
               <i class="fas fa-trash-alt"></i>
             </div>
@@ -47,7 +47,7 @@
         <div class="col-md-3">
           <div class="card social-widget-card">
             <div class="card-block-big bg-twitter">
-              <h3><%=count.PCount%></h3>
+              <h3><%=count.PCount || 0%></h3>
               <span class="m-t-10">보류처리</span>
               <i class="fas fa-database"></i>
             </div>
