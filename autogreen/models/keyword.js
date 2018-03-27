@@ -133,7 +133,7 @@ var Keyword = {
   getCPKeyword: function(item,callback){
     console.log('getCPKeyword');
     var sql = 'select U_name from user_all_b where U_id=?';
-    var DBpromise = new promise('fileham');
+    var DBpromise = new promise(global.osp);
     var param = [item.cp,item.offset,item.limit];
     console.log(sql,param[0]);
     DBpromise.query(sql,param[0])

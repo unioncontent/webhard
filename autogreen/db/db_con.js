@@ -1,11 +1,3 @@
-// var dbInfo = {
-//   host     : '192.168.0.43',
-//   user     : 'autogreen',
-//   password : 'uni1004',
-//   port     : '3306',
-//   database : 'webhard'
-// };
-
 // const host = '192.168.0.43';
 const host = '121.138.117.49';
 const user = 'autogreen';

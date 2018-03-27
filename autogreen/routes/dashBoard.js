@@ -43,6 +43,11 @@ router.get('/', function(req, res, next) {
       });
     });
     return arr;
+  },err => {
+    res.render('dashBoard',{
+      count : [0,0,0,0],
+      countList : []
+    });
   })
   .then(rows => {
     DBpromise.close();
@@ -55,7 +60,7 @@ router.get('/', function(req, res, next) {
   })
   .catch(function (err) {
     DBpromise.close();
-    console.log(err);
+    console.log('대시보드에러:',err);
   });
 });
 
@@ -80,7 +85,7 @@ router.post('/get24DataList', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login', {layout: false,message : req.flash('loginMessage')});
+  res.render('login', {layout: false, message : req.flash('loginMessage')});
 });
 
 /* set passport*/
