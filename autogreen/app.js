@@ -42,17 +42,17 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', express.static(__dirname + '/www')); // redirect root
-app.use('/js', express.static(__dirname + '/node_modules/sweetalert/dist')); // redirect sweetalert
-app.use('/js', express.static(__dirname + '/node_modules/raphael')); // redirect raphael
-app.use('/js', express.static(__dirname + '/node_modules/morris.js')); // redirect morris
-app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
-app.use('/js', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect bootstrap JS
-app.use('/js', express.static(__dirname + '/node_modules/components-jqueryui')); // redirect jquery-ui JS
-app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
-app.use('/js', express.static(__dirname + '/node_modules/tether/dist/js')); // redirect JS tether
-app.use('/js', express.static(__dirname + '/node_modules/jquery-slimscroll')); // redirect JS jquery-slimscroll
-app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
-app.use('/css', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect CSS bootstrap-daterangepicker
+// app.use('/js', express.static(__dirname + '/node_modules/sweetalert/dist')); // redirect sweetalert
+// app.use('/js', express.static(__dirname + '/node_modules/raphael')); // redirect raphael
+// app.use('/js', express.static(__dirname + '/node_modules/morris.js')); // redirect morris
+// app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+// app.use('/js', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect bootstrap JS
+// app.use('/js', express.static(__dirname + '/node_modules/components-jqueryui')); // redirect jquery-ui JS
+// app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+// app.use('/js', express.static(__dirname + '/node_modules/tether/dist/js')); // redirect JS tether
+// app.use('/js', express.static(__dirname + '/node_modules/jquery-slimscroll')); // redirect JS jquery-slimscroll
+// app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+// app.use('/css', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect CSS bootstrap-daterangepicker
 
 /* set router */
 // 대시보드 & 로그인
