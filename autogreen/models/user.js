@@ -1,6 +1,5 @@
 const mysql = require('mysql');
 const promise = require('../db/db_promise.js');
-// const info = require('../db/db_con.js');
 
 var User = {
   getUserList : function(user,callback) {
@@ -118,6 +117,27 @@ var User = {
       return callback(err,null);
     });
   },
+  checkOverlapId: function(id,callback) {
+    var sql = 'select count(*) as total from user_all_b where U_id=? and U_state=?';
+    var param = [id,'1'];
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql,param)
+    .then(rows => {
+      console.log(rows);
+      var result = false;
+      if(rows[0]['total'] == 0){
+        result = true;
+      }
+      return callback(null,result);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
   checkId: function(id,callback) {
     var sql = 'select * from user_all where U_id=? and U_state=? and U_class!=?';
     var param = [id,'1','c'];
@@ -133,6 +153,40 @@ var User = {
       return callback(null,result);
     })
     .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
+  insertUser:function(item,callback){
+    var param = Object.values(item);
+    var promise = require('../db/db_promise.js');
+    var DBpromise = new promise(global.osp);
+    DBpromise.query('insert user_all_b(U_id, U_pw, U_class, U_name, U_state, U_regdate) values(?,?,?,?,?,?)',param).then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows =>{
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
+  updateUser:function(item,callback){
+    var param = Object.values(item);
+    console.log(param);
+    if(param[0] == '' || param[2] == '' || param[3] == ''){
+      return callback(err,null);
+    }
+    var promise = require('../db/db_promise.js');
+    var DBpromise = new promise(global.osp);
+    DBpromise.query('update user_all_b set U_name=?,U_pw=?,U_state=? where U_id=?',param).then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows =>{
       DBpromise.close();
     })
     .catch(function (err) {
