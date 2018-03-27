@@ -62,23 +62,13 @@ router.post('/', function(req, res, next) {
   if(!req.user){
     return res.redirect('/login');
   }
-  var param = Object.values(req.body);
-  if(param[0] == '' || param[2] == '' || param[3] == ''){
-    res.status(500).send('다시 입력해 주세요.');
-    return false;
-  }
 
-  var promise = require('../db/db_promise.js');
-  var DBpromise = new promise(global.osp);
-  DBpromise.query('update user_all_b set U_name=?,U_pw=?,U_state=? where U_id=?',param).then(rows => {
-    res.send('업데이트 완료되었습니다.');
-  })
-  .then(rows =>{
-    DBpromise.close();
-  })
-  .catch(function (err) {
-    res.status(500).send('다시 시도해 주세요.');
-    return false;
+  User.updateUser(req.body,function(err, result) {
+    if (err) {
+      res.status(500).send('다시 입력해주세요.');
+    } else {
+      res.send('업데이트 완료되었습니다.');
+    }
   });
 });
 
@@ -93,17 +83,12 @@ router.post('/add', function(req, res, next) {
   if(!req.user){
     return res.redirect('/login');
   }
-  var param = Object.values(req.body);
-  var promise = require('../db/db_promise.js');
-  var DBpromise = new promise(global.osp);
-  DBpromise.query('insert user_all_b(U_id, U_pw, U_class, U_name, U_state, U_regdate) values(?,?,?,?,?,?)',param).then(rows => {
-    res.send('거래처 등록이 완료되었습니다.');
-  })
-  .then(rows =>{
-    DBpromise.close();
-  })
-  .catch(function (err) {
-    res.status(500).send('다시 입력해 주세요.');
+  User.insertUser(req.body,function(err, result) {
+    if (err) {
+      res.status(500).send('다시 등록해주세요.');
+    } else {
+      res.send('거래처 등록이 완료되었습니다.');
+    }
   });
 });
 
@@ -125,7 +110,7 @@ router.post('/getNextPage', function(req, res, next) {
     User.getUserList(searchObject, function(err, result) {
 
       if (err) {
-        throw err;
+        res.status(500).send('다시시도해주세요.');
       } else {
         res.send({
           total: total,
@@ -144,10 +129,11 @@ router.post('/idCheck', function(req, res, next) {
     return res.redirect('/login');
   }
   var id = req.body.id;
-  User.checkId(id, function(err, results) {
+  User.checkOverlapId(id, function(err, results) {
     if(err) throw err;
     var user = results;
-    if (!user) {
+    console.log('checkOverlapId:',results);
+    if (user) {
       res.send('success');
     }
     else{

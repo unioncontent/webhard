@@ -360,7 +360,6 @@ function addContents(data,DBpromise){
       // console.log(count);
       // console.log(totalCount);
       if(count == totalCount){
-        DBpromise.userClose();
         DBpromise.close();
       }
       return true;
