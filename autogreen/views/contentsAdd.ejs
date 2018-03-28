@@ -12,7 +12,7 @@
             </a>
           </li>
           <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
-          <li class="breadcrumb-item"><a href="../contents/add">콘텐츠등록</a></li>
+          <li class="breadcrumb-item"><a href="/contents/add">콘텐츠등록</a></li>
         </ul>
       </div>
     </div>
@@ -116,7 +116,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">기본검색어</label>
                 <div class="col-sm-5">
-                  <input name="keyword" id="keyword" type="text" class="form-control" placeholder="기본검색어">
+                  <input name="keyword" id="keyword" type="text" class="form-control" placeholder="기본검색어(없으면 자동으로 제목이 기본검색어가 됩니다)">
                 </div>
               </div>
               <div class="row">
@@ -130,19 +130,77 @@
           <div class="card">
             <div class="card-header">
               <h5>일괄등록</h5>
-              <span>* 엑셀양식 : CP사(cpName) / 제목(title) / 영문제목(engTitle) / OSP관리ID(ospId) / 관리방법(method) / 관리현황(apply) / Delay시간(delay_time) / HASH값(hash) / 가격(price) / 기본검색어(keyword) </span>
             </div>
             <div class="card-block">
-              <form action='/contents/add/upload' id='uploadFrm' method="post" enctype="multipart/form-data">
-                <div class="form-group row">
-                  <div class="col-sm-5">
-                    <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
+              <div class="m-b-20  col-sm-12">
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                    <h4 class="sub-title m-b-10">upload</h4>
+                    <form action="/contents/add/upload" id="uploadFrm" method="post" enctype="multipart/form-data">
+                      <div class="form-group row">
+                        <div class="col-sm-9">
+                          <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                          <button id="insertBtn2" type="submit" class="btn btn-inverse m-b-0 p-b-10 p-t-10">등록</button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                  <div class="col-sm-1">
-                    <button id="insertBtn2" type="submit" class="btn btn-inverse m-b-0 p-b-10 p-t-10">등록</button>
+                  <div class="col-md-12 col-lg-6">
+                    <div class="inline-order-list m-t-0">
+                      <h4 class="sub-title">example</h4>
+                      <p class="text-muted">
+                        ※ 엑셀 1행 생략불가, method값 = 자동:1/수동:0 , apply값 = 삭제:D/제휴:T/보류:P
+                      </p>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr class="text-uppercase border-bottom-inverse">
+                            <th class="text-center">#</th>
+                            <th class="text-center">A</th>
+                            <th class="text-center">B</th>
+                            <th class="text-center">C</th>
+                            <th class="text-center">D</th>
+                            <th class="text-center">E</th>
+                            <th class="text-center">F</th>
+                            <th class="text-center">G</th>
+                            <th class="text-center">H</th>
+                            <th class="text-center">I</th>
+                          </tr>
+                        </thead>
+                        <tbody class="text-center">
+                          <tr class="table-danger border-bottom-inverse">
+                            <th scope="row">1</th>
+                            <td>cpId</td>
+                            <td>title</td>
+                            <td>engtitle</td>
+                            <td>ospid</td>
+                            <td>method</td>
+                            <td>apply</td>
+                            <td>hash</td>
+                            <td>price</td>
+                            <td>keyword</td>
+                          </tr>
+                          <tr class="border-bottom-inverse">
+                            <th>2</th>
+                            <td>MBC</td>
+                            <td>무도</td>
+                            <td class="text-muted">IC<br/>(생략가능)</td>
+                            <td><%=userNAME%></td>
+                            <td>0</td>
+                            <td>P</td>
+                            <td class="text-muted">sd###<br/>(생략가능)</td>
+                            <td class="text-muted">10000<br/>(생략가능)</td>
+                            <td class="text-muted">무한도전<br/>(생략가능)</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -150,7 +208,52 @@
     </div>
   </div>
 </div>
+<style type="text/css">
+table.table-columned th, table.table-columned td,
+.table td, .table th{
+  border: 1px solid #34495e;
+}
+</style>
 <script type="text/javascript">
+$(document).ready(function(){
+  var url = new URL(window.location.href);
+  var msg = url.searchParams.get("msg");
+  var upload = url.searchParams.get("upload");
+  var excelNum = 0;
+  if(upload || msg){
+    history.pushState(null, null,location.href.split('?')[0]);
+  }
+  if(upload == 'true'){
+    alert('일괄등록 성공했습니다.');
+  }
+  else if(upload == 'false'){
+    console.log(msg);
+    if(msg){
+      excelNum = String(Number(msg.split('_')[0])+1);
+      msg = msg.split('_')[1];
+    }
+    var errorMsg = '일괄등록 실패했습니다.\n';
+    if(msg == 'ExcelHeaderError'){
+      errorMsg += '엑셀 1열에 내용이 틀렸습니다.\n다시 확인해주세요.';
+    }
+    else if(msg == 'OSPIdError'){
+      errorMsg += 'OSP ID가 맞는지 다시 확인해주세요.';
+    }
+    else if(msg == 'CPNameError'){
+      errorMsg += 'CP사 이름이 등록이 되어있는지 확인해주세요.\n엑셀 '+excelNum+'번줄을 확인해주세요.';
+    }
+    else if(msg == 'NoFileError'){
+      errorMsg += '해당 파일의 상태를 확인해주세요.';
+    }
+    else if(msg == 'ExcelSysError'){
+      errorMsg += '시스템에 문제가 생겼습니다.\n나중에 다시 시도해주세요.';
+    }
+    else{
+      errorMsg += '다시 시도해주세요.';
+    }
+    alert(errorMsg);
+  }
+});
 $("#insertBtn").on("click",function(){
   var check=true;
   var param = {
