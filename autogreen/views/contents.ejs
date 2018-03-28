@@ -192,7 +192,7 @@ $(document).ready(function(){
   }
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
-    url: '../contents/getCPList',
+    url: '/contents/getCPList',
     type: 'post',
     datatype : 'json',
     error:function(request,status,error){
@@ -228,7 +228,7 @@ $('.alert-excel').on("click",function(){
 
 // cp 변경시
 $('#selectCp').on('change',function(){
-  var link = '../contents?page=1&cp_name='+$("#selectCp option:selected").val();
+  var link = '/contents?page=1&cp_name='+$("#selectCp option:selected").val();
   // var t = url.searchParams.get("searchType");
   // var s = url.searchParams.get("search");
   // if (t !== undefined && t != ''){
@@ -246,7 +246,7 @@ $('#searchBtn').on('click',function(){
     alert('검색어를 넣어주세요.');
     return false;
   }
-  location.href = '../contents?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  location.href = '/contents?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
 })
 $('#keywordInput').on('keyup',function(event){
   if(event.keyCode == 13){
@@ -273,7 +273,7 @@ $(document).on('click','.btn-update',function(event){
       }
       else{
         $.ajax({
-          url: '../contents/update',
+          url: '/contents/update',
           type: 'post',
           data: {
             'K_method': tdEle.eq(4).find('option:selected').val(),
@@ -311,7 +311,7 @@ $(document).on('click','.btn-delete',function(){
   .then((value) =>{
     if(value != null){
       $.ajax({
-        url: '../contents/delete',
+        url: '/contents/delete',
         type: 'post',
         data: {
           'n_idx_c': input.eq(0).val()
@@ -363,7 +363,7 @@ $(document).on('click','.page-link',function(){
 
 function ajaxGetPageList(param,pageNum){
   $.ajax({
-    url: '../contents/getNextPage',
+    url: '/contents/getNextPage',
     type: 'post',
     data: param,
     error: function(request,status,error){

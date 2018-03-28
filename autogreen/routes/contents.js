@@ -220,8 +220,8 @@ router.post('/add/cpCheck', function(req, res, next) {
   });
 });
 
-var xlstojson = require("xls-to-json-lc");
-var xlsxtojson = require("xlsx-to-json-lc");
+var count = 0;
+var totalCount = 0;
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -231,20 +231,42 @@ var storage = multer.diskStorage({
     cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
   }
 });
-
 var upload = multer({ storage: storage });
-var count = 0;
-var totalCount = 0;
+
+async function asyncForEach(array, callback) {
+  for (var index = 0; index < array.length; index++) {
+    var done = await callback(array[index], index, array);
+    if(done == false){
+      break;
+    }
+  }
+}
+//엑셀 1열 값이 맞는지 확인
+var compare = function(a){
+	var i = 0, j;
+  var b = ['cpname','title','engtitle','ospid','method','apply','delaytime','hash','price','keyword'];
+	if(Array.isArray(a)){
+		if(a.length != b.length) return false;
+		for(j = a.length ; i < j ; i++) if(!compare(a[i], b[i])) return false;
+		return true;
+	}
+	return a === b;
+};
 
 router.post('/add/upload', upload.single('excel'), function(req, res){
-  count = 0;totalCount = 0;
-  if (!req.file) {
-    res.json({
-      error_code: 1,
-      err_desc: "No file passed"
-    });
-    return;
+  if(!req.user){
+    return res.redirect('/login');
   }
+  count = 0;
+  totalCount = 0;
+
+  if (!req.file) {
+    console.log("No file passed");
+    return res.redirect('/contents/add?upload=false&msg=1_NoFileError');
+  }
+
+  var xlstojson = require("xls-to-json-lc");
+  var xlsxtojson = require("xlsx-to-json-lc");
   if (req.file.originalname.split('.')[req.file.originalname.split('.').length - 1] === 'xlsx') {
     exceltojson = xlsxtojson;
   } else {
@@ -258,122 +280,147 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
       lowerCaseHeaders: true
     }, function(err, result) {
       if (err) {
-        return res.json({
-          error_code: 1,
-          err_desc: err,
-          data: null
-        });
+        console.log("exceltojson err:",err);
+        return res.redirect('/contents/add?upload=false&msg=1_ExcelSysError');
       }
-      var promises = [];
-      var DBpromise = new promise(global.osp);
-      result.forEach(function(item){
+      totalCount = result.length;
+      asyncForEach(result, async (item, index, array) => {
+        if(index == 0){
+          console.log(Object.keys(array[0]));
+          var headerCheck = await compare(Object.keys(array[0]));
+          if(!headerCheck){
+            res.redirect('/contents/add?upload=false&msg=1_ExcelHeaderError');
+            return false;
+          }
+        }
+        // console.log("each", item);
         var param = {
-          'CP_name': item["cpName"],
+          'CP_name': item["cpname"],
           'CP_title': item["title"],
           'CP_title_eng': item["engtitle"],
           'OSP_id': item["ospid"],
           'K_method': item["method"],
-          'K_apply': item["apply"],
-          'delay_time': item["delay_time"],
+          'K_apply': (item["method"] == '0') ? 'P' : item["apply"],
+          'delay_time': item["delaytime"] || 0,
           'CP_hash': item["hash"],
           'CP_price': (item["price"] == "") ? 0 : item["price"],
           'keyword': (item["keyword"] == "") ? item["title"] : item["keyword"]
         };
-        if(item.cpid == '' && item.title == ''){
+        if(param["CP_name"] == '' || param["CP_title"] == '' || param["OSP_id"] == ''){
+          // data는 없고 배열 마지막이라면
+          if((index+1) == totalCount){
+            res.redirect('/contents/add?upload=true');
+            return true;
+          }
+          return 'notData';
+        }
+        else if(param["OSP_id"] != global.osp){
+          res.redirect('/contents/add?upload=false&msg=1_OSPIdError');
           return false;
         }
-        promises.push(addContents(param,DBpromise));
+        var returnValue = await addContents(param);
+        // console.log('check1:',returnValue[0] && count == totalCount);
+        // console.log('check2:',returnValue[0] == false);
+        console.log('addContents:',returnValue);
+        console.log('count:',count);
+        console.log('totalCount:',totalCount);
+        if(returnValue[0] && count == totalCount){
+          res.redirect('/contents/add?upload=true');
+          return true;
+        }
+        else if(returnValue[0] == false){
+          res.redirect('/contents/add?upload=false&msg='+count.toString()+'_'+returnValue[1]);
+          return false;
+        }
       });
-
-      Promise.all(promises)
-        .then(function(data){
-          totalCount = data.length;
-          res.redirect('/contents/add');
-        })
-        .catch(function(err){
-          console.log('에러에러:',result);
-        });
     });
   } catch (e) {
-    res.json({
-      error_code: 1,
-      err_desc: "Corupted excel file"
-    });
+    console.log("Corupted excel file err:",e);
+    return res.redirect('/contents/add?upload=false&msg=1_ExcelSysError');
   }
   var fs = require('fs');
   try {
     fs.unlinkSync(req.file.path);
   } catch(e) {
-    console.log(e);
+    console.log("uploads 파일 삭제 에러:",e);
   }
 });
 
-function addContents(data,DBpromise){
-  // console.log("1 CP사 확인\n","select * from user_all_b where U_id=? and U_class=?",[data.CP_name,'c']);
-  DBpromise.query("select * from user_all_b where U_name=? and U_class=?",[data.CP_name,'c'])
-    .then(rows => {
-      // console.log("2 OSP ID확인\n","select * from user_all_b where U_id=? and U_class=?",[data.OSP_id,'o']);
-      if(rows == null){
-        // console.log('row==null');
-        throw new Error('error');
+async function addContents(data){
+  var DBpromise = new promise(global.osp);
+  try{
+    try{
+      var sql = "select * from user_all_b where U_name=? and U_class=?";
+      var rows = await DBpromise.query(sql,[data.CP_name,'c']);
+      // console.log("1 CP사 확인");
+      // console.log(rows);
+      data.U_id_c = rows[0].U_id;
+    } catch(err){
+      console.log(err);
+      if(err==null){
+        throw new Error('CPNameError');
       }
-      return DBpromise.query("select U_id, U_pw, U_class, U_name, U_state,\'"+rows[0].U_id+"\' as CP_id from user_all_b where U_id=? and U_class=?",[data.OSP_id,'o'])
-    }).catch(handleError)
-    .then(rows => {
-      if(rows == -1){
-        throw new Error('error');
-      }
-      // console.log("3 콘텐츠 추가\n","select U_id, U_pw, U_class, U_name, U_state,\'"+rows[0].U_id+"\' as CP_id from user_all_b where U_id=? and U_class=?",[data.OSP_id,'o']);
-      var rNum = getRandomInt();
-      data.U_id_c = rows[0].CP_id;
-      data.CP_CntID = data.U_id_c + '-' + data.OSP_id + '-' + (rNum+1);
-      var param = [data.CP_CntID,data.U_id_c,data.CP_title,data.CP_title_eng,data.CP_price,data.CP_hash];
-      var sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
-      return DBpromise.query(sql,param);
-    }).catch(handleError)
-    .then(rows => {
-      if(rows == -1){
-        throw new Error('error');
-      }
-      console.log("4 콘텐츠 확인");
+    }
+
+    var rNum = getRandomInt();
+    data.CP_CntID = data.U_id_c + '-' + data.OSP_id + '-' + (rNum+1);
+
+    var param = [data.CP_CntID,data.U_id_c,data.CP_title,data.CP_title_eng,data.CP_price,data.CP_hash];
+    sql = 'insert into cnts_list_c(CP_CntID, U_id_c, CP_title, CP_title_eng, CP_price, CP_hash, CP_regdate) values(?,?,?,?,?,?,now())';
+    rows = await DBpromise.query(sql,param);
+    // console.log("2 콘텐츠 추가");
+    // console.log(rows);
+    try{
       sql = 'select * from cnts_list_c where CP_title=? order by CP_regdate desc';
-      // console.log(sql,data.CP_title);
-      return DBpromise.query(sql,data.CP_title);
-    }).catch(handleError)
-    .then(rows => {
-      if(rows == -1){
-        throw new Error('error');
+      rows = await DBpromise.query(sql,data.CP_title);
+      // console.log("3 콘텐츠 확인");
+      // console.log(rows);
+    } catch(err){
+      console.log(err);
+      if(err==null){
+        throw new Error('CntListInsertError');
       }
-      console.log("5 키워드 추가");
-      if(data.CP_CntID == rows[0].CP_CntID){
-        data.n_idx_c = rows[0].n_idx;
-        data.K_key = '1';
-        data.K_type = '1';
-        var param = [data.n_idx_c,data.U_id_c,data.keyword,data.K_apply,data.K_method,data.K_key,data.K_type,data.delay_time];
-        var sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, delay_time, K_regdate) values(?,?,?,?,?,?,?,?,now())';
-        return DBpromise.query(sql,param);
+    }
+
+    if(data.CP_CntID == rows[0].CP_CntID){
+      data.n_idx_c = rows[0].n_idx;
+      data.K_key = '1';
+      data.K_type = '1';
+      param = [data.n_idx_c, data.U_id_c, data.keyword, data.K_apply, data.K_method, data.K_key, data.K_type, data.CP_hash, parseInt(data.delay_time)];
+      try{
+        sql = 'insert into cnts_kwd_f(n_idx_c, U_id_c, K_keyword, K_apply, K_method, K_key, K_type, K_hash, delay_time, K_regdate) value(?,?,?,?,?,?,?,?,?,now())';
+        rows = await DBpromise.query(sql,param);
+        // console.log("4 키워드 추가");
+        // console.log(rows);
+      } catch(err){
+        console.log(err);
+        sql = 'delete from cnts_list_c where n_idx=?';
+        rows = await DBpromise.query(sql,data.n_idx_c);
+        throw new Error('KwdInsertError');
       }
-    }).catch(handleError)
-    .then(rows => {
-      console.log('콘텐츠 키워드 insert 끝');
-      count+=1;
-      // console.log(count);
-      // console.log(totalCount);
-      if(count == totalCount){
-        DBpromise.close();
+    }
+    console.log(count,'번 콘텐츠&키워드 insert 끝');
+  } catch(error){
+    console.log(error.message);
+    var msg = error.message;
+    if('code' in error){
+      if(error.code == 'ER_DUP_ENTRY'){
+        return [true,'콘텐츠 등록 성공'];
       }
-      return true;
-    }).catch(handleError);
+      msg = error.code;
+    }
+    return [false,msg];
+  } finally {
+    count += 1;
+    DBpromise.close();
+  }
+  return [true,'콘텐츠 등록 성공'];
 }
 
 function getRandomInt() {
   var min = 0;
   var max = 10000;
   return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function handleError(err) {
-  return -1;
 }
 
 module.exports = router;
