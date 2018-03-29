@@ -30,15 +30,13 @@
           <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
-          <%if (userCLASS == 'a'){%>
-          <li >
+          <li>
             <a href="/contents/add" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
               <span class="pcoded-mtext">콘텐츠등록</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%}%>
           <li>
             <a href="/contents" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -78,7 +76,6 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%if (userCLASS == 'a'){%>
           <li >
             <a href="/filtering" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -86,10 +83,8 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%}%>
         </ul>
       </li>
-      <%if (userCLASS == 'a'){%>
       <li class="manual">
         <a href="/manual" data-i18n="nav.advance-components.main">
           <span class="pcoded-micon"><i class="ti-pencil-alt"></i></span>
@@ -97,6 +92,7 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
+      <%if (userCLASS == 'a'){%>
       <li class="pcoded-hasmenu user">
         <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
           <span class="pcoded-micon"><i class="ti-user"></i></span>
@@ -121,7 +117,6 @@
         </ul>
       </li>
       <%}%>
-      <%if (userCLASS == 'a'){%>
       <li class="delay">
         <a href="/delay">
           <span class="pcoded-micon"><i class="ti-time"></i></span>
@@ -129,7 +124,6 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
-      <%}%>
     </ul>
   </div>
 </nav>
