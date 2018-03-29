@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
   var searchObject = {
     cp_name: '0',
     offset: 0,
-    limit: 10
+    limit: 40
   }
   if (typeof req.query.cp_name !== 'undefined') {
     searchObject.cp_name = req.query.cp_name;
@@ -71,7 +71,7 @@ router.post('/getNextPage', function(req, res, next) {
   var searchObject = {
     cp_name: req.body.cp_name || '0',
     offset: Number(req.body.start) || 0,
-    limit: 10
+    limit: 40
   }
   console.log(req.body);
   if('searchType' in req.body){
@@ -112,13 +112,25 @@ router.post('/update', function(req, res, next) {
   if (!req.user) {
     return res.redirect('/login');
   }
-  Keyword.updateKeyword(req.body, function(err, result) {
-    if (err){
-      res.status(500).send('다시시도해주세요.');
-      throw err;
-    }
-    res.send(req.body);
-  });
+  if(req.body.type == 'all'){
+    Keyword.updateCpKeyKeyword(req.body, function(err, result) {
+      if (err){
+        res.status(500).send('다시시도해주세요.');
+        throw err;
+      }
+      console.log(req.body)
+      res.send(req.body);
+    });
+  }
+  else{
+    Keyword.updateKeyword(req.body, function(err, result) {
+      if (err){
+        res.status(500).send('다시시도해주세요.');
+        throw err;
+      }
+      res.send(req.body);
+    });
+  }
 });
 
 router.post('/updateOne', function(req, res, next) {
