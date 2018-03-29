@@ -39,6 +39,10 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-block table-border-style  table-responsive">
+              <div id="toolbar-options1" class="hidden">
+                <a href="#" class="option1" data-value="1"><i class="far fa-check-circle"></i></a>
+                <a href="#" class="option0" data-value="0"><i class="fas fa-ban"></i></a>
+              </div>
               <table class="table table-bordered">
                 <thead>
                   <tr>
@@ -46,7 +50,10 @@
                     <th width="5%">CP사</th>
                     <th width="5%">CP관리ID</th>
                     <th width="15%">제목</th>
-                    <th width="5%">상태</th>
+                    <th width="5%">
+                      상태
+                      <div id="key-toolbar" class="btn-toolbar btn-primary btn-toolbar-primary"><i class="fa fa-cog"></i></div>
+                    </th>
                     <th width="5%">관리현황</th>
                     <th width="5%">관리방법</th>
                     <th width="1%">수정</th>
@@ -126,7 +133,7 @@
                         <% } %>
                         <% for (y; y <= pageCount; y++) { %>
                           <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
-                            <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 10)).toString()%>" >
+                            <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 40)).toString()%>" >
                               <%= y %>
                             </a>
                           </li>
@@ -138,7 +145,7 @@
                         %>
                         <% if(currentPage != pageCount && pageCount > 4) { %>
                           <li class="page-item">
-                            <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 10)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
+                            <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 40)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
                               &raquo;
                               <span aria-hidden="true"></span>
                               <span class="sr-only">Next</span>
@@ -175,7 +182,44 @@
   .swal-text{
     text-align: center;
   }
+  #key-toolbar{
+    width: 15px;
+    height: 14px;
+    padding: 8px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  #key-toolbar > i{
+    margin: 0px;
+    font-size: 15px;
+    vertical-align: top;
+  }
+  .table thead th{
+    vertical-align: top;
+  }
+  .tool-right .tool-item:first-child{
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  .tool-right .tool-item:last-child{
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  .toolbar-primary .tool-item{
+    background: #02baf2!important;
+  }
+  .toolbar-primary .tool-item.selected, .toolbar-primary .tool-item:hover {
+    background: #009dcd !important;
+  }
+  .toolbar-primary .tool-item > .far, .toolbar-primary .tool-item > .fas {
+    color: white;
+  }
+  .swal-title {
+    font-size: 25px;
+  }
 </style>
+<link href="/css/jquery.toolbar.css" rel="stylesheet" />
+<script src="/js/jquery.toolbar.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 // url 변경 후 파라미터값 가져오기
@@ -189,6 +233,19 @@ $(document).ready(function(){
   if(searchTypeParams != null && searchParams != null){
     $("#selectSearchType").val(searchTypeParams).prop("selected", true);
     $("#keywordInput").val(searchParams);
+  }
+  $('#key-toolbar').toolbar({
+    content: '#toolbar-options1',
+    position: 'right',
+    style: 'primary',
+    event: 'hover',
+    hideOnClick: true
+  });
+  if(c != null && c != '0'){
+    $('#key-toolbar').show();
+  }
+  else{
+    $('#key-toolbar').hide();
   }
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
@@ -205,6 +262,57 @@ $(document).ready(function(){
           html = '<option value="'+item.U_id+'" selected>'+item.U_name+'</option>'
         }
         $('#selectCp').append(html);
+      });
+    }
+  });
+});
+$(document).on('click','.option1,.option0',function() {
+  if(c == '0'){
+    swal("수정불가!", "cp사를 선택해주세요.", "error");
+    return false;
+  }
+  var type = ($(this).data("value") == '0') ? '제외':'검출';
+  swal({
+    title: "모든 콘텐츠 상태를 "+type+"하시겠습니까?",
+    text: "\'"+c+"\' 사의\n 모든 콘텐츠 상태가 변경됩니다.",
+    icon: "warning",
+    buttons: ["취소", true],
+    dangerMode: true,
+  })
+  .then((value) =>{
+    if(value != null){
+      $.ajax({
+        url: '/contents/update',
+        type: 'post',
+        data: {
+          'type':'all',
+          'K_key': $(this).data("value"),
+          'U_id_c': c
+        },
+        error:function(request,status,error){
+          swal("ERROR!", "다시 시도해주세요.", "error");
+          console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        },
+        success:function(data){
+          swal("SUCCESS", "모든 콘텐츠 상태가 "+type+"되었습니다!", "success");
+          console.log(data);
+          if(data){
+            var param = {
+              cp_name: $('#selectCp option:selected').val() || '0',
+              start: 0
+            };
+            if(url.searchParams.get("searchType") != '' && url.searchParams.get("searchType") != null){
+              param.searchType = url.searchParams.get("searchType");
+            }
+            if(url.searchParams.get("search") != '' && url.searchParams.get("search") != null){
+              param.search = url.searchParams.get("search");
+            }
+            ajaxGetPageList(param,1);
+          }
+          else{
+            swal("ERROR!", "다시 시도해주세요.", "error");
+          }
+        }
       });
     }
   });
@@ -229,14 +337,6 @@ $('.alert-excel').on("click",function(){
 // cp 변경시
 $('#selectCp').on('change',function(){
   var link = '/contents?page=1&cp_name='+$("#selectCp option:selected").val();
-  // var t = url.searchParams.get("searchType");
-  // var s = url.searchParams.get("search");
-  // if (t !== undefined && t != ''){
-  //   if (s !== undefined && s != ''){
-  //     link += '&searchType='+t+'&search='+s;
-  //   }
-  // }
-  // console.log(link);
   location.href = link;
 });
 
@@ -398,7 +498,7 @@ function ajaxGetPageList(param,pageNum){
         for (y; y <= data.pageCount; y++) {
           var active = (pageNum == y) ? "active" : "";
           html += '<li class=\"'+active+' page-item">\
-            <a class="page-link" data-value=\"'+((y-1) * 10)+'"\ >'+y+'</a></li>'
+            <a class="page-link" data-value=\"'+((y-1) * 40)+'"\ >'+y+'</a></li>'
 
           if(parseInt(pageNum) + 3 == y) {
             break;
@@ -406,7 +506,7 @@ function ajaxGetPageList(param,pageNum){
         }
         if(pageNum != data.pageCount && data.pageCount > 4) {
           html += '<li class="page-item">\
-                <a class="page-link" data-value=\"'+(Math.floor(data.total/10)*10)+'"\ aria-label="Next">&raquo;\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/40)*40)+'"\ aria-label="Next">&raquo;\
                   <span aria-hidden="true"></span>\
                   <span class="sr-only">Next</span>\
                 </a></li>';
