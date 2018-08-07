@@ -1,8 +1,8 @@
 // const host = '192.168.0.43';
-const host = '121.138.117.49';
+const host = '192.168.0.5';
 const user = 'autogreen';
 const password = 'uni1004';
-const port = '3306';
+const port = '3307';
 
 var environments = {
   mysql : {
