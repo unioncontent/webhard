@@ -67,14 +67,26 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% for(var i=0; i < fList.length; i++) { %>
+                    <%
+                      var url;
+                      for(var i=0; i < fList.length; i++) {
+                        if(userNAME == 'sharebox'){
+                          url = 'http://sharebox.co.kr/storage/storage.php?todo=view&idx='+fList[i].osp_idx;
+                        }
+                        else if(userNAME == 'me2disk'){
+                          url = 'http://me2disk.pe.kr/contents/view.htm?idx='+fList[i].osp_idx;
+                        }
+                        else if(userNAME == 'fileham'){
+                          url = 'http://fileham.com/main/popup.php?doc=bbsInfo&idx='+fList[i].osp_idx+'&code1=&code2=&search_sort=';
+                        }
+                    %>
                     <tr>
                       <th><%= totalUser - i - data.offset %></th>
                       <td><div class="cp_nobr"><%= fList[i].cp_name %></div></td>
                       <td><%= fList[i].osp_idx %></td>
                       <td><div class="cntId_nobr"><%= fList[i].cnt_id %></div></td>
                       <td><div class="kwd_nobr"><%= fList[i].K_keyword %></div></td>
-                      <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx=<%= fList[i].osp_idx %>&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr"><%= fList[i].title %></div></a></td>
+                      <td><a href="<%=url%>" target="_blank"><div class="title_nobr"><%= fList[i].title %></div></a></td>
                       <td><%= fList[i].price %></th>
                       <td><%= moment(fList[i].createDate).format('YYYY-MM-DD HH:mm:ss') %></td>
                       <td><%= moment(fList[i].csDate).format('YYYY-MM-DD HH:mm:ss') %></td>
@@ -439,14 +451,25 @@ function ajaxGetPageList(param,pageNum){
       }
 
       $('tbody').empty();
+      var userNAME = $('#more-details').text();
       data.cList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
+        var url;
+        if(userNAME == 'sharebox'){
+          url = 'http://sharebox.co.kr/storage/storage.php?todo=view&idx='+item.osp_idx;
+        }
+        else if(userNAME == 'me2disk'){
+          url = 'http://me2disk.pe.kr/contents/view.htm?idx='+item.osp_idx;
+        }
+        else if(userNAME == 'fileham'){
+          url = 'http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.osp_idx+'&code1=&code2=&search_sort=';
+        }
         $('tbody').append('<tr><th>'+numIdx+'</th>\
           <td><div class="cp_nobr">'+item.cp_name+'</div></td>\
           <td>'+item.osp_idx+'</td>\
           <td><div class="cntId_nobr">'+item.cnt_id+'</div></td>\
           <td><div class="kwd_nobr">'+item.K_keyword+'</div></td>\
-          <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.osp_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+item.title+'</div></a></td>\
+          <td><a href="'+url+'" target="_blank"><div class="title_nobr">'+item.title+'</div></a></td>\
           <td>'+item.price+'</th>\
           <td>'+moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
           <td>'+moment(item.csDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
