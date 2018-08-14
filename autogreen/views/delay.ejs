@@ -48,12 +48,24 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% for(var i=0; i < dList.length; i++) { %>
+                    <%
+                    var url;
+                    for(var i=0; i < dList.length; i++) {
+                      if(userNAME == 'sharebox'){
+                        url = 'http://sharebox.co.kr/storage/storage.php?todo=view&idx='+dList[i].OSP_idx;
+                      }
+                      else if(userNAME == 'me2disk'){
+                        url = 'http://me2disk.pe.kr/contents/view.htm?idx='+dList[i].OSP_idx;
+                      }
+                      else if(userNAME == 'fileham'){
+                        url = 'http://fileham.com/main/popup.php?doc=bbsInfo&idx='+dList[i].OSP_idx+'&code1=&code2=&search_sort=';
+                      }
+                      %>
                     <tr>
                       <td><%= totalDelay - i - data.offset %></td>
                       <td><%= dList[i].OSP_idx %></td>
                       <td><div class="kwd_nobr"><%= dList[i].K_keyword %></div></td>
-                      <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx=<%= dList[i].OSP_idx %>&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr"><%= dList[i].OSP_title %></div></a></td>
+                      <td><a href="<%=url%>" target="_blank"><div class="title_nobr"><%= dList[i].OSP_title %></div></a></td>
                       <td><%= dList[i].OSP_price %></td>
                       <td><%= dList[i].delay_time %>분</td>
                       <td><%= moment(dList[i].OSP_regdate).format('YYYY-MM-DD HH:mm:ss') %></td>
@@ -228,12 +240,23 @@ function ajaxGetPageList(param,pageNum){
       }
 
       $('tbody').empty();
+      var userNAME = $('#more-details').text();
       data.dList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
+        var url;
+        if(userNAME == 'sharebox'){
+          url = 'http://sharebox.co.kr/storage/storage.php?todo=view&idx='+item.OSP_idx;
+        }
+        else if(userNAME == 'me2disk'){
+          url = 'http://me2disk.pe.kr/contents/view.htm?idx='+item.OSP_idx;
+        }
+        else if(userNAME == 'fileham'){
+          url = 'http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.OSP_idx+'&code1=&code2=&search_sort=';
+        }
         var html = '<tr><th>'+numIdx+'</th>\
           <td>'+item.OSP_idx+'</td>\
           <td><div class="kwd_nobr">'+((item.K_keyword == null) ? '' : item.K_keyword)+'</div></td>\
-          <td><a href="http://fileham.com/main/popup.php?doc=bbsInfo&idx='+item.OSP_idx+'&code1=&code2=&search_sort=" target="_blank"><div class="title_nobr">'+item.OSP_title+'</div></a></td>\
+          <td><a href="'+url+'" target="_blank"><div class="title_nobr">'+item.OSP_title+'</div></a></td>\
           <td>'+item.OSP_price+'</td>\
           <td>'+item.delay_time+'분</td>\
           <td>'+moment(item.OSP_regdate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
