@@ -16,6 +16,7 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
+      <%if (userSite != 'autogreen'){%>
       <li class="period" style="display:none">
         <a href="/period">
           <span class="pcoded-micon"><i class="ti-bar-chart-alt"></i></span>
@@ -23,7 +24,8 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
-      <li class="pcoded-hasmenu contents">
+      <%}%>
+      <li class="pcoded-hasmenu contents cnts">
         <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
           <span class="pcoded-micon"><i class="ti-video-clapper"></i></span>
           <span class="pcoded-mtext">콘텐츠관리</span>
@@ -31,22 +33,30 @@
         </a>
         <ul class="pcoded-submenu">
           <li>
-            <a href="/contents/add" data-i18n="nav.advance-components.draggable">
+            <%
+              var keywordURL = 'keyword';
+              var contentsURL = 'contents';
+              if (userSite == 'autogreen'){
+                contentsURL = 'cnts';
+                keywordURL = 'kwd';
+              }
+            %>
+            <a href="/<%=contentsURL%>/add" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
               <span class="pcoded-mtext">콘텐츠등록</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
           <li>
-            <a href="/contents" data-i18n="nav.advance-components.draggable">
+            <a href="/<%=contentsURL%>" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
               <span class="pcoded-mtext">콘텐츠리스트</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%if (userCLASS == 'a'){%>
+          <%if ((userSite != 'autogreen' && userCLASS == 'a') || userSite == 'autogreen'){%>
           <li>
-            <a href="/keyword" data-i18n="nav.advance-components.grid-stack">
+            <a href="/<%=keywordURL%>" data-i18n="nav.advance-components.grid-stack">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
               <span class="pcoded-mtext">키워드설정</span>
               <span class="pcoded-mcaret"></span>
@@ -55,6 +65,83 @@
           <%}%>
         </ul>
       </li>
+      <%if (userSite == 'autogreen'){%>
+        <li class="pcoded-hasmenu monitoring">
+          <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
+            <span class="pcoded-micon"><i class="ti-desktop"></i></span>
+            <span class="pcoded-mtext">모니터링현황</span>
+            <span class="pcoded-mcaret"></span>
+          </a>
+          <ul class="pcoded-submenu">
+            <li>
+              <a href="/" data-i18n="nav.advance-components.draggable">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">비제휴사현황</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+            <li>
+              <a href="/" data-i18n="nav.advance-components.draggable">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">제휴사현황</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+            <li>
+              <a href="/" data-i18n="nav.advance-components.grid-stack">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">통계현황</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="mail">
+          <a href="/">
+            <span class="pcoded-micon"><i class="ti-email"></i></span>
+            <span class="pcoded-mtext" data-i18n="nav.dash.main">메일발송관리</span>
+            <span class="pcoded-mcaret"></span>
+          </a>
+        </li>
+        <li class="pcoded-hasmenu setting">
+          <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
+            <span class="pcoded-micon"><i class="ti-settings"></i></span>
+            <span class="pcoded-mtext">관리사설정</span>
+            <span class="pcoded-mcaret"></span>
+          </a>
+          <ul class="pcoded-submenu">
+            <li>
+              <a href="/" data-i18n="nav.advance-components.draggable">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">OSP사현황</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+            <li>
+              <a href="/" data-i18n="nav.advance-components.draggable">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">CP사현황</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+            <li>
+              <a href="/" data-i18n="nav.advance-components.grid-stack">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">메일링설정</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+            <li>
+              <a href="/" data-i18n="nav.advance-components.grid-stack">
+                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                <span class="pcoded-mtext">공지사항</span>
+                <span class="pcoded-mcaret"></span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      <%}%>
+      <%if (userSite != 'autogreen'){%>
       <li class="pcoded-hasmenu filtering">
         <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
           <span class="pcoded-micon"><i class="ti-filter"></i></span>
@@ -124,6 +211,7 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
+      <%}%>
     </ul>
   </div>
 </nav>
