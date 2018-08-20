@@ -1,0 +1,301 @@
+<div class='main-body'>
+  <div class='page-wrapper'>
+    <div class='page-header'>
+      <div class='page-header-title'>
+        <h4>거래처리스트</h4>
+      </div>
+      <div class='page-header-breadcrumb'>
+        <ul class='breadcrumb-title'>
+          <li class='breadcrumb-item'>
+            <a href='/'>
+              <i class='fas fa-home'></i>
+            </a>
+          </li>
+          <li class='breadcrumb-item'><a href='#!'>거래처관리</a></li>
+          <li class='breadcrumb-item'><a href='#!'>거래처리스트</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class='page-body'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <select name='select' class='col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left' id='selectClass'>
+            <option value='a' <%= (uClass == 'a') ? 'selected':''%>>전체</option>
+            <option value='o' <%= (uClass == 'o') ? 'selected':''%>>OSP사</option>
+            <option value='c' <%= (uClass == 'c') ? 'selected':''%>>CP사</option>
+          </select>
+        </div>
+        <div class='col-md-12'>
+          <div class='card'>
+            <div class='card-block table-border-style table-responsive'>
+              <table class='table table-sm'>
+                <thead>
+                  <tr>
+                    <th width='1%'>NO</th>
+                    <th width='5%'>거래처명</th>
+                    <th width='5%'>ID</th>
+                    <th width='5%'>PW</th>
+                    <th width='5%'>분류</th>
+                    <th width='1%'>상태</th>
+                    <th width='10%'>등록일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i < userData.length; i++) { %>
+                  <tr class="user">
+                    <th><%=totalUser - i - minusCount %></th>
+                    <td><%= userData[i].U_name %></td>
+                    <td><%= userData[i].U_id %></td>
+                    <td><%= userData[i].U_pw %></td>
+                    <td><%= (userData[i].U_class == 'a') ? 'Admin' : (userData[i].U_class == 'o') ? 'OSP' : 'CP' %></td>
+                    <td><%= (userData[i].U_state != '1') ? 'OFF' : 'ON' %></td>
+                    <td><%= moment(userData[i].U_regdate).format('YYYY-MM-DD HH:mm:ss') %></td>
+                  </tr>
+                  <% }; %>
+                </tbody>
+                <tfoot>
+                  <% if(pageCount > 1) { %>
+                  <tr>
+                    <td colspan="9">
+                      <ul class="pagination float-right">
+                        <%
+                          var y = 1;
+                          if(currentPage > 1 && pageCount > 4) {
+                            y = currentPage-1;
+                        %>
+                          <li class="page-item">
+                            <a class="page-link" data-value="0" data-num="1" aria-label="Previous">
+                              &laquo;
+                              <span aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                          </li>
+                        <% } %>
+                        <% for (y; y <= pageCount; y++) { %>
+                          <li class= "<%=(currentPage == y) ? 'active' : ''%> page-item">
+                            <a class="page-link" data-value="<%=Math.ceil(((y - 1) * 20)).toString()%>" >
+                              <%= y %>
+                            </a>
+                          </li>
+                        <%
+                            if(parseInt(currentPage) + 3 == y) {
+                              break;
+                            }
+                          }
+                        %>
+                        <% if(currentPage != pageCount && pageCount > 4) { %>
+                          <li class="page-item">
+                            <a class="page-link" data-value="<%=Math.ceil(((pageCount - 1) * 20)).toString()%>" data-num="<%=pageCount%>" aria-label="Next">
+                              &raquo;
+                              <span aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </li>
+                        <% } %>
+                      </ul>
+                    </td>
+                  </tr>
+                  <% } %>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='user-Modal' role='dialog'>
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class='modal-title'>거래처 수정</h5>
+              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                <span aria-hidden='true'><i class='ti-close'></i></span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class='card-block'>
+                  <div class='form-group row'>
+                    <input type='hidden' class='form-control' name='trTag'>
+                    <label class='col-sm-2 col-form-label'>거래처명</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='userName'>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>ID</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='id' readonly>
+                      <span class='messages'><p class='text-danger error'>(수정불가)</p></span>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>PASSWORD</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='pwd'>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>분류</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='class' readonly>
+                      <span class='messages'><p class='text-danger error'>(수정불가)</p></span>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>상태</label>
+                    <div class='col-sm-5'>
+                      <select class='form-control' id='status'>
+                        <option value='1' id='ON'>ON</option>
+                        <option value='0' id='OFF'>OFF</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class='form-group row'>
+                    <label class='col-sm-2 col-form-label'>등록일</label>
+                    <div class='col-sm-5'>
+                      <input type='text' class='form-control' name='date' readonly>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <label class='col-sm-2'></label>
+                    <div class='col-sm-10'>
+                      <button id='updateBtn' type='button' class='submit btn btn-primary m-b-0'>수정</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.21.0/min/moment-with-locales.min.js"></script>
+<script type="text/javascript">
+//거래처 등록
+$(document).on('click','.user',function(event){
+  var ele = $(this).children('td');
+  $('input[name=userName]').val($(ele[0]).text());
+  $('input[name=id]').val($(ele[1]).text());
+  $('input[name=pwd]').val($(ele[2]).text());
+  $('input[name=class]').val($(ele[3]).text());
+  $('#'+$(ele[4]).text()).prop('selected', true);
+  $('input[name=date]').val($(ele[5]).text());
+  $('#user-Modal').modal('show');
+});
+
+// 거래처 수정
+$('#updateBtn').on('click',function(){
+  $.ajax({
+    url: '../user',
+    type: 'post',
+    data : {
+      'userName': $('input[name=userName]').val(),
+      'pwd': $('input[name=pwd]').val(),
+      'status': $("#status option:selected").val(),
+      'id': $('input[name=id]').val()
+    },
+    datatype : 'json',
+    error:function(request,status,error){
+      // alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert(request.responseText);
+    },
+    success:function(data){
+      alert(data);
+      location.reload();
+    }
+  });
+});
+
+//osp or cp or 전체 로 변경
+$('#selectClass').on('change',function(){
+  location.href = '../user?page=1&class='+$("#selectClass option:selected").val();
+});
+
+//페이지 변경시
+$(document).on('click','.page-link',function(){
+  var url_string = window.location.href
+  var url = new URL(url_string);
+  var num = Number($(this).text()) || Number($(this).data().num);
+  var param = {
+    uClass : $('#selectClass option:selected').val() || '0',
+    start : Number($(this).data().value)
+  };
+  ajaxGetPageList(param,num);
+});
+
+function ajaxGetPageList(param,pageNum){
+  $.ajax({
+    url: '../user/getNextPage',
+    type: 'post',
+    data: param,
+    error: function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert('새로고침해주세요~');
+    },
+    success: function(data){
+      console.log(data);
+      pageNum = pageNum || data.pageCount;
+      if(typeof(history.pushState) == 'function'){
+        //현재 주소를 가져온다.
+        var renewURL = location.href;
+        //현재 주소 중 page 부분이 있다면 새로 부여될 페이지 번호를 할당한다.
+        renewURL = renewURL.replace(/\?page=([0-9]+)/ig,'?page='+pageNum);
+        if(renewURL.indexOf("?page=") == -1){
+          renewURL += '?page='+pageNum;
+        }
+        //페이지 갱신 실행!
+        history.pushState(null, null,renewURL);
+      }
+      $('tfoot').empty();
+      if(data.pageCount > 1) {
+        var html = '<tr><td colspan="9"><ul class="pagination float-right">';
+        var y = 1;
+        if(pageNum > 1  && data.pageCount > 4) {
+          y = pageNum-1;
+          html += '<li class="page-item"><a class="page-link" data-value="0" data-num="1" aria-label="Previous">&laquo;\
+              <span aria-hidden="true"></span>\
+              <span class="sr-only">Previous</span>\
+            </a></li>';
+        }
+
+        for (y; y <= data.pageCount; y++) {
+          var active = (pageNum == y) ? "active" : "";
+          html += '<li class=\"'+active+' page-item">\
+            <a class="page-link" data-value=\"'+((y-1) * 20)+'"\ >'+y+'</a></li>'
+
+          if(parseInt(pageNum) + 3 == y) {
+            break;
+          }
+        }
+        if(pageNum != data.pageCount && data.pageCount > 4) {
+          html += '<li class="page-item">\
+                <a class="page-link" data-value=\"'+(Math.floor(data.total/20)*20)+'"\ aria-label="Next">&raquo;\
+                  <span aria-hidden="true"></span>\
+                  <span class="sr-only">Next</span>\
+                </a></li>';
+        }
+        html += '</ul></td></tr>';
+        $('tfoot').append(html);
+      }
+
+      $('tbody').empty();
+      console.log(data);
+      data.uList.forEach(function(item,idx){
+        var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
+        $('tbody').append('<tr class="user"><th>'+numIdx+'</th>\
+          <td>'+item.U_name+'</td>\
+          <td>'+item.U_id+'</td>\
+          <td>'+item.U_pw+'</td>\
+          <td>'+((item.U_class == 'a') ? 'Admin' : (item.U_class == 'o') ? 'OSP' : 'CP')+'</td>\
+          <td>'+((item.U_state != '1') ? 'OFF' : 'ON')+'</td>\
+          <td>'+moment(item.U_regdate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
+        </tr>');
+      });
+    }
+  });
+}
+</script>

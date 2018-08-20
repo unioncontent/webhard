@@ -42,80 +42,64 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', express.static(__dirname + '/www')); // redirect root
-// app.use('/js', express.static(__dirname + '/node_modules/sweetalert/dist')); // redirect sweetalert
-// app.use('/js', express.static(__dirname + '/node_modules/raphael')); // redirect raphael
-// app.use('/js', express.static(__dirname + '/node_modules/morris.js')); // redirect morris
-// app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
-// app.use('/js', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect bootstrap JS
-// app.use('/js', express.static(__dirname + '/node_modules/components-jqueryui')); // redirect jquery-ui JS
-// app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
-// app.use('/js', express.static(__dirname + '/node_modules/tether/dist/js')); // redirect JS tether
-// app.use('/js', express.static(__dirname + '/node_modules/jquery-slimscroll')); // redirect JS jquery-slimscroll
-// app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
-// app.use('/css', express.static(__dirname + '/node_modules/bootstrap-daterangepicker')); // redirect CSS bootstrap-daterangepicker
 
-/* set router */
 // 대시보드 & 로그인
 app.use(function(req, res, next) {
   res.locals.user = res.user;
   if(req.user){
+    res.locals.userSite = req.user.site;
+    res.locals.userLogo = req.user.U_logo;
     res.locals.userNAME = req.user.U_name;
     res.locals.userCLASS = req.user.U_class;
     res.locals.userID = req.user.U_id;
     global.osp = res.locals.userID.replace('_admin','');
-  }
-  else {
-    res.locals.userNAME = undefined;
-    res.locals.userID = undefined;
-    res.locals.userCLASS = undefined;
+    if(res.locals.userID == "test"){
+      res.locals.userSite = "test";
+      global.osp = "fileham";
+    }
   }
   next();
 });
-
-//엑셀
-var excel = require('./routes/excel');
-app.use('/excel', excel);
-
 //대시보드
 var dashBoard = require('./routes/dashBoard');
 app.use('/', dashBoard);
 app.use('/login', dashBoard);
 
-// 통계
-var period = require('./routes/period');
-app.use('/period', period);
-
+/* mcp routes */
 // 콘텐츠
-var contents = require('./routes/contents');
-app.use('/contents', contents);
-app.use('/contents/add/:addType', contents);
+var cnt = require('./routes/mcp/contents');
+app.use('/cnts', cnt);
 
+/* osp routes */
+//엑셀
+var excel = require('./routes/osp/excel');
+// 통계
+var period = require('./routes/osp/period');
+// 콘텐츠
+var contents = require('./routes/osp/contents');
 // 키워드
-var keyword = require('./routes/keyword');
-app.use('/keyword', keyword);
-app.use('/keyword/info', keyword);
-
+var keyword = require('./routes/osp/keyword');
 // 필터링현황
-var filtering = require('./routes/filtering');
-app.use('/filtering', filtering);
-app.use('/filtering/:pType', filtering);
-
+var filtering = require('./routes/osp/filtering');
 // 수동처리
-var manual = require('./routes/manual');
-app.use('/manual', manual);
-
+var manual = require('./routes/osp/manual');
 // 거래처
-var user = require('./routes/user');
-app.use('/user', user);
-app.use('/user/add', user);
-
+var user = require('./routes/osp/user');
 // 딜레이
-var delay = require('./routes/delay');
+var delay = require('./routes/osp/delay');
+
+app.use('/excel', excel);
+app.use('/period', period);
+app.use('/contents', contents);
+app.use('/keyword', keyword);
+app.use('/filtering', filtering);
+app.use('/manual', manual);
+app.use('/user', user);
 app.use('/delay', delay);
 
 /* set error */
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  // catch 404 and forward to error handler
   var err = new Error('Not Found');
   err.status = 404;
   next(err);

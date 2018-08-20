@@ -6,7 +6,11 @@
         <i class="ti-menu"></i>
       </a>
       <a href="/">
-        <img class="img-fluid" src="/images/main_logo.png" alt="Theme-Logo"/>
+        <%if (userSite == 'test'){%>
+          <span style="font-size: 24px;font-weight: bold;">Stop-Penalty</span>
+        <%}else{%>
+          <img class="img-fluid" src="/images/main_logo.png" alt="Theme-Logo"/>
+        <%}%>
       </a>
       <a class="mobile-options">
         <i class="ti-more"></i>
@@ -21,21 +25,11 @@
         </ul>
         <ul class="nav-right">
           <li class="user-profile header-notification">
-            <a href="#!">
-                <img src="/images/user.png" alt="User-Profile-Image">
-                <span><%=userID%></span>
-                <i class="ti-angle-down"></i>
-            </a>
-            <ul class="show-notification profile-notification">
-              <li>
-                <form id='logoutForm' action="../logoutAction" method="post">
-                  <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> -->
-                  <a href="../logout">
-                    <i class="ti-layout-sidebar-left"></i> Logout
-                  </a>
-                </form>
-              </li>
-            </ul>
+            <form id='logoutForm'method="post">
+              <a href="/logout">
+                <i class="ti-layout-sidebar-left"></i> Logout
+              </a>
+            </form>
           </li>
         </ul>
       </div>

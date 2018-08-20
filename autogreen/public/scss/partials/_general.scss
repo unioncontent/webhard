@@ -83,7 +83,8 @@ table td > a:hover{
 
 .card {
     border-radius: 2px;
-    border-top: 4px solid $inverse-color;/*4px solid #8CDDCD;*/
+    border-top: 1px solid $inverse-color;
+    // border-top: 4px solid $inverse-color;/*4px solid #8CDDCD;*/
     box-shadow: 0 2px 1px rgba(0, 0, 0, .05);
     border: {
         left: none;
@@ -123,9 +124,11 @@ table td > a:hover{
     }
     h5 {
         margin-bottom: 0;
-        color: #757575;
+        // color: #757575;
+        color: black;
         font-size: 16px;
-        font-weight: 600;
+        font-weight: bold;
+        // font-weight: 600;
         text-transform: uppercase;
         display: inline-block;
         margin-right: 10px;
