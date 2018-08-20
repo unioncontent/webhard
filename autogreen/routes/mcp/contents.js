@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 // DB module
 var contents = require('../../models/mcp/contents.js');
 var keyword = require('../../models/mcp/keyword.js');
@@ -12,11 +13,61 @@ var isAuthenticated = function (req, res, next) {
 };
 
 router.get('/',isAuthenticated,async function(req, res, next) {
-  res.render('mcp/contents');
+  var data = await getListPageData(req.query);
+  res.render('mcp/contents',data);
 });
 
+async function getListPageData(param){
+  var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
+  var data = {
+    list:[],
+    listCount:{total:0},
+    cp:'',
+    mcp:'',
+    searchType:'',
+    search:'',
+    page:1,
+    country: array,
+    mcpList:await contents.getMCPList('m'),
+    cpList:await contents.getMCPList('c')
+  };
+  var limit = 20;
+  var searchParam = [0,limit];
+  var currentPage = 1;
+  var searchBody = {};
+  if (typeof param.page !== 'undefined') {
+    currentPage = param.page;
+    data['page'] = currentPage;
+  }
+  if (parseInt(currentPage) > 0) {
+    searchParam[0] = (currentPage - 1) * limit
+    data['offset'] = searchParam[1];
+  }
+  if (typeof param.cp !== 'undefined') {
+    searchBody['cp'] = param.cp;
+    data['cp'] = param.cp;
+  }
+  if (typeof param.mcp !== 'undefined') {
+    searchBody['mcp'] = param.mcp;
+    data['mcp'] = param.mcp;
+  }
+  if (typeof param.searchType !== 'undefined' && typeof param.search !== 'undefined') {
+    searchBody['searchType'] = param.searchType;
+    searchBody['search'] = param.search;
+    data['searchType'] = param.searchType;
+    data['search'] = param.search;
+  }
+  try{
+    data['list'] = await contents.selectView(searchBody,searchParam);
+    data['listCount'] = await contents.selectViewCount(searchBody,searchParam);
+  }
+  catch(e){
+    console.log(e);
+  }
+  return data;
+}
+
 router.get('/add',isAuthenticated,async function(req, res, next) {
-  var fs = require('fs');
   var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
   var mcpList = await contents.getMCPList('m');
   var cpList = await contents.getMCPList('c');

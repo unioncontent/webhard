@@ -364,6 +364,7 @@ table.table-columned th, table.table-columned td,
     swal({
       title: "등록하시겠습니까?",
       icon: "warning",
+      buttons: ["취소", true],
       dangerMode: true
     })
     .then(function(value) {
@@ -461,8 +462,8 @@ table.table-columned th, table.table-columned td,
     swal({
       title: "대량등록하시겠습니까?",
       icon: "warning",
-      dangerMode: true,
-      showCancelButton: true
+      buttons: ["취소", true],
+      dangerMode: true
     })
     .then(function(value) {
       if (value != null) {
