@@ -3,6 +3,45 @@ const DBpromise = require('../../db/db_promise.js');
 // const info = require('../../db/db_con.js');
 
 var Contents = {
+  selectView: async function(body,param){
+    var sql = 'select * from cnts_all_view where search is not null';
+    if('cp' in body){
+      sql += ' and cnt_cp = \''+body['cp']+'\'';
+    }
+    if('mcp' in body){
+      sql += ' and cnt_mcp = \''+body['mcp']+'\'';
+    }
+    if('searchType' in body){
+      switch (body.searchType) {
+        case 'c': sql+=' and cnt_id =\''+body.search+'\''; break;
+        case 't': sql+=' and search like \'%'+body.search+'%\''; break;
+      }
+    }
+    sql += ' order by n_idx desc limit ?,?';
+    return await getResult(sql,param);
+  },
+  selectViewCount: async function(body,param){
+    var sql = 'select count(*) as total from cnts_all_view where search is not null ';
+    if('cp' in body){
+      sql += ' and cnt_cp = \''+body['cp']+'\'';
+    }
+    if('mcp' in body){
+      sql += ' and cnt_mcp = \''+body['mcp']+'\'';
+    }
+    if('searchType' in body){
+      switch (body.searchType) {
+        case 'c': sql+=' and cnt_id =\''+body.search+'\''; break;
+        case 't': sql+=' and search like \'%'+body.search+'%\''; break;
+      }
+    }
+    var count = await getResult(sql,param);
+    if(count.length == 0){
+      return 0;
+    }
+    else{
+      return count[0]['total'];
+    }
+  },
   cntInsertCheck: async function(param) {
     var sql = "select * from cnt_l_list where n_idx = ?";
     var result = await getResult(sql,param);
