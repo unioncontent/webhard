@@ -298,7 +298,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">취소</button>
-              <button id="insertBtn2" class="btn btn-inverse m-b-0 p-b-10 p-t-10">등록</button>
+              <button id="insertBtn2" class="btn btn-inverse">등록</button>
             </div>
           </div>
         </div>
@@ -434,10 +434,11 @@ table.table-columned th, table.table-columned td,
       error:function(request,status,error){
         console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
         alert(request.responseText);
+        location.reload();
       },
       success:function(data){
         alert('등록되었습니다.');
-        window.location.reload();
+        location.reload();
       }
     });
   }
