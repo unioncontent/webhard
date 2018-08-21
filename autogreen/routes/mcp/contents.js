@@ -17,6 +17,47 @@ router.get('/',isAuthenticated,async function(req, res, next) {
   res.render('mcp/contents',data);
 });
 
+router.post('/delete',isAuthenticated,async function(req, res, next) {
+  var result = await contents.delete(req.body.n_idx);
+  if(!('protocol41' in result)){
+    res.status(500);
+    return false;
+  }
+  result = await keyword.delete([req.body.n_idx,'cpId']);
+  if(!('protocol41' in result)){
+    res.status(500);
+    return false;
+  }
+  res.send(true);
+});
+
+router.post('/update',isAuthenticated,async function(req, res, next) {
+  var result;
+  if('type' in req.body){
+    result = await keyword.updateCpKey(req.body);
+    if(!('protocol41' in result)){
+      res.status(500);
+      return false;
+    }
+  } else{
+    result = await keyword.update(req.body);
+    if(!('protocol41' in result)){
+      res.status(500);
+      return false;
+    }
+  }
+  res.send(true);
+});
+
+router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
+  try{
+    var data = await getListPageData(req.body);
+    res.send({status:true,result:data});
+  } catch(e){
+    res.status(500).send(e);
+  }
+});
+
 async function getListPageData(param){
   var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
   var data = {

@@ -63,7 +63,7 @@ var Contents = {
     return await getResult(sql,pValue);
   },
   delete: async function(n_idx){
-    var sql = 'delete from cnts_list_c where n_idx=?';
+    var sql = 'delete from cnt_l_list where n_idx=?';
     return await getResult(sql,n_idx);
   },
   getCPlistID: async function(param){
