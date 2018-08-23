@@ -25,6 +25,7 @@
                 <label class="col-sm-3 col-form-label">* 관리사(MCP)</label>
                 <div class="col-sm-9">
                   <select name="select" class="form-control" id="selectMCP">
+                    <option value="">선택</option>
                     <% for(var i=0; i < mcpList.length; i++) {%>
                       <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
                     <% }; %>
@@ -36,9 +37,7 @@
                 <label class="col-sm-3 col-form-label">* 저작권사(CP)</label>
                 <div class="col-sm-9">
                   <select name="select" class="form-control" id="selectCP">
-                    <% for(var i=0; i < cpList.length; i++) {%>
-                      <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
-                    <% }; %>
+                    <option value="">선택</option>
                   </select>
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
@@ -359,6 +358,36 @@ table.table-columned th, table.table-columned td,
       alert(errorMsg);
     }
   });
+  $("#selectMCP").on("change",function(){
+    // CP초기화
+    $("#selectCP").empty();
+    $("#selectCP").append('<option value="">선택</option>');
+
+    var mcpValue = $("#selectMCP option:selected").val();
+    if(mcpValue == ''){
+      return false;
+    }
+    $.ajax({
+      url: '/cnts/add/getCP',
+      type: 'post',
+      data : {mcp:mcpValue},
+      datatype : 'json',
+      error:function(request,status,error){
+        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert('cp리스트 불러올 수 없습니다. 다시 시도해주세요.');
+      },
+      success:function(data){
+        if(data.status != true){
+          alert('cp리스트 불러올 수 없습니다. 다시 시도해주세요.');
+          return false;
+        }
+        data.result.forEach(function(item,idx){
+          var html = '<option value="'+item.cp_id+'">'+item.cp_cname+'</option>';
+          $("#selectCP").append(html);
+        });
+      }
+    });
+  });
   // 등록버튼 클릭시
   $("#insertBtn").on("click",function(){
     swal({
@@ -387,11 +416,17 @@ table.table-columned th, table.table-columned td,
       k_mailing:$("input:radio[name='k_mailing']:checked").val()
     };
     // 필수
+    if(param.cnt_mcp == ""){
+      check = requiredMessage("selectMCP","관리사를 선택해주세요.");
+    }
+    if(param.cnt_cp == ""){
+      check = requiredMessage("selectCP","저작권사를 선택해주세요.");
+    }
     if(param.cnt_title == ""){
-      check = requiredMessage("cnt_title","제목을 선택해주세요.");
+      check = requiredMessage("cnt_title","제목을 입력해주세요.");
     }
     if(param.cnt_price == ""){
-      check = requiredMessage("cnt_price","판매금액을 선택해주세요.");
+      check = requiredMessage("cnt_price","판매금액을 입력해주세요.");
     }
     if(check){
       return false;
