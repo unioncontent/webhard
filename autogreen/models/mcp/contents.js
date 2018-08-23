@@ -51,6 +51,10 @@ var Contents = {
     var sql = "select * from cp_list where cp_state = 1 and cp_class=?";
     return await getResult(sql,param);
   },
+  getCPList: async function(param) {
+    var sql = "select * from cp_list where cp_mcp = ? and cp_class='c'";
+    return await getResult(sql,param.mcp);
+  },
   insert: async function(param) {
     var mcpid = param["cnt_mcp"];
     var cpid = param["cnt_cp"];

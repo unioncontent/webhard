@@ -119,6 +119,15 @@ router.get('/add',isAuthenticated,async function(req, res, next) {
   });
 });
 
+router.post('/add/getCP',isAuthenticated,async function(req, res, next) {
+  try{
+    var data = await contents.getCPList(req.body);
+    res.send({status:true,result:data});
+  } catch(e){
+    res.status(500).send(e);
+  }
+});
+
 router.post('/add',isAuthenticated,async function(req, res, next) {
   var kParam = {
     k_title:req.body.k_title,
