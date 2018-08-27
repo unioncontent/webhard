@@ -7,7 +7,7 @@
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
           <li class="breadcrumb-item">
-            <a href="../dashBoard/dashBoard">
+            <a href="/dashBoard/dashBoard">
               <i class="fas fa-home"></i>
             </a>
           </li>
@@ -212,7 +212,7 @@ $(document).ready(function(){
 
   // cp 셀렉트 박스 옵션값 넣기
   $.ajax({
-    url: '../manual/getCPList',
+    url: '/manual/getCPList',
     type: 'post',
     datatype : 'json',
     error:function(request,status,error){
@@ -234,7 +234,7 @@ $(document).ready(function(){
 // cp 변경시
 $('#selectCp').on('change',function(){
   var cpName = $("#selectCp option:selected").val();
-  var link = '../manual?page=1&cp_name='+cpName;
+  var link = '/manual?page=1&cp_name='+cpName;
   var href = new URL(window.location.href);
   var s = href.searchParams.get("sDate");
   var e = href.searchParams.get("eDate");
@@ -251,7 +251,7 @@ $('#searchBtn').on('click',function(){
     return false;
   }
   var href = new URL(window.location.href);
-  link = '../manual?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
+  link = '/manual?page=1&cp_name='+$("#selectCp option:selected").val()+'&searchType='+$("#selectSearchType option:selected").val()+'&search='+$("#keywordInput").val();
   var s = href.searchParams.get("sDate");
   var e = href.searchParams.get("eDate");
   if( s != null && e != null ){
@@ -279,7 +279,7 @@ $(document).on('click','.btn-delete',function(){
       var trEle = $(this).closest("tr");
       var eles = trEle.find('td');
       $.ajax({
-        url: '../manual/delete',
+        url: '/manual/delete',
         type: 'post',
         data: {
           'OSP_idx': eles.eq(3).text()
@@ -325,7 +325,7 @@ $(document).on('click','.btn-update',function(){
       var dValue = eles.eq(9).children("input").val()
       if(sValue == "D" && dValue == ""){
         $.ajax({
-          url: '../manual/api',
+          url: '/manual/api',
           type: 'post',
           data: {
             'mode': 'D',
@@ -348,7 +348,7 @@ $(document).on('click','.btn-update',function(){
       }
       else if(sValue != "P" && dValue != ""){
         $.ajax({
-          url: '../delay/insert',
+          url: '/delay/insert',
           type: 'post',
           data: {
             'apply': sValue,
@@ -378,7 +378,7 @@ $(document).on('click','.btn-update',function(){
 
 function ajaxUpdate(apply,idx,cpName){
   $.ajax({
-    url: '../manual/update',
+    url: '/manual/update',
     type: 'post',
     data: {
       'K_apply': apply,
@@ -450,7 +450,7 @@ $(document).on('click','.page-link',function(){
 });
 function ajaxGetPageList(param,pageNum){
   $.ajax({
-    url: '../manual/getNextPage',
+    url: '/manual/getNextPage',
     type: 'post',
     data: param,
     error: function(request,status,error){
