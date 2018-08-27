@@ -72,7 +72,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/api', function(req, res, next) {
   var request = require('request');
-  var apiInfo = require('../../models/apiInfo.js')[global.osp];
+  var apiInfo = require('../../models/osp/apiInfo.js')[global.osp];
   var data = apiInfo.deletePost(req.body.mode,req.body.idx);
 
   // 헤더 부분
