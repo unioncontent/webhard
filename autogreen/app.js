@@ -69,6 +69,10 @@ app.use('/login', dashBoard);
 // 콘텐츠
 var cnt = require('./routes/mcp/contents');
 app.use('/cnts', cnt);
+// 키워드
+var kwd = require('./routes/mcp/keyword');
+app.use('/kwd', kwd);
+
 
 /* osp routes */
 //엑셀

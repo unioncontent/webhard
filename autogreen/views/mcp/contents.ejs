@@ -69,10 +69,11 @@
                     <th width="5%">CPID</th>
                     <th width="5%">저작권기간</th>
                     <th width="5%">
-                      관리현황
+                      관리상태
                       <div id="key-toolbar" class="btn-toolbar btn-primary btn-toolbar-primary"><i class="fa fa-cog"></i></div>
                     </th>
-                    <th width="5%">관리상태</th>
+                    <th width="5%">관리현황</th>
+                    <th width="5%">관리방법</th>
                     <th width="5%">메일발송</th>
                     <th width="5%">판매금액</th>
                     <th width="5%">Hash</th>
@@ -93,7 +94,7 @@
                     <td><div class="title_nobr"><%= list[i].cnt_eng_title %></div></td>
                     <td><%= list[i].cnt_director %></td>
                     <td>
-                      <select name="select" class="form-control" id="selectNat" style="min-width: 78px;">
+                      <select name="select" class="form-control" id="selectNat" style="min-width: 94px;">
                         <%
                         var nat = list[i].cnt_nat;
                         for(var j=0; j < country.length; j++) {
@@ -123,7 +124,7 @@
                     <td><%= list[i].cnt_cpid %></td>
                     <td><%= list[i].cnt_period %></td>
                     <td>
-                      <select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectState" style="min-width: 78px;">
+                      <select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectState" style="min-width: 94px;">
                         <% if(list[i].k_state == null) { %>
                           <option value="-1">없음</option>
                         <% }else{%>
@@ -133,8 +134,18 @@
                       </select>
                     </td>
                     <td>
+                      <select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectMethod" style="min-width: 94px;">
+                        <% if(list[i].k_state == null) { %>
+                          <option value="-1">없음</option>
+                        <% }else{%>
+                          <option value="1" <%= (list[i].k_method == '1') ? 'selected' : '' %>>자동</option>
+                          <option value="0" <%= (list[i].k_method == '0') ? 'selected' : '' %>>수동</option>
+                        <% } %>
+                      </select>
+                    </td>
+                    <td>
                       <select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectApply" style="min-width: 110px;">
-                        <% if(list[i].k_apply == null) { %>
+                        <% if(list[i].k_state == null) { %>
                           <option value="-1">없음</option>
                         <% }else{%>
                           <option value="D" <%= (list[i].k_apply == 'D') ? 'selected' : '' %>>삭제/차단</option>
@@ -178,7 +189,7 @@
                     if(pageCount > 1) {
                     %>
                     <tr>
-                      <td colspan="20">
+                      <td colspan="21">
                         <ul class="pagination float-right">
                           <%
                             var pageSize = 5;
@@ -385,6 +396,7 @@
             type: 'post',
             data: {
               'k_state': tdEle.find('#selectState').find('option:selected').val(),
+              'k_method': tdEle.find('#selectMethod').find('option:selected').val(),
               'K_apply': tdEle.find('#selectApply').find('option:selected').val(),
               'k_mailing': tdEle.find('#selectMail').find('option:selected').val(),
               'n_idx': idx
@@ -479,7 +491,7 @@
             <td><div class="title_nobr">'+item.cnt_title+'</div></td>\
             <td><div class="title_nobr">'+((item.cnt_eng_title == null) ? '':item.cnt_eng_title)+'</div></td>\
             <td>'+((item.cnt_director == null) ? '':item.cnt_director)+'</td>\
-            <td><select name="select" class="form-control" id="selectNat" style="min-width: 78px;">';
+            <td><select name="select" class="form-control" id="selectNat" style="min-width: 94px;">';
           var nat = item.cnt_nat;
           for(var j=0; j < data.result.country.length; j++) {
             var str = data.result.country[j].replace('\r','');
@@ -502,15 +514,22 @@
             </td>\
             <td>'+((item.cnt_cpid == null) ? '':item.cnt_cpid)+'</td>\
             <td>'+item.cnt_period+'</td>';
-          html +='<td><select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectState" style="min-width: 78px;">';
+          html +='<td><select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectState" style="min-width: 94px;">';
           if(item.k_state == null) {
             html +='<option value="-1">없음</option>';
           } else {
             html +='<option value="1" '+((item.k_state == '1') ? 'selected' : '')+'>관리중</option>';
             html +='<option value="0" '+((item.k_state == '0') ? 'selected' : '')+'>중지</option>';
           }
+          html += '</select></td><td><select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectMethod" style="min-width: 94px;">';
+          if(item.k_state == null) {
+            html +='<option value="-1">없음</option>';
+          } else {
+            html +='<option value="1" '+((item.k_method == '1') ? 'selected' : '')+'>자동</option>';
+            html +='<option value="0" '+((item.k_method == '0') ? 'selected' : '')+'>수동</option>';
+          }
           html += '</select></td><td><select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectApply" style="min-width: 110px;">';
-          if(item.k_apply == null) {
+          if(item.k_state == null) {
             html += '<option value="-1">없음</option>';
           } else {
             html += '<option value="D" '+((item.k_apply == 'D') ? 'selected' : '')+'>삭제/차단</option>\
@@ -548,7 +567,7 @@
         var pageCount = Math.ceil(data.result.listCount/limit);
         $('#listTable tfoot').empty();
         if(pageCount > 1) {
-          var html = '<tr><td colspan="20"><ul class="pagination float-right">';
+          var html = '<tr><td colspan="21"><ul class="pagination float-right">';
           var pageSize = 5;
           var currentPage = data.result.page;
           var pRCnt = parseInt(currentPage / pageSize);

@@ -1,0 +1,395 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>키워드설정</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
+          <li class="breadcrumb-item"><a href="#!">키워드설정</a></li>
+        </ul>
+      </div>
+      <div class="page-body">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
+            <option value=''>MCP사선택</option>
+            <% for(var i=0; i < mcpList.length; i++) {%>
+              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 m-l-5 p-r-5 f-left" id="selectCP">
+            <option value=''>CP사선택</option>
+            <% for(var i=0; i < cpList.length; i++) {%>
+              <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block table-border-style  table-responsive">
+              <div class="preloader3 loader-block">
+                <div class="circ1 loader-primary"></div>
+                <div class="circ2 loader-primary"></div>
+                <div class="circ3 loader-primary"></div>
+                <div class="circ4 loader-primary"></div>
+              </div>
+              <table class="table table-bordered" id="listTable">
+                <thead>
+                  <tr>
+                    <th width="1%">NO</th>
+                    <th width="7%">MCP</th>
+                    <th width="7%">CP</th>
+                    <th width="5%">등록콘텐츠</th>
+                    <th width="5%">검색키워드</th>
+                    <th width="5%">제외키워드</th>
+                    <th width="5%">수정</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i < list.length; i++) { %>
+                  <tr>
+                    <th><%= list.length - i %></th>
+                    <td><%= list[i].cnt_mcp %></td>
+                    <td><%= list[i].cnt_cp %></td>
+                    <td><%= list[i].CCount %></td>
+                    <td><%= list[i].TCount %></td>
+                    <td><%= list[i].DCount %></td>
+                    <td class="text-center">
+    								  <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">
+                        <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;" data-cp="<%= list[i].cnt_cp %>" data-mcp="<%= list[i].cnt_mcp %>">
+        								  <span class="far fa-trash-alt"></span>
+        								</button>
+      							    <button type="button" class="btn-edit btn btn-primary waves-effect waves-light"  data-cp="<%= list[i].cnt_cp %>" data-mcp="<%= list[i].cnt_mcp %>">
+        								  <span class="far fa-edit"></span>
+        								</button>
+    								  </div>
+    								</td>
+                  </tr>
+                  <% }; %>
+                </tbody>
+                <tfoot>
+                  <%
+                    var limit = 20;
+                    var pageCount = Math.ceil(listCount/limit);
+                    if(pageCount > 1) {
+                    %>
+                    <tr>
+                      <td colspan="7">
+                        <ul class="pagination float-right">
+                          <%
+                            var pageSize = 5;
+                            var pRCnt = parseInt(page / pageSize);
+                            if(page % pageSize == 0){
+                              pRCnt = parseInt(page / pageSize) - 1;
+                            }
+                            if(page > 5) {
+                          %>
+                            <li class="page-item">
+                              <a class="page-link" data-value="1" aria-label="Previous">
+                                <i class="ti-angle-double-left f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" data-value=="<%=(pRCnt * pageSize)%>" aria-label="Previous">
+                                <i class="ti-angle-left f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                          <% } %>
+                          <% for(var index=pRCnt * pageSize + 1;index<(pRCnt + 1)*pageSize + 1;index++){%>
+                            <li class= "<%=(page == index) ? 'active' : ''%> page-item">
+                              <a class="page-link" data-value="<%=index%>" >
+                                <%= index %>
+                              </a>
+                            </li>
+                          <%
+                              if(index == pageCount) {
+                                break;
+                              }
+                            }
+                          %>
+                          <% if((pRCnt + 1) * pageSize < pageCount) { %>
+                            <li class="page-item">
+                              <a class="page-link" data-value="<%=(pRCnt + 1)*pageSize+1%>" aria-label="Next">
+                                <i class="ti-angle-right f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" data-value="<%=pageCount%>" aria-label="Next">
+                                <i class="ti-angle-double-right f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                          <% } %>
+                        </ul>
+                      </td>
+                    </tr>
+                    <% } %>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.table td, .table th{
+  text-align:  center;
+  vertical-align: middle;
+}
+.table td{
+  font-size: 15px;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  width: 1280px;
+  z-index: 10000;
+}
+</style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+<script>
+  $(document).ready(function(){
+    startSetting();
+  });
+  // 수정 버튼 클릭시
+  $(document).on('click','.btn-edit',function(){
+    location.href = '/kwd/info?page=1&cp='+$(this).data('cp')+'&mcp='+$(this).data('mcp');
+  });
+
+  // 삭제 버튼 클릭시
+  $(document).on("click",'.btn-delete',function(){
+    swal({
+      title: "삭제 하시겠습니까?",
+      text: "해당 데이터의 키워드가 모두 삭제됩니다.",
+      icon: "warning",
+      buttons: ["취소", true],
+      dangerMode: true,
+    })
+    .then((value) =>{
+      if(value != null){
+        var cp = $(this).data("cp");
+        var mcp = $(this).data("mcp");
+        $.ajax({
+          url: '/kwd/delete',
+          type: 'post',
+          data: {cp:cp,mcp:mcp},
+          error:function(request,status,error){
+            errorMSG();
+          },
+          success:function(data){
+            alert("삭제되었습니다.");
+            reloadPage();
+          }
+        });
+      }
+    });
+  });
+
+  // mcp선택시
+  $(document).on('change','#selectMCP',function(){
+    $("#selectCP").empty();
+    $("#selectCP").append('<option value="">CP사선택</option>');
+
+    var mcpValue = $("#selectMCP option:selected").val();
+    var param = {};
+    if(mcpValue != ''){
+      param.mcp = mcpValue;
+    }
+    $.ajax({
+      url: '/kwd/getCP',
+      type: 'post',
+      data : param,
+      datatype : 'json',
+      error:function(request,status,error){
+        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        alert('cp리스트 불러올 수 없습니다. 다시 시도해주세요.');
+      },
+      success:function(data){
+        if(data.status != true){
+          alert('cp리스트 불러올 수 없습니다. 다시 시도해주세요.');
+          return false;
+        }
+        data.result.forEach(function(item,idx){
+          var html = '<option value="'+item.cp_id+'">'+item.cp_cname+'</option>';
+          $("#selectCP").append(html);
+        });
+      }
+    });
+
+    param = settingParams(1);
+    ajaxGetPageList(param);
+  });
+
+  //페이지 이동
+  $(document).on('click','.page-link',function(){
+    var param = settingParams(Number($(this).data().value));
+    ajaxGetPageList(param);
+  });
+  // 리스트 새로고침
+  function reloadPage(){
+    console.log('reloadPage');
+    var pageValue = ($.urlParam("page") == '' || $.urlParam("page") == null) ? 1 : parseInt($.urlParam("page"));
+    var param = settingParams(pageValue);
+    ajaxGetPageList(param);
+  }
+  // 페이지 ajax
+  function ajaxGetPageList(param){
+    console.log('ajaxGetPageList:',param);
+    $('.preloader3').show();
+    $.ajax({
+      url: '/kwd/getNextPage',
+      type: 'post',
+      data: param,
+      error: function(request,status,error){
+        errorMSG();
+      },
+      success: function(data){
+        console.log(data);
+        if(data.status != true){
+          errorMSG();
+          return false;
+        }
+        $('#listTable tbody').empty();
+        data.result.list.forEach(function(item,idx){
+          var numIdx = Math.ceil(data.result.listCount-idx-(data.result.page-1)).toString();
+          var html = '<tr><th>'+numIdx+'</th>\
+            <td>'+item.cnt_mcp+'</td>\
+            <td>'+item.cnt_cp+'</td>\
+            <td>'+item.CCount+'</td>\
+            <td>'+item.TCount+'</td>\
+            <td>'+item.DCount+'</td>\
+            <td class="text-center">\
+              <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">\
+                <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;" data-cp="'+item.cnt_cp+'" data-mcp="'+item.cnt_mcp+'">\
+                  <span class="far fa-trash-alt"></span>\
+                </button>\
+                <button type="button" class="btn-edit btn btn-primary waves-effect waves-light"  data-cp="'+item.cnt_cp+'" data-mcp="'+item.cnt_mcp+'">\
+                  <span class="far fa-edit"></span>\
+                </button>\
+              </div>\
+            </td>\
+          </tr>';
+          $('#listTable tbody').append(html);
+        });
+        var limit = 20;
+        var pageCount = Math.ceil(data.result.listCount/limit);
+        $('#listTable tfoot').empty();
+        if(pageCount > 1) {
+          var html = '<tr><td colspan="7"><ul class="pagination float-right">';
+          var pageSize = 5;
+          var currentPage = data.result.page;
+          var pRCnt = parseInt(currentPage / pageSize);
+          if(currentPage % pageSize == 0){
+            pRCnt = parseInt(currentPage / pageSize) - 1;
+          }
+          if(currentPage > 5) {
+            html += '<li class="page-item"><a class="page-link" data-value="1" aria-label="Previous">\
+                <i class="ti-angle-double-left f-12"></i>\
+                <span aria-hidden="true"></span>\
+                <span class="sr-only">Previous</span>\
+              </a></li>\
+              <li class="page-item"><a class="page-link" data-value=\"'+(pRCnt * pageSize)+'"\ aria-label="Previous">\
+                <i class="ti-angle-left f-12"></i>\
+                <span aria-hidden="true"></span>\
+                <span class="sr-only">Previous</span>\
+              </a></li>';
+          }
+
+          for(var index=pRCnt * pageSize + 1;index<(pRCnt + 1)*pageSize + 1;index++){
+            var active = (currentPage == index) ? "active" : "";
+            html += '<li class=\"'+active+' page-item">\
+              <a class="page-link" data-value=\"'+index+'"\ >'+index+'</a></li>'
+
+            if(index == pageCount) {
+              break;
+            }
+          }
+          if((pRCnt + 1) * pageSize < pageCount) {
+            html += '<li class="page-item">\
+                  <a class="page-link" data-value=\"'+((pRCnt + 1)*pageSize+1)+'"\ aria-label="Next">\
+                    <i class="ti-angle-right f-12"></i>\
+                    <span aria-hidden="true"></span>\
+                    <span class="sr-only">Next</span>\
+                  </a></li>\
+                  <li class="page-item">\
+                  <a class="page-link" data-value=\"'+pageCount+'"\ aria-label="Next">\
+                    <i class="ti-angle-double-right f-12"></i>\
+                    <span aria-hidden="true"></span>\
+                    <span class="sr-only">Next</span>\
+                  </a></li>';
+          }
+          html += '</ul></td></tr>';
+          $('#listTable tfoot').append(html);
+        }
+        $('.preloader3').fadeOut(500);
+      }
+    });
+  }
+  // 리스트 조건 세팅
+  function startSetting(){
+    var mcp = $.urlParam("mcp");
+    if(mcp){
+      $('#selectMCP > option[value='+mcp+']').attr("selected",true);
+    }
+    var cp = $.urlParam("cp");
+    if(cp){
+      $('#selectCP > option[value='+cp+']').attr("selected",true);
+    }
+  }
+  // 리스트 조건 param 세팅
+  function settingParams(num){
+    var renewURL = window.location.origin+window.location.pathname;
+    var param = {
+      page : num
+    };
+    if(typeof history.pushState == 'function'){
+      renewURL += '?page='+param.page;
+      history.pushState(null, null,renewURL);
+    }
+    // MCP
+    var mcpValue = $('#selectMCP option:selected').val();
+    if(mcpValue != ''){
+      param.mcp = mcpValue;
+      if(typeof history.pushState == 'function'){
+        renewURL += '&mcp='+param.mcp;
+        history.pushState(null, null,renewURL);
+      }
+    }
+    // CP
+    var cpValue = $('#selectCP option:selected').val();
+    if(cpValue != ''){
+      param.cp = cpValue;
+      if(typeof history.pushState == 'function'){
+        renewURL += '&cp='+param.cp;
+        history.pushState(null, null,renewURL);
+      }
+    }
+    return param;
+  }
+</script>

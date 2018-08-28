@@ -120,7 +120,9 @@ router.get('/add',isAuthenticated,async function(req, res, next) {
 });
 
 router.post('/add/getCP',isAuthenticated,async function(req, res, next) {
+  console.log('/add/getCP');
   try{
+    console.log(req.body);
     var data = await contents.getCPList(req.body);
     res.send({status:true,result:data});
   } catch(e){
@@ -133,11 +135,12 @@ router.post('/add',isAuthenticated,async function(req, res, next) {
     k_title:req.body.k_title,
     k_key:1,
     k_state:req.body.k_state,
+    k_method:req.body.k_method,
     k_apply:req.body.k_apply,
     k_mailing:req.body.k_mailing
   };
   var cParam = req.body;
-  delete cParam.k_title, delete cParam.k_state, delete cParam.k_apply, delete cParam.k_mailing;
+  delete cParam.k_title, delete cParam.k_state, delete cParam.k_method, delete cParam.k_apply, delete cParam.k_mailing;
   var result = await contents.insert(cParam);
   if(!('insertId' in result)){
     res.status(500).send('콘텐츠 등록이 실패했습니다.');

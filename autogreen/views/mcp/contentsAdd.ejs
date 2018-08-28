@@ -107,7 +107,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label">* 관리현황</label>
+                <label class="col-sm-3 col-form-label">* 관리상태</label>
                 <div class="col-sm-9">
                   <div id="state" class="form-radio">
                     <div class="radio radiofill radio-inverse radio-inline">
@@ -127,7 +127,27 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label">* 관리상태</label>
+                <label class="col-sm-3 col-form-label">* 관리현황</label>
+                <div class="col-sm-9">
+                  <div id="method" class="form-radio">
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="1" name="k_method">
+                        <i class="helper"></i>자동
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="0" name="k_method" checked>
+                        <i class="helper"></i>수동
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 관리방법</label>
                 <div class="col-sm-9">
                   <div id="apply" class="form-radio">
                     <div class="radio radiofill radio-inverse radio-inline">
@@ -230,7 +250,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="col-lg-12">
+              <!-- <div class="col-lg-12">
                 <div class="inline-order-list m-t-0">
                   <h4 class="sub-title">example</h4>
                   <p class="text-muted">
@@ -281,7 +301,7 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> -->
               <div class="col-lg-12">
                 <h4 class="sub-title m-b-10">upload</h4>
                   <div class="form-group row">
@@ -412,6 +432,7 @@ table.table-columned th, table.table-columned td,
       cnt_price:$("#cnt_price").val(),
       k_title:($("#k_title").val() != "") ? $("#k_title").val():$("#cnt_title").val(),
       k_state:$("input:radio[name='k_state']:checked").val(),
+      k_method:$("input:radio[name='k_method']:checked").val(),
       k_apply:$("input:radio[name='k_apply']:checked").val(),
       k_mailing:$("input:radio[name='k_mailing']:checked").val()
     };
