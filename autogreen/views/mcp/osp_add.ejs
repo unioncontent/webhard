@@ -1,0 +1,420 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>OSP사등록</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">관리설정</a></li>
+          <li class="breadcrumb-item"><a href="#!">OSP사등록</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 서비스명</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_sname" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 오픈일</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_open" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* ID</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_id" type="text">
+                  <input type="hidden" id="idCheck"/>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+                <div class="col-sm-1 btn-check">
+                  <button id="idCheck" type="button" class="btn btn-default alert-prompt">
+                    중복체크
+                  </button>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* PW</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_pw" type="password">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 법인명</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_cname" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 사업자번호</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_cnum" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">부가통신사업자</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_scnum" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 제휴현황</label>
+                <div class="col-sm-7 form-radio">
+                  <div class="radio radiofill radio-default radio-inline m-t-5">
+                    <label class="m-b-0">
+                      <input type="radio" value="1" name="osp_tstate" checked>
+                      <i class="helper"></i>제휴
+                    </label>
+                  </div>
+                  <div class="radio radiofill radio-default radio-inline">
+                    <label class="m-b-0">
+                      <input type="radio" value="0" name="osp_tstate">
+                      <i class="helper"></i>비제휴
+                    </label>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 대표자명</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_ceoname" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">담당자명</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_pname" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* URL</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_url" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">상세페이지 URL</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_durl" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">다운로드이미지</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_img" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">주소</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_addrs" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">연락처(숫자만)</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="osp_tel" type="text">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 이메일</label>
+                <div class="col-sm-7">
+                  <div id="osp_email">
+                    <input class="form-control col-sm-5 f-left" id="osp_email_id" type="text">
+                    <span class="f-left m-l-5 m-r-5">@</span>
+                    <input class="form-control col-sm-5 f-left" id="osp_email_site" type="text">
+                  </div>
+                  <span class='messages f-left'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">모바일</label>
+                <div class="col-sm-7">
+                  <div class="border-checkbox-section m-t-5">
+                    <div class="border-checkbox-group border-checkbox-group-default">
+                      <input class="border-checkbox mail-checkbox" type="checkbox" id="osp_mobile_0" value="0">
+                      <label class="border-checkbox-label m-b-0" for="osp_mobile_0">어플</label>
+                    </div>
+                    <div class="border-checkbox-group border-checkbox-group-default">
+                      <input class="border-checkbox mail-checkbox" type="checkbox" id="osp_mobile_1" value="1">
+                      <label class="border-checkbox-label m-b-0" for="osp_mobile_1">웹</label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">* 상태</label>
+                <div class="col-sm-7 form-radio">
+                  <div class="radio radiofill radio-default radio-inline m-t-5">
+                    <label class="m-b-0">
+                      <input type="radio" value="1" name="osp_state" checked>
+                      <i class="helper"></i>정상
+                    </label>
+                  </div>
+                  <div class="radio radiofill radio-default radio-inline">
+                    <label class="m-b-0">
+                      <input type="radio" value="0" name="osp_state">
+                      <i class="helper"></i>중지
+                    </label>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-sm-3"></label>
+                <div class="col-sm-7">
+                  <button class="btn btn-inverse btn-add m-b-0">등록</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  /* loader */
+  .preloader3{
+    display: none;
+    padding-top:20%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 100px;
+    width: 1280px;
+    z-index: 10000;
+  }
+</style>
+<!-- Bootstrap daterangepicker js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+<script>
+  // 중복 체크
+  $(".alert-prompt").on("click",function(){
+    swal({
+      title: "✓ 아이디 중복 체크",
+      content: "input",
+      buttons: ["취소", "확인"],
+      closeOnClickOutside: false,
+      closeOnEsc: false
+    })
+    .then((value) => {
+      console.log(value);
+      if (value === "") {
+        alert("ERROR!", "아이디를 다시 입력해주세요.");
+        return false;
+      }
+      if (value != null) {
+        $.ajax({
+          type: "POST",
+          url: "/setting/osp/idCheck",
+          dataType: "text",
+          data: {id : value},
+          error: function(req,status,error){
+            errorMsg();
+          },
+          success: function(data){
+            console.log(data);
+            if(data == 'fail'){
+              swal("ERROR!", "아이디가 중복됩니다. 다시 입력해 주세요.", "error");
+            }else if(data == 'success'){
+              swal("중복확인!", value+"는 사용가능한 아이디입니다.", "success");
+
+              $('#osp_id').val(value);
+              $("#idCheck").val("true");
+              $('#osp_id').removeClass("form-control-danger");
+              $('#osp_id').siblings().children("p").text("");
+            }
+          }
+        });
+      }
+    });
+  });
+
+  // 등록버튼 클릭시
+  $(".btn-add").on("click",function(){
+    var check=false;
+    var param = {
+      osp_sname:$('#osp_sname').val(),
+      osp_open:$('#osp_open').val(),
+      osp_id:$('#osp_id').val(),
+      osp_pw:$('#osp_pw').val(),
+      osp_cname:$('#osp_cname').val(),
+      osp_cnum:$('#osp_cnum').val(),
+      osp_tstate:$("input:radio[name='osp_tstate']:checked").val(),
+      osp_ceoname:$('#osp_ceoname').val(),
+      osp_url:$('#osp_url').val(),
+      osp_email:$('#osp_email_id').val()+'@'+$('#osp_email_site').val()
+    };
+    // 필수
+    if(param.osp_sname == ""){
+      check = requiredMessage("osp_sname","서비스명을 입력해주세요.");
+    }
+    if(param.osp_open == ""){
+      check = requiredMessage("osp_open","오픈일을 선택해주세요.");
+    }
+    if(param.osp_id == ""){
+      check = requiredMessage("osp_id","아이디를 입력해주세요.");
+    }
+    if(param.osp_id != "" && $("#idCheck").val() == ""){
+      check = requiredMessage("osp_id","아이디를 중복확인 해주세요.");
+    }
+    if(param.osp_pw == ""){
+      check = requiredMessage("osp_pw","비밀번로를 입력해주세요.");
+    }
+    if(param.osp_cname == ""){
+      check = requiredMessage("osp_cname","법인명을 입력해주세요.");
+    }
+    if(param.osp_cnum == ""){
+      check = requiredMessage("osp_cnum","사업자번호를 입력해주세요.");
+    }
+    if(param.osp_tstate == ""){
+      check = requiredMessage("osp_tstate","제휴현황을 선택해주세요.");
+    }
+    if(param.osp_ceoname == ""){
+      check = requiredMessage("osp_ceoname","대표자명 입력해주세요.");
+    }
+    if(param.osp_url == ""){
+      check = requiredMessage("osp_url","URL을 입력해주세요.");
+    }
+    if($('#osp_email_id').val() == "" && $('#osp_email_site').val() == ""){
+      check = requiredMessage("osp_email","이메일을 입력해주세요.");
+    }
+    if(check){
+      return false;
+    }
+    swal({
+      title: "등록하시겠습니까?",
+      icon: "warning",
+      buttons: ["취소", true],
+      dangerMode: true
+    })
+    .then(function(value) {
+      if (value != null) {
+        insertOSP(param);
+      }
+    });
+  });
+
+  // 등록 ajax func
+  function insertOSP(param){
+    // 추가
+    if($("#osp_scnum").val() != ""){
+      param.osp_scnum = $("#osp_scnum").val();
+    }
+    if($("#osp_pname").val() != ""){
+      param.osp_pname = $("#osp_pname").val();
+    }
+    if($("#osp_durl").val() != ""){
+      param.osp_durl = $("#osp_durl").val();
+    }
+    if($("#cnt_cpid").val() != ""){
+      param.cnt_cpid = $("#cnt_cpid").val();
+    }
+    if($("#osp_img").val() != ""){
+      param.osp_img = $("#osp_img").val();
+    }
+    if($("#osp_addrs").val() != ""){
+      param.osp_addrs = $("#osp_addrs").val();
+    }
+    if($("#osp_tel").val() != ""){
+      param.osp_tel = $("#osp_tel").val().replace(/[-]/gi,'');
+    }
+    if($("input[type='checkbox']:checked").length > 0){
+      if($("input[type='checkbox']:checked").length == 2){
+        param.osp_mobile = 2;
+      }
+      else{
+        param.osp_mobile = $("input[type='checkbox']:checked").val();
+      }
+    }
+    if($("input:radio[name='osp_state']:checked").val() != ""){
+      param.osp_state = $("input:radio[name='osp_state']:checked").val();
+    }
+
+    $.ajax({
+      url: '/setting/osp/add',
+      type: 'post',
+      data : param,
+      datatype : 'json',
+      error:function(request,status,error){
+        errorMsg();
+      },
+      success:function(data){
+        alert(data.msg);
+        if(data.state){
+          location.reload();
+        }
+      }
+    });
+  }
+
+  $("input, select").on("focus",function(){
+    $(this).removeClass("form-control-danger");
+    $(this).siblings().children("p").text("");
+    if($(this).attr('id').indexOf('email') != -1){
+      $("#osp_email").siblings().children("p").text("");
+    }
+  });
+
+  function requiredMessage(target,msg){
+    $("#"+target).siblings().children().text(msg);
+    if(target != "osp_email"){
+      $("#"+target).addClass("form-control-danger");
+    }
+    else{
+      $("#"+target+"_id").addClass("form-control-danger");
+      $("#"+target+"_site").addClass("form-control-danger");
+    }
+    return true;
+  }
+
+  // 오픈일
+  $('#osp_open').daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    locale: {
+      format: 'YYYY-MM-DD',
+      "customRangeLabel": "Custom",
+      "daysOfWeek": [
+          "일", "월", "화", "수", "목", "금", "토"
+      ],
+      "monthNames": [
+        "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"
+      ],
+    }
+  });
+
+</script>
