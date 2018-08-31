@@ -73,6 +73,21 @@ app.use('/cnts', cnt);
 var kwd = require('./routes/mcp/keyword');
 app.use('/kwd', kwd);
 
+// 모니터링현황
+var monitoring = require('./routes/mcp/monitoring');
+app.use('/monitoring', monitoring);
+
+// 통계
+var statistics = require('./routes/mcp/statistics');
+app.use('/statistics', statistics);
+
+// OSP사현황,CP사현황
+var setting = require('./routes/mcp/setting');
+app.use('/setting', setting);
+
+// 공지사항
+var notice = require('./routes/mcp/notice');
+app.use('/notice', notice);
 
 /* osp routes */
 //엑셀

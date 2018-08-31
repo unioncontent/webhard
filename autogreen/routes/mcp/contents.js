@@ -112,7 +112,7 @@ router.get('/add',isAuthenticated,async function(req, res, next) {
   var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
   var mcpList = await contents.getMCPList('m');
   var cpList = await contents.getMCPList('c');
-  res.render('mcp/contentsAdd',{
+  res.render('mcp/contents_add',{
     country: array,
     mcpList:mcpList,
     cpList:cpList
