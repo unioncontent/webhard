@@ -274,7 +274,7 @@
           url: "/setting/cp/idCheck",
           dataType: "text",
           data: {id : value},
-          error: function(req,status,error){
+          error: function(req,state,error){
             errorMsg();
           },
           success: function(data){
@@ -303,7 +303,7 @@
         url: '/setting/getMCPList',
         type: 'post',
         datatype : 'json',
-        error:function(request,status,error){
+        error:function(request,state,error){
           errorMsg();
         },
         success:function(data){
@@ -403,7 +403,7 @@
       type: 'post',
       data : param,
       datatype : 'json',
-      error:function(request,status,error){
+      error:function(request,state,error){
         errorMsg();
       },
       success:function(data){
