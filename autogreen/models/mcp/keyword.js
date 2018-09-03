@@ -92,6 +92,19 @@ var Keyword = {
     }
     return await getResult(sql,param[0]);
   },
+  delete2: async function(param){
+    var pVal = [];
+    var sql = 'delete from k_word where ';
+    if(param['class'] == 'c'){
+      sql += 'k_mcp=? and k_cp=?';
+      pVal.push(param['mcp']);
+      pVal.push(param['id']);
+    } else{
+      sql += 'k_mcp=?';
+      pVal.push(param['id']);
+    }
+    return await getResult(sql,pVal);
+  },
   update: async function(item){
     var sql = 'update k_word set k_state=?, k_method=?, k_apply=?, k_mailing=? where k_L_idx=?';
     var param = Object.values(item);

@@ -1,32 +1,31 @@
 const mysql = require('mysql');
 const DBpromise = require('../../db/db_promise.js');
 
-var osp = {
+var cp = {
   selectView: async function(body,param){
-    var sql = 'SELECT n_idx, osp_id, DATE_FORMAT(osp_open, \'%Y-%m-%d\') AS osp_open, \
-    if(osp_sname is null,\'\',osp_sname) as osp_sname, osp_tstate, osp_state, if(osp_mobile is null,\'-1\',osp_mobile) as osp_mobile,\
-    DATE_FORMAT(osp_regdate, \'%Y-%m-%d %H:%i:%s\') AS osp_regdate FROM osp_o_list where n_idx is not null ';
-    if('tstate' in body){
-      sql += ' and osp_tstate = \''+body['tstate']+'\'';
+    var sql = 'SELECT n_idx, cp_id, if(cp_cname is null,\'\',cp_cname) as cp_cname, cp_class, cp_state, if(cp_mcp is null,\'-1\',cp_mcp) as cp_mcp,\
+    DATE_FORMAT(cp_regdate, \'%Y-%m-%d %H:%i:%s\') AS cp_regdate FROM cp_list where n_idx is not null ';
+    if('class' in body){
+      sql += ' and cp_class = \''+body['class']+'\'';
     }
     if('searchType' in body){
       switch (body.searchType) {
-        case 'i': sql+=' and osp_id =\''+body.search+'\''; break;
-        case 'n': sql+=' and osp_sname like \'%'+body.search+'%\''; break;
+        case 'i': sql+=' and cp_id =\''+body.search+'\''; break;
+        case 'n': sql+=' and cp_cname like \'%'+body.search+'%\''; break;
       }
     }
-    sql += ' order by n_idx desc limit ?,?';
+    sql += ' and (cp_class != \'a\' and cp_class != \'t\') order by n_idx desc limit ?,?';
     return await getResult(sql,param);
   },
   selectViewCount: async function(body,param){
-    var sql = 'select count(*) as total from osp_o_list where n_idx is not null ';
+    var sql = 'select count(*) as total from cp_list where n_idx is not null  and (cp_class != \'a\' and cp_class != \'t\')';
     if('cp' in body){
       sql += ' and cnt_cp = \''+body['cp']+'\'';
     }
     if('searchType' in body){
       switch (body.searchType) {
-        case 'i': sql+=' and osp_id =\''+body.search+'\''; break;
-        case 'n': sql+=' and osp_sname like \'%'+body.search+'%\''; break;
+        case 'i': sql+=' and cp_id =\''+body.search+'\''; break;
+        case 'n': sql+=' and cp_cname like \'%'+body.search+'%\''; break;
       }
     }
     var count = await getResult(sql,param);
@@ -37,9 +36,9 @@ var osp = {
       return count[0]['total'];
     }
   },
-  selectOSPInfo: async function(param) {
-    var sql = 'select n_idx, osp_id, osp_pw, osp_sname, DATE_FORMAT(osp_open, \'%Y-%m-%d\') AS osp_open, osp_cname, osp_cnum, osp_scnum, osp_tstate, osp_ceoname, osp_pname, osp_url, osp_durl, osp_img, osp_addrs, osp_tel, osp_email, osp_mobile, osp_mobile_url, osp_state, DATE_FORMAT(osp_regdate, \'%Y-%m-%d %H:%i:%s\') AS osp_regdate';
-    sql += ' from osp_o_list where n_idx = ?';
+  selectCPInfo: async function(param) {
+    var sql = 'select n_idx,cp_id, cp_pw, cp_cname, cp_cnum, cp_ceoname, cp_pname, cp_addrs, cp_tel, cp_hp, cp_email, cp_class, cp_mcp, cp_logo, cp_state, DATE_FORMAT(cp_regdate, \'%Y-%m-%d %H:%i:%s\') AS cp_regdate';
+    sql += ' from cp_list where n_idx = ?';
     var info = await getResult(sql,param);
     var result;
     if(info.length > 0){
@@ -53,8 +52,14 @@ var osp = {
     return await getResult(sql,pValue);
   },
   delete: async function(param) {
-    var sql = 'delete from osp_o_list where n_idx = ?';
-    return await getResult(sql,param);
+    var sql = 'delete from cp_list where ';
+    if(param['type'] == 'idx'){
+      sql+= 'n_idx = ?';
+    }
+    else if(param['type'] == 'mcp'){
+      sql+= 'cp_mcp = ?';
+    }
+    return await getResult(sql,param['val']);
   },
   update: async function(param) {
     var idx = param.idx;
@@ -63,14 +68,13 @@ var osp = {
     placeholders = arr.join(', ');
     var pValue = Object.values(param);
     pValue.push(idx);
-    var sql = "update osp_o_list set "+placeholders+" where n_idx=?;";
+    var sql = "update cp_list set "+placeholders+" where n_idx=?;";
     return await getResult(sql,pValue);
   },
-  checkOspId:async function(id) {
-    var sql = 'select count(*) as total from osp_o_list where osp_id=?';
+  checkCPId:async function(id) {
+    var sql = 'select count(*) as total from cp_list where cp_id=?';
     var param = [id];
     var result = await getResult(sql,param);
-    console.log(result);
     if (result[0].total > 0) {
       return 'fail';
     }
@@ -84,7 +88,7 @@ function insertSqlSetting(keys){
   var arr = [].map.call(keys, function(obj) { return '?'; });
   columns = keys.join(', ');
   placeholders = arr.join(', ');
-  var sql = "INSERT INTO osp_o_list ( "+columns+" ) VALUES ( "+placeholders+" );";
+  var sql = "INSERT INTO cp_list ( "+columns+" ) VALUES ( "+placeholders+" );";
 
   return sql;
 }
@@ -106,4 +110,4 @@ async function getResult(sql,param) {
   }
 }
 
-module.exports = osp;
+module.exports = cp;

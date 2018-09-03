@@ -554,7 +554,7 @@
     $('#edit-Modal input[type=checkbox]').prop('checked',false);
 
     $.ajax({
-      url: '/setting/osp/getOSPInfo',
+      url: '/setting/osp/getInfo',
       type: 'post',
       data: {idx:idx},
       error: function(request,status,error){

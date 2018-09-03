@@ -62,8 +62,8 @@
                     <th><%= listCount - i - (page-1) %></th>
                     <td><div class="edit" data-idx="<%= list[i].n_idx %>"><%= list[i].cp_cname %></div></td>
                     <td><%= list[i].cp_id %></td>
-                    <td><%= (list[i].cp_class == 'm')?'MCP':'CP' %></td>
-                    <td><%= (list[i].cp_mcp == '' || list[i].cp_mcp == null)? 'MCP':list[i].cp_mcp %></td>
+                    <td><%= (list[i].cp_class == 'm') ? 'MCP':'CP' %></td>
+                    <td><%= (list[i].cp_class == 'm') ? 'MCP':list[i].cp_mcp %></td>
                     <td><%= ((list[i].cp_state == "0") ? 'OFF' : 'ON') %></td>
                     <td><%= list[i].cp_regdate %></td>
                   </tr>
@@ -256,7 +256,6 @@
                             <th class="b-r-1 text-left">* MCP선택</th>
                             <td>
                               <select class="form-control" id="cp_mcp">
-                                <option value=""></option>
                               </select>
                               <input id="o_cp_mcp" type="hidden" value="">
                             </td>
@@ -264,14 +263,26 @@
                           <tr>
                             <th class="b-r-1 text-left">회사로고</th>
                             <td>
-                              <input class="form-control input-sm" id="cp_logo_file" type="file">
-                              <div class="col-sm-1 btn-check">
-                                <button id="imgUpload" type="button" class="btn btn-default alert-prompt">
-                                  업로드
-                                </button>
-                                <input class="form-control input-sm" id="cp_logo" type="hidden">
+                              <div id='fileInfoEles'>
+                                <input class="form-control col-sm-6 f-left input-sm" id="cp_logo_txt" type="type" readonly>
+                                <div class="f-left col-sm-1">
+                                  <button id="imgChange" type="button" class="btn btn-warning">변경</button>
+                                </div>
                               </div>
-                              <input id="o_cp_logo" type="hidden" value="">
+                              <input class="form-control input-sm" id="cp_logo" type="hidden">
+                              <div id='uploadEles' style = 'display:none'>
+                                <form action="/setting/upload" method="post" enctype="multipart/form-data" id="fileForm">
+                                  <input class="f-left form-control col-sm-6 p-l-6 p-t-5 p-b-6 input-sm" name="fileInput" id="cp_logo_file" type="file"  accept=".png, .jpg, .jpeg">
+                                </from>
+                                <div class="f-left col-sm-1 btn-check">
+                                  <button id="imgUpload" type="button" class="btn btn-default">
+                                    업로드
+                                  </button>
+                                  <button id="cancelUpload" type="button" class="btn btn-default" style="display:none">
+                                    변경취소
+                                  </button>
+                                </div>
+                              </div>
                             </td>
                           </tr>
                           <tr>
@@ -348,9 +359,6 @@
 <!-- alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script>
-  $(document).ready(function(){
-    startSetting();
-  });
   var modalInputEle = {
     cp_id: $('#cp_id'),
     cp_pw: $('#cp_pw'),
@@ -368,6 +376,77 @@
     cp_state: $('#cp_state'),
     cp_regdate: $('#cp_regdate')
   };
+  $(document).ready(function(){
+    startSetting();
+  });
+  // 이미지 변경시
+  $('#imgChange').on('click', function(){
+    $('#uploadEles').show();
+    $('#fileInfoEles').hide();
+    $('#cancelUpload').show();
+  });
+  $('#cancelUpload').on('click', function () {
+    $('#uploadEles').hide();
+    $('#fileInfoEles').show();
+  });
+  $('#imgUpload').on('click', function () {
+    var form = $('#fileForm')[0];
+    var formData = new FormData(form);
+
+    $.ajax({
+        type: 'post',
+        url: '/setting/file_upload',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          console.log(data);
+          var html = '<span id="file-delete"><i class="fas fa-times"></i>삭제</span>';
+          $('.btn-check').append(html);
+          $('#file-delete').data('file',data);
+          $('#cp_logo').val(data);
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+  });
+
+  $(document).on('click','#file-delete',function(){
+    var filePath = $('#file-delete').data('file');
+    swal({
+      title: "회사로고를 삭제하시겠습니까?",
+      icon: "warning",
+      buttons: ["취소", true],
+      dangerMode: true
+    })
+    .then(function(value) {
+      if (value != null) {
+        ajaxFileDel(filePath);
+      }
+    });
+  });
+  function ajaxFileDel(filePath){
+    console.log(filePath);
+    if(filePath.indexOf('public/') == -1){
+      filePath = 'public/'+filePath;
+    }
+    $.ajax({
+      type: 'post',
+      url: '/setting/file_delete',
+      data: {path:filePath},
+      success: function (data) {
+        console.log(data);
+        $('#file-delete').remove();
+        $('#cp_logo').val('');
+        $('#cp_logo_file').val('');
+      },
+      error: function (err) {
+          console.log(err);
+      }
+    });
+  }
+
   $('.btn-delete').on('click',function(){
     var idx = $(this).data('idx');
     swal({
@@ -381,12 +460,17 @@
         $.ajax({
           url: '/setting/cp/delete',
           type: 'post',
-          data: {idx:idx},
+          data: {
+            idx:idx,
+            class:$('#o_cp_class').val(),
+            id:$('#cp_id').val(),
+            mcp:$('#o_cp_mcp').val()
+          },
           error: function(request,status,error){
             errorMSG();
           },
           success: function(data){
-            if(data.status){
+            if(data.state){
               alert('삭제 완료했습니다.');
               reloadPage();
               $('#edit-Modal').modal('hide');
@@ -420,7 +504,7 @@
           }
           else{
             param[key] = modalInputEle[key].val();
-            if(key == 'cp_tel'){
+            if(key == 'cp_tel' || key == 'cp_hp'){
               param[key] = param[key].replace(/[-]/gi,'');
             }
           }
@@ -455,8 +539,11 @@
             errorMSG();
           },
           success: function(data){
-            if(data.status){
+            if(data.state){
               alert('수정 완료했습니다.');
+              if($('#cp_logo').val() != ''){
+                ajaxFileDel('public/'+$('#cp_logo_txt').val());
+              }
               reloadPage();
               $('#edit-Modal').modal('hide');
             }
@@ -478,22 +565,59 @@
     $('#edit-Modal input[type=checkbox]').prop('checked',false);
 
     $.ajax({
-      url: '/setting/cp/getCPInfo',
+      url: '/setting/cp/getInfo',
       type: 'post',
       data: {idx:idx},
       error: function(request,status,error){
         errorMSG();
       },
       success: function(data){
-        console.log(data);
-        // cp일때 select 처리부분구현하기!
-
+        $('#cp_mcp').empty();
         for (var key in modalInputEle) {
           if(key == 'cp_state' || key == 'cp_class'){
             $('#'+key+' input[type=radio][value='+data.result[key]+']').prop('checked',true);
+            if( key == 'cp_class' && data.result[key] == 'c'){
+              var mcpVal = data.result['cp_mcp'];
+              $.ajax({
+                url: '/setting/getMCPList',
+                type: 'post',
+                datatype : 'json',
+                error:function(request,status,error){
+                  errorMsg();
+                },
+                success:function(data){
+                  console.log(data);
+                  if(!data.state){
+                    alert(data.msg);
+                    return false;
+                  }
+                  data.result.forEach(function(item,idx){
+                    console.log(item);
+                    $('#cp_mcp').append('<option value="'+item.cp_id+'" '+((item.cp_id==mcpVal)?'selected':'')+'>'+item.cp_cname+'</option>');
+                    $('#mcpSelect').show();
+                  });
+                }
+              });
+            }
+            else if( key == 'cp_class' && data.result[key] == 'm'){
+              $('#mcpSelect').hide();
+            }
           }
           else{
             modalInputEle[key].val(data.result[key]);
+            if(key == 'cp_logo'){
+              if(data.result[key] != '' && data.result[key] != null){
+                $('#cp_logo_txt').val(data.result[key]);
+                $('#fileInfoEles').show();
+                $('#uploadEles').hide();
+                $('#cancelUpload').show();
+              }
+              else{
+                $('#uploadEles').show();
+                $('#fileInfoEles').hide();
+                $('#cancelUpload').hide();
+              }
+            }
           }
           $('#o_'+key).val(data.result[key]);
         }
@@ -501,7 +625,6 @@
       }
     });
   });
-
   $('.btn-add').on('click',function(){
     location.href = '/setting/cp/add';
   });
@@ -548,7 +671,7 @@
       },
       success: function(data){
         console.log(data);
-        if(data.status != true){
+        if(data.state != true){
           errorMSG();
           return false;
         }
@@ -559,7 +682,7 @@
             <td><div class="edit" data-idx="'+item.n_idx+'">'+item.cp_cname+'</div></td>\
             <td>'+item.cp_id+'</td>\
             <td>'+((item.cp_class == 'm')?'MCP':'CP')+'</td>\
-            <td>'+((item.cp_mcp == '' || item.cp_mcp == null)? 'MCP':item.cp_mcp)+'</td>\
+            <td>'+((item.cp_class == 'm')? 'MCP':item.cp_mcp)+'</td>\
             <td>'+((item.cp_state == "0") ? 'OFF' : 'ON')+'</td>\
             <td>'+item.cp_regdate+'</td>\
           </tr>';
@@ -621,7 +744,7 @@
   }
   // 리스트 조건 세팅
   function startSetting(){
-    var cpclass = $.urlParam("cpclass");
+    var cpclass = $.urlParam("class");
     if(cpclass){
       $('#selectClass > option[value='+cpclass+']').attr("selected",true);
     }
@@ -645,11 +768,11 @@
       history.pushState(null, null,renewURL);
     }
     // 제휴현황
-    var cpclassValue = $('#selectClass option:selected').val();
-    if(cpclassValue != ''){
-      param.cpclass = cpclassValue;
+    var classValue = $('#selectClass option:selected').val();
+    if(classValue != ''){
+      param.class = classValue;
       if(typeof history.pushState == 'function'){
-        renewURL += '&cpclass='+param.cpclass;
+        renewURL += '&class='+param.class;
         history.pushState(null, null,renewURL);
       }
     }
