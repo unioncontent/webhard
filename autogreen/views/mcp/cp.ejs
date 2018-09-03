@@ -561,7 +561,7 @@
     // modal 초기화
     $('.btn-update').data('idx',idx);
     $('.btn-delete').data('idx',idx);
-    $('#edit-Modal > input[type=text]').val('');
+    $('#edit-Modal input[type=text]').val('');
     $('#edit-Modal input[type=checkbox]').prop('checked',false);
 
     $.ajax({
@@ -582,7 +582,7 @@
                 url: '/setting/getMCPList',
                 type: 'post',
                 datatype : 'json',
-                error:function(request,status,error){
+                error:function(request,state,error){
                   errorMsg();
                 },
                 success:function(data){

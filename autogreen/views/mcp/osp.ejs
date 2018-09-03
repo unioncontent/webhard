@@ -444,7 +444,7 @@
             errorMSG();
           },
           success: function(data){
-            if(data.status){
+            if(data.state){
               alert('삭제 완료했습니다.');
               reloadPage();
               $('#edit-Modal').modal('hide');
@@ -529,7 +529,7 @@
             errorMSG();
           },
           success: function(data){
-            if(data.status){
+            if(data.state){
               alert('수정 완료했습니다.');
               reloadPage();
               $('#edit-Modal').modal('hide');
@@ -549,7 +549,7 @@
     // modal 초기화
     $('.btn-update').data('idx',idx);
     $('.btn-delete').data('idx',idx);
-    $('#edit-Modal > input[type=text]').val('');
+    $('#edit-Modal input[type=text]').val('');
     $('#edit-Modal input[type=radio]').prop('checked',false);
     $('#edit-Modal input[type=checkbox]').prop('checked',false);
 
@@ -649,7 +649,7 @@
       },
       success: function(data){
         console.log(data);
-        if(data.status != true){
+        if(data.state != true){
           errorMSG();
           return false;
         }
