@@ -4,7 +4,13 @@
     <div class="">
       <div class="main-menu-header">
         <div class="user-details">
-          <span id="more-details"><%=userNAME%></span>
+          <span id="more-details">
+            <% if(userLogo == '' || userLogo == null){%>
+              <%=userNAME%>
+            <%} else {%>
+              <img class="img-cLogo" src="\<%=userLogo%>"/>
+            <%}%>
+          </span>
         </div>
       </div>
     </div>
@@ -215,3 +221,12 @@
     </ul>
   </div>
 </nav>
+<style>
+  .img-cLogo{
+    max-width: 174px;
+    max-height: 48px;
+  }
+  .main-menu .main-menu-header .user-details{
+    margin: 0px auto;
+  }
+</style>

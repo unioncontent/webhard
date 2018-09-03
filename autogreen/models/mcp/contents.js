@@ -51,6 +51,10 @@ var Contents = {
     var sql = "select * from cp_list where cp_state = 1 and cp_class=?";
     return await getResult(sql,param);
   },
+  getMCPList2: async function(param) {
+    var sql = "select * from cp_list where cp_class=?";
+    return await getResult(sql,param);
+  },
   getCPList: async function(param) {
     var value = [];
     var sql = "select * from cp_list where cp_class='c'";
@@ -74,6 +78,19 @@ var Contents = {
   delete: async function(n_idx){
     var sql = 'delete from cnt_l_list where n_idx=?';
     return await getResult(sql,n_idx);
+  },
+  delete2: async function(param){
+    var pVal = [];
+    var sql = 'delete from cnt_l_list where ';
+    if(param['class'] == 'c'){
+      sql += 'cnt_mcp=? and cnt_cp=?';
+      pVal.push(param['mcp']);
+      pVal.push(param['id']);
+    } else{
+      sql += 'cnt_mcp=?';
+      pVal.push(param['id']);
+    }
+    return await getResult(sql,pVal);
   },
   getCPlistID: async function(param){
     var sql = 'select cp_id from cp_list where (cp_class=\'m\' and cp_cname=?) || (cp_class=\'c\' and cp_cname=?)';
