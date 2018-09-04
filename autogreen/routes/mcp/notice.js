@@ -1,4 +1,5 @@
 var express = require('express');
+var datetime = require('node-datetime');
 var router = express.Router();
 // DB module
 var notice = require('../../models/mcp/notice.js');
@@ -86,6 +87,62 @@ router.post('/delete',isAuthenticated,async function(req, res, next) {
 router.post('/getInfo',isAuthenticated,async function(req, res, next) {
   var data = await notice.selectNotice(req.body.idx);
   res.send({state:true,result:data});
+});
+
+var fs = require('fs');
+var fs_extra = require('fs-extra');
+var multiparty = require('multiparty');
+
+async function mkdirsFun (directory) {
+  try {
+    await fs_extra.ensureDir(directory)
+    return directory;
+    console.log('success!')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+router.post('/file_upload',async function (req, res) {
+  var date = datetime.create();
+  var today = date.format('Ymd');
+  var time = date.format('HMS');
+  await mkdirsFun('public/uploads/'+today);
+
+  var form = new multiparty.Form({
+      autoFiles: false, // 요청이 들어오면 파일을 자동으로 저장할 것인가
+      uploadDir: 'public/uploads/'+today// 파일이 저장되는 경로(프로젝트 내의 temp 폴더에 저장됩니다.)
+  });
+
+  form.parse(req, function (error, fields, files) {
+      if (error){
+        res.status(500).send(error);
+      }
+
+      // 파일 전송이 요청되면 이곳으로 온다.
+      // 에러와 필드 정보, 파일 객체가 넘어온다.
+      var o_path = files.fileInput[0].path;
+      var path = 'public/uploads/'+today+'/';
+      var fileRName = time+'_'+files.fileInput[0].originalFilename;
+      res.send({
+        filePath : path+fileRName,
+        fileName : fileRName
+      }); // 파일과 예외 처리를 한 뒤 브라우저로 응답해준다.
+      fs.rename(o_path, path+fileRName, function(err) {
+        if (err) throw err;
+        res.end();
+      });
+  });
+});
+
+router.post('/file_delete',async function (req, res) {
+  // fs.unlinkSync(filePath);
+  // res.send(true);
+  fs.unlink('C:/gitProject/webhard/autogreen/'+req.body.path, function (err) {
+    if (err) throw err;
+    console.log('successfully deleted');
+    res.send(true);
+  });
 });
 
 module.exports = router;

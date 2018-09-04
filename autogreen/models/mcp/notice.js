@@ -9,6 +9,7 @@ var notice = {
       switch (body.searchType) {
         case 't': sql+=' and title like \'%'+body.search+'%\''; break;
         case 'c': sql+=' and content like \'%'+body.search+'%\''; break;
+        case 'w': sql+=' and writer like \'%'+body.search+'%\''; break;
       }
     }
     sql += ' order by n_idx desc limit ?,?';
@@ -20,6 +21,7 @@ var notice = {
       switch (body.searchType) {
         case 't': sql+=' and title like \'%'+body.search+'%\''; break;
         case 'c': sql+=' and content like \'%'+body.search+'%\''; break;
+        case 'w': sql+=' and writer like \'%'+body.search+'%\''; break;
       }
     }
     var count = await getResult(sql,param);
