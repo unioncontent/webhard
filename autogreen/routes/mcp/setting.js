@@ -21,6 +21,9 @@ router.get('/:pType',isAuthenticated,async function(req, res, next) {
   else if(req.params.pType == 'cp'){
     data = await getCPListPageData(req.query);
   }
+  else{
+    data = await getMailListPageData(req.query);
+  }
   res.render('mcp/'+req.params.pType,data);
 });
 
@@ -114,6 +117,46 @@ async function getCPListPageData(param){
   catch(e){
     console.log(e);
   }
+  return data;
+}
+
+async function getMailListPageData(param){
+  var data = {
+    list:[],
+    listCount:{total:0},
+    cp:'',
+    mcp:'',
+    page:1,
+    mcpList:await contents.getMCPList('m'),
+    cpList:await contents.getMCPList('c')
+  };
+  var limit = 20;
+  var searchParam = [0,limit];
+  var currentPage = 1;
+  var searchBody = {};
+  if (typeof param.page !== 'undefined') {
+    currentPage = param.page;
+    data['page'] = currentPage;
+  }
+  if (parseInt(currentPage) > 0) {
+    searchParam[0] = (currentPage - 1) * limit
+    data['offset'] = searchParam[1];
+  }
+  if (typeof param.cp !== 'undefined') {
+    searchBody['cp'] = param.cp;
+    data['cp'] = param.cp;
+  }
+  if (typeof param.mcp !== 'undefined') {
+    searchBody['mcp'] = param.mcp;
+    data['mcp'] = param.mcp;
+  }
+  // try{
+  //   data['list'] = await contents.selectView(searchBody,searchParam);
+  //   data['listCount'] = await contents.selectViewCount(searchBody,searchParam);
+  // }
+  // catch(e){
+  //   console.log(e);
+  // }
   return data;
 }
 
@@ -239,10 +282,6 @@ router.post('/getMCPList',isAuthenticated,async function(req, res, next) {
     return false;
   }
   res.send({state:true,result:data});
-});
-
-router.get('/mailing',isAuthenticated,async function(req, res, next) {
-  res.render('mcp/mailing');
 });
 
 module.exports = router;
