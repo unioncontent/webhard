@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "forever ./bin/www"
+    "start": "forever start --minUptime 500 --spinSleepTime 200 ./bin/www"
   },
   "dependencies": {
     "Promise": "^1.0.5",
