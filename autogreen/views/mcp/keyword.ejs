@@ -245,7 +245,11 @@
     param = settingParams(1);
     ajaxGetPageList(param);
   });
-
+  // cp 선택시
+  $(document).on('change','#selectCP',function(){
+    var param = settingParams(1);
+    ajaxGetPageList(param);
+  });
   //페이지 이동
   $(document).on('click','.page-link',function(){
     var param = settingParams(Number($(this).data().value));
