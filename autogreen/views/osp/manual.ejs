@@ -203,7 +203,7 @@ $(document).ready(function(){
     $('#reportrange span').html(moment().format('YYYY.MM.DD') + ' - ' + moment().format('YYYY.MM.DD'));
   }
   else{
-    $('#reportrange span').html(moment(new Date(sDateParams)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDateParams+' 23:59:59')).format('YYYY.MM.DD'));
+    $('#reportrange span').html(moment(new Date(sDateParams)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDateParams)).format('YYYY.MM.DD'));
   }
   if(searchTypeParams != null && searchParams != null){
     $("#selectSearchType").val(searchTypeParams).prop("selected", true);
@@ -562,7 +562,7 @@ function searchDate(){
   var href = new URL(window.location.href);
   var dateArr = $("#reportrange span").text().split(' - ');
   var start = moment(new Date(dateArr[0]));
-  var end = moment(new Date(dateArr[1]+' 23:59:59'));
+  var end = moment(new Date(dateArr[1]));
   var param = {
     cp_name :  $('#selectCp option:selected').val() || '0',
     start : 0,
@@ -611,10 +611,7 @@ var ranges = {
 };
 var optionSet1 = {
   startDate: (sDateParams != null) ? moment(new Date(sDateParams)) : moment(),
-  endDate:  (eDateParams != null) ? moment(new Date(eDateParams+' 23:59:59')) : moment(),
-  dateLimit: {
-    days: 60
-  },
+  endDate:  (eDateParams != null) ? moment(new Date(eDateParams)) : moment(),
   showDropdowns: true,
   showRangeInputsOnCustomRangeOnly: false,
   ranges: ranges,
