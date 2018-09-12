@@ -322,43 +322,6 @@
       $('#key-toolbar').hide();
     }
   });
-  // 상태 전체 변경
-  // $(document).on('click','.option1,.option0',function() {
-  //   if(c == '0'){
-  //     swal("수정불가!", "cp사를 선택해주세요.", "error");
-  //     return false;
-  //   }
-  //   var type = ($(this).data("value") == '0') ? '제외':'검출';
-  //   swal({
-  //     title: "모든 콘텐츠 상태를 "+type+"하시겠습니까?",
-  //     text: "\'"+c+"\' 사의\n 모든 콘텐츠 상태가 변경됩니다.",
-  //     icon: "warning",
-  //     buttons: ["취소", true],
-  //     dangerMode: true,
-  //   })
-  //   .then((value) =>{
-  //     if(value != null){
-  //       $.ajax({
-  //         url: '/contents/update',
-  //         type: 'post',
-  //         data: {
-  //           'type':'all',
-  //           'K_key': $(this).data("value"),
-  //           'U_id_c': c
-  //         },
-  //         error:function(request,status,error){
-  //           swal("ERROR!", "다시 시도해주세요.", "error");
-  //           console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
-  //         },
-  //         success:function(data){
-  //           swal("SUCCESS", "모든 콘텐츠 상태가 "+type+"되었습니다!", "success");
-            // reloadPage();
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-  // MCP or CP 선택시
   $(document).on('change','#selectMCP,#selectCP',function(){
     var param = settingParams(1);
     ajaxGetPageList(param);
