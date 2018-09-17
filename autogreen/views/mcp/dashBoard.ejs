@@ -6,17 +6,149 @@
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="/">
-              <i class="fas fa-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">대시보드</a></li>
+          <li class="breadcrumb-item">24시간 기준</li>
         </ul>
       </div>
     </div>
     <div class="page-body">
       <div class="row">
+        <div class="col-md-2">
+          <div class="card counter-card-1">
+            <div class="card-block-big">
+              <div>
+                <h3>4000</h3>
+                <p>Most Played Last Month
+                  <span class="f-right text-primary">
+                    <i class="icofont icofont-arrow-up"></i>
+                    37.89%
+                  </span>
+                </p>
+                <div class="progress ">
+                  <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <i class="icofont icofont-comment"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 card-table">
+            <div class="table-border-style">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>관리콘텐츠</th>
+                      <th>제휴-모니터링</th>
+                      <th>비제휴-모니터링</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        <div class="col-md-4 card-table">
+          <div class="table-border-style">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>뮤레카 필터링</th>
+                    <th>아컴스튜디오 필터링</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-7">
+              <div id="chart1" style="margin: 0 auto"></div>
+            </div>
+            <div class="col-md-3">
+              <div id="chart2" style="margin: 0 auto"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card table-1-card">
+            <div class="card-block">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr class="text-capitalize">
+                      <th colspan="4">공지사항</th>
+                      <th>더보기</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="4">신규사이트가 추가되었습니다.</td>
+                      <td>2018-07-07</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block table-border-style">
+              <div class="table-responsive">
+                <table class="table table-cp table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="10%">회사명</th>
+                      <th>사이트</th>
+                      <th>상태</th>
+                      <th>합계</th>
+                      <th>제휴건</th>
+                      <th>비제휴건</th>
+                      <th>뮤레카필터</th>
+                      <th>아컴스튜디오필터</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>(주)오버마인드</th>
+                      <th>filesun</th>
+                      <th>비제휴</th>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                      <th>(주)오버마인드</th>
+                      <th>filesun</th>
+                      <th>제휴</th>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -25,4 +157,93 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script>
+  $(document).ready(function(){
+    Highcharts.setOptions({
+      lang: {
+        resetZoom:"전체보기"
+      }
+    });
+    chart1Road();
+    chart2Road();
+  });
+  function chart1Road(){
+    var categoriesData = ['filesun','filelon','filewar','nomfile']; // 여기에 x축 데이터를 넣는다.
+    var seriesData = [{
+      name: '제휴',
+      data: [5, 3, 4, 7, 2]
+    }, {
+      name: '비제휴',
+      data: [2, 2, 3, 2, 1]
+    }]; // 여기에 data를 파싱해 y축 구조를 만들어준다.
+
+    var options = {
+      chart: {
+        renderTo: 'chart1',
+        type: 'column'
+      },
+      title: {
+        text: '웹하드별 모니터링현황'
+      },
+      xAxis: {
+        categories: categoriesData
+      },
+      yAxis: {
+        min: 0
+      },
+      tooltip: {
+        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+        shared: true
+      },
+      plotOptions: {
+        column: {
+          stacking: 'percent'
+        }
+      },
+      series: seriesData
+    };
+    Highcharts.chart(options);
+  }
+  function chart2Road(){
+    var options = {
+      chart: {
+        renderTo: 'chart2',
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: false
+          },
+          showInLegend: true
+        }
+      },
+      series: [{
+        name: '현황',
+        colorByPoint: true,
+        data: [{
+          name: '제휴',
+          y: 61.41,
+          sliced: true,
+          selected: true
+        }, {
+          name: '비제휴',
+          y: 38.59
+        }]
+      }]
+    };
+    Highcharts.chart(options);
+  }
 </script>

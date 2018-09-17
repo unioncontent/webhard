@@ -1,0 +1,150 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>통계현황</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">모니터링현황</a></li>
+          <li class="breadcrumb-item"><a href="#!">통계현황</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12 m-b-10">
+          <select name="select" class="col-md-1 form-control form-control-inverse p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
+            <option value=''>MCP사선택</option>
+          </select>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectCP">
+            <option value=''>CP사선택</option>
+          </select>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectTState">
+            <option value=''>제휴사</option>
+            <option value=''>비제휴사</option>
+          </select>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectOC">
+            <option value=''>OSP</option>
+            <option value=''>콘텐츠</option>
+          </select>
+          <div id="reportrange" class="col-md-3 form-control form-control-inverse m-l-5 p-b-10 p-r-5 f-left">
+            <i class="glyphicon glyphicon-calendar far fa-calendar-alt"></i>
+            <span></span>
+            <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
+          </div>
+          <button class="btn btn-inverse btn-view f-left m-l-5 p-r-5 p-l-5">
+            <i class="fas fa-chart-bar"></i>통계보기
+          </button>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="col-md-6 card-table f-left">
+                <div class="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>전체 검출합계</th>
+                          <th>전체 제휴건</th>
+                          <th>전체 비제휴건</th>
+                          <th>전체 채증건</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>1</td>
+                          <td>1</td>
+                          <td>1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 card-table f-right">
+                <div class="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>뮤레카 필터링</th>
+                          <th>아컴스튜디오 필터링</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-block table-border-style  table-responsive">
+              <div class="preloader3 loader-block">
+                <div class="circ1 loader-primary"></div>
+                <div class="circ2 loader-primary"></div>
+                <div class="circ3 loader-primary"></div>
+                <div class="circ4 loader-primary"></div>
+              </div>
+              <table class="table table-bordered" id="listTable">
+                <thead>
+                  <tr>
+                    <th width="1%">NO</th>
+                    <th width="5%">OSP</th>
+                    <th width="5%">MCP/CP</th>
+                    <th width="5%">제휴현황</th>
+                    <th width="5%">검출건</th>
+                    <th width="5%">제휴건</th>
+                    <th width="5%">비제휴건</th>
+                    <th width="5%">채증건</th>
+                    <th width="5%">뮤레카</th>
+                    <th width="5%">아컴</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>fileis</td>
+                    <td>MCP/CP</td>
+                    <td>비제휴</td>
+                    <td>1234</td>
+                    <td>0</td>
+                    <td>123</td>
+                    <td>123</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- lightbox -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js" charset="utf-8"></script>
+<!-- datePicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- alert -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+<!-- custom -->
+<link rel="stylesheet" href="/pages/statistics/style.css">
+<script type="text/javascript" src="/pages/statistics/script.js"></script>

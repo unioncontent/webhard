@@ -1,0 +1,29 @@
+.table td,.table th{
+  text-align: center;
+}
+.card-table{
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 2px;
+  font-size: 12px;
+}
+.card-table .table-bordered td,.card-table .table-bordered th {
+  border: 1px solid #ccc;
+}
+.card-table .table th, .card-table .table td {
+  text-align: left;
+}
+#listTable th:nth-child(3),#listTable td:nth-child(3){
+  display: none;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  width: 1280px;
+  z-index: 10000;
+}
