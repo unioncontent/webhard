@@ -17,6 +17,15 @@ router.get('/',isAuthenticated,async function(req, res, next) {
   res.render('mcp/contents',data);
 });
 
+router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
+  try{
+    var data = await getListPageData(req.body);
+    res.send({status:true,result:data});
+  } catch(e){
+    res.status(500).send(e);
+  }
+});
+
 router.post('/delete',isAuthenticated,async function(req, res, next) {
   var result = await contents.delete(req.body.n_idx);
   if(!('protocol41' in result)){
@@ -47,15 +56,6 @@ router.post('/update',isAuthenticated,async function(req, res, next) {
     }
   }
   res.send(true);
-});
-
-router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
-  try{
-    var data = await getListPageData(req.body);
-    res.send({status:true,result:data});
-  } catch(e){
-    res.status(500).send(e);
-  }
 });
 
 async function getListPageData(param){
