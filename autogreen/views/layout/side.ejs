@@ -46,6 +46,7 @@
                 contentsURL = 'cnts';
                 keywordURL = 'kwd';
               }
+              if (userCLASS != 'c'){
             %>
             <a href="/<%=contentsURL%>/add" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -53,6 +54,7 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
+          <%}%>
           <li>
             <a href="/<%=contentsURL%>" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -60,7 +62,7 @@
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%if ((userSite != 'autogreen' && userCLASS == 'a') || userSite == 'autogreen'){%>
+          <%if ((userSite != 'autogreen' && userCLASS == 'a') || (userSite == 'autogreen' && userCLASS != 'c')){%>
           <li>
             <a href="/<%=keywordURL%>" data-i18n="nav.advance-components.grid-stack">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -130,6 +132,7 @@
                 <span class="pcoded-mcaret"></span>
               </a>
             </li>
+            <%if(userCLASS != 'c'){%>
             <li>
               <a href="/setting/mailing" data-i18n="nav.advance-components.grid-stack">
                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -137,6 +140,7 @@
                 <span class="pcoded-mcaret"></span>
               </a>
             </li>
+            <%}%>
             <li>
               <a href="/notice" data-i18n="nav.advance-components.grid-stack">
                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>

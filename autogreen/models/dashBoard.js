@@ -51,8 +51,8 @@ var DashBoard = {
     }).filter(function(n){ return n != undefined });
   },
   checkId: async function(id) {
-    var sql = 'select * from user_all where U_id=? and U_state=? and U_class!=?';
-    var param = [id,'1','c'];
+    var sql = 'select * from user_all where U_id=? and U_state=?';
+    var param = [id,'1'];
     return await getResult('site',sql,param);
   }
 }
