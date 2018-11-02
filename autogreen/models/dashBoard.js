@@ -2,6 +2,14 @@ const mysql = require('mysql');
 const DBpromise = require('../db/db_promise.js');
 
 var DashBoard = {
+  call_dashBoard: async function(type,user){
+    var sql = "call site.dashboard(?,?,?,?)";
+    var param = [type,user.U_class,user.cp_mcp,''];
+    if(user.U_class == 'c'){
+      param[3] = user.cp_id;
+    }
+    return await getResult2(sql,param);
+  },
   getStatistics: async function(osp,cp){
     var sql = "SELECT FORMAT(COUNT(*),0) AS totalCount,\
     FORMAT(COUNT(IF(K_apply='T' and CS_state='1',1,null)),0) as TCount,\
@@ -67,4 +75,20 @@ async function getResult(osp,sql,param) {
   }
 }
 
+async function getResult2(sql,param) {
+  var db = new DBpromise('site');
+  console.log('sql : ',sql);
+  console.log('param : ',param);
+  try{
+    if(param == undefined){
+      return await db.query(sql);
+    }
+    return await db.query(sql,param);
+  } catch(e){
+    console.log('DB Error : ',e);
+    return [];
+  } finally{
+    db.close();
+  }
+}
 module.exports = DashBoard;

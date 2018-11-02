@@ -6,6 +6,7 @@ var router = express.Router();
 // DB module
 var User = require('../models/osp/user.js');
 var DashBoard = require('../models/dashBoard.js');
+var Cp = require('../models/mcp/cp.js');
 
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated())
@@ -42,7 +43,40 @@ router.get('/',isAuthenticated,async function(req, res, next) {
     return false;
   }
   else{
-    res.render('mcp/dashBoard');
+    req.user.cp_mcp = req.user.cp_id;
+    if(req.user.U_class == "c"){
+      req.user.cp_mcp = await Cp.selectView({searchType:'i',search:req.user.cp_id},[0,1]);
+    }
+    var data = {
+      ospCount:0,
+      ospACount:0,
+      ospNACount:0,
+      contentsCount:0,
+      aCount:0,
+      naCount:0,
+      ospTotalCount:[],
+      ospTotalCountList:[],
+      notice:[]
+    };
+    var result1 = await DashBoard.call_dashBoard(1,req.user);
+    data.ospCount = (result1.length > 2) ? result1[0][0].total:0;
+    data.ospACount = (result1.length > 2) ? result1[0][0].atotal:0;
+    data.ospNACount = (result1.length > 2) ? result1[0][0].natotal:0;
+    data.contentsCount = (result1.length > 2) ? result1[1][0].total:0;
+    data.notice = (result1.length > 2) ? result1[2]:[];
+    var result2 = await DashBoard.call_dashBoard(2,req.user);
+    data.aCount = (result2.length > 0) ? result2[0][0].atotal:0;
+    data.naCount = (result2.length > 0) ? result2[0][0].natotal:0;
+    var result3 = await DashBoard.call_dashBoard(3,req.user);
+    data.ospTotalCount = (result3.length > 1) ? result3[1][0]:0;
+    data.ospTotalCountList = (result3.length > 1) ? result3[0]:0;
+    console.log(result1[0]);
+    console.log(result1[1]);
+    console.log(result1[2]);
+    console.log(result2[0]);
+    console.log(result3[0]);
+    console.log(result3[1]);
+    res.render('mcp/dashBoard',data);
   }
 });
 

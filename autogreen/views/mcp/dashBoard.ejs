@@ -17,10 +17,10 @@
             <div class="card-block">
               <span>OSP 현황</span>
               <hr class="m-t-10 m-b-10">
-              <h3 class="f-left">53</h3>
+              <h3 class="f-left"><%=ospCount%></h3>
               <span class="f-right f-12 text-info text-center m-b-0">
                 <span>제휴 / 비제휴</span><br>
-                <span>48 / 5</span>
+                <span><%=ospACount%> / <%=ospNACount%></span>
               </span>
             </div>
           </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-4 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5>10k</h5>
+                      <h5><%=contentsCount%></h5>
                       <span>관리콘텐츠</span>
                     </div>
                   </div>
@@ -40,14 +40,14 @@
                 <div class="col-sm-4 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5>100%</h5>
+                      <h5><%=aCount%></h5>
                       <span>제휴-모니터링</span>
                     </div>
                   </div>
                 </div><div class="col-sm-4 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5>100%</h5>
+                      <h5><%=naCount%></h5>
                       <span>비제휴-모니터링</span>
                     </div>
                   </div>
@@ -63,14 +63,14 @@
                 <div class="col-sm-6 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5>100%</h5>
+                      <h5>0</h5>
                       <span>뮤레카 필터링</span>
                     </div>
                   </div>
                 </div><div class="col-sm-6 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5>100%</h5>
+                      <h5>0</h5>
                       <span>아컴스튜디오 필터링</span>
                     </div>
                   </div>
@@ -99,10 +99,12 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <% for(var i=0; i < notice.length; i++) { %>
                     <tr>
-                      <td colspan="4">신규사이트가 추가되었습니다.</td>
-                      <td>2018-07-07</td>
+                      <td colspan="4"><%= notice[i].title %></td>
+                      <td><%= notice[i].regdate %></td>
                     </tr>
+                    <% }; %>
                   </tbody>
                 </table>
               </div>
@@ -127,34 +129,28 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr class="table-info">
                       <th colspan="3">합계</th>
-                      <td>123</td>
-                      <td>123</td>
-                      <td>123</td>
-                      <td>123</td>
-                      <td>123</td>
+                      <td><%=ospTotalCount.total%></td>
+                      <td><%=ospTotalCount.atotal%></td>
+                      <td><%=ospTotalCount.natotal%></td>
+                      <td>0</td>
+                      <td>0</td>
                     </tr>
+                    <% for(var i=0; i < ospTotalCountList.length; i++) { %>
                     <tr>
-                      <th>(주)오버마인드</th>
-                      <th>filesun</th>
-                      <th class="text-danger">비제휴</th>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                    </tr>
-                    <tr>
-                      <th>(주)오버마인드</th>
-                      <th>filesun</th>
-                      <th class="text-success">제휴</th>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <th><%=ospTotalCountList[i].osp_sname%></th>
+                      <th><%=ospTotalCountList[i].cnt_osp%></th>
+                      <th class="<%=((ospTotalCountList[i].osp_tstate == '0')? 'text-danger': 'text-success')%>">
+                        <%=((ospTotalCountList[i].osp_tstate == '0')? '비제휴': '제휴')%>
+                      </th>
+                      <td><%=ospTotalCountList[i].total%></td>
+                      <td><%=ospTotalCountList[i].atotal%></td>
+                      <td><%=ospTotalCountList[i].natotal%></td>
                       <td>0</td>
                       <td>0</td>
                     </tr>
+                    <% }; %>
                   </tbody>
                 </table>
               </div>
@@ -165,6 +161,8 @@
     </div>
   </div>
 </div>
+<input type="hidden" id="contentsArr" value="<%=JSON.stringify(ospTotalCountList)%>">
+<input type="hidden" id="aCountArr" value="<%=JSON.stringify(ospTotalCount)%>">
 <!-- morris -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
@@ -227,15 +225,20 @@
     chart2Road();
   });
   function chart1Road(){
-    var categoriesData = ['filesun','filelon','filewar','nomfile']; // 여기에 x축 데이터를 넣는다.
+    var categoriesData = new Array();
+    var contentsList = JSON.parse($('#contentsArr').val());
     var seriesData = [{
       name: '제휴',
-      data: [5, 3, 4, 7, 2]
+      data: []
     }, {
       name: '비제휴',
-      data: [2, 2, 3, 2, 1]
-    }]; // 여기에 data를 파싱해 y축 구조를 만들어준다.
-
+      data: []
+    }];
+    for(var i in contentsList){
+      categoriesData.push(contentsList[i].osp_sname);
+      seriesData[0].data.push(contentsList[i].atotal);
+      seriesData[1].data.push(contentsList[i].natotal);
+    };
     var options = {
       chart: {
         renderTo: 'chart1',
@@ -278,6 +281,9 @@
     Highcharts.chart(options);
   }
   function chart2Road(){
+    var aCountList = JSON.parse($('#aCountArr').val());
+    // var atotal_p = ((Number(aCountList.atotal.replace(/,/gi,'')) / Number(aCountList.total.replace(/,/gi,''))) * 100);
+    // var natotal_p = ((Number(aCountList.natotal.replace(/,/gi,'')) / Number(aCountList.total.replace(/,/gi,''))) * 100);
     var options = {
       chart: {
         renderTo: 'chart2',
@@ -312,12 +318,12 @@
         colorByPoint: true,
         data: [{
           name: '제휴',
-          y: 61.41,
+          y: Number(aCountList.atotal.replace(/,/gi,'')),
           sliced: true,
           selected: true
         }, {
           name: '비제휴',
-          y: 38.59
+          y: Number(aCountList.natotal.replace(/,/gi,'')) 
         }]
       }]
     };
