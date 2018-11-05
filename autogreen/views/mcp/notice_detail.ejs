@@ -1,0 +1,116 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>공지사항</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">관리설정</a></li>
+          <li class="breadcrumb-item"><a href="#!">공지사항</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block table-border-style">
+              <div class="table-border-style">
+                <div class="table-responsive">
+                  <table class="table" id="modal-cnt">
+                    <colgroup>
+                      <col width="30%">
+                      <col width="70%">
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th class="b-r-1 text-left">* 글쓴이</th>
+                        <td>
+                          <input class="form-control input-sm" id="writer" type="text">
+                          <input id="o_writer" type="hidden" value="test">
+                          <span class="messages"><p class="text-danger error"></p></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="b-r-1 text-left">* 제목</th>
+                        <td>
+                          <input class="form-control input-sm" id="title" type="text">
+                          <input id="o_title" type="hidden" value="test2">
+                          <span class="messages"><p class="text-danger error"></p></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="b-r-1 text-left">* 내용</th>
+                        <td>
+                          <textarea class="form-control" id="content" rows="10"></textarea>
+                          <input id="o_content" type="hidden" value="">
+                          <span class="messages"><p class="text-danger error"></p></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="b-r-1 text-left">첨부파일</th>
+                        <td>
+                          <div class="form-control f-left col-sm-9 file-list">
+                            <ul id="uploadFileList"></ul>
+                          </div>
+                          <input id="file" type="hidden">
+                          <button class="f-right btn btn-default" onclick="$('#file_input').trigger('click');">파일 업로드</button>
+                          <!-- 파일 업로드 -->
+                          <form action="/setting/upload" method="post" enctype="multipart/form-data" id="fileForm">
+                            <input class="upload" name="fileInput" id="file_input" type="file">
+                        </form></td>
+                      </tr>
+                      <tr>
+                        <th class="b-r-1 text-left">* 분류</th>
+                        <td>
+                          <div class="form-radio text-left" id="type">
+                            <div class="radio radiofill radio-default radio-inline">
+                              <label>
+                                <input type="radio" value="m" name="type" class="type">
+                                <i class="helper"></i>MCP공지
+                              </label>
+                            </div>
+                            <div class="radio radiofill radio-default radio-inline">
+                              <label>
+                                <input type="radio" value="c" name="type" class="type">
+                                <i class="helper"></i>CP공지
+                              </label>
+                            </div>
+                            <input id="o_type" value="m" type="hidden" class="form-control">
+                          </div>
+                          <span class="messages"><p class="text-danger error"></p></span>
+                        </td>
+                      </tr>
+                      <tr id="regdate_tr" style="">
+                        <th class="b-r-1 text-left">등록일</th>
+                        <td>
+                          <input class="form-control input-sm" id="regdate" type="text" readonly="">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+</style>
+<!-- Bootstrap daterangepicker js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+<script>
+</script>
