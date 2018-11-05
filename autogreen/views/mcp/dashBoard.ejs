@@ -12,15 +12,35 @@
     </div>
     <div class="page-body">
       <div class="row">
+        <div class="col-md-12">
+          <input type="hidden" id="user_class" value="<%=userCLASS%>">
+          <input type="hidden" id="user_id" value="<%=userID%>">
+          <% if(userCLASS == 'a'){ %>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
+            <option value=''>MCP사선택</option>
+            <% for(var i=0; i < mcpList.length; i++) {%>
+              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+          <% } %>
+          <% if(userCLASS == 'a' || userCLASS == 'm'){ %>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 m-l-5 p-r-5 f-left" id="selectCP">
+            <option value=''>CP사선택</option>
+            <% for(var i=0; i < cpList.length; i++) {%>
+              <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+          <% } %>
+        </div>
         <div class="col-md-3">
           <div class="card">
             <div class="card-block">
               <span>OSP 현황</span>
               <hr class="m-t-10 m-b-10">
-              <h3 class="f-left"><%=ospCount%></h3>
+              <h3 class="f-left" id="ospCount1"><%=ospCount%></h3>
               <span class="f-right f-12 text-info text-center m-b-0">
                 <span>제휴 / 비제휴</span><br>
-                <span><%=ospACount%> / <%=ospNACount%></span>
+                <span id="ospCount2"><%=ospACount%> / <%=ospNACount%></span>
               </span>
             </div>
           </div>
@@ -32,7 +52,7 @@
                 <div class="col-sm-4 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5><%=contentsCount%></h5>
+                      <h5 id="cntsCount1"><%=contentsCount%></h5>
                       <span>관리콘텐츠</span>
                     </div>
                   </div>
@@ -40,14 +60,14 @@
                 <div class="col-sm-4 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5><%=aCount%></h5>
+                      <h5 id="cntsCount2"><%=aCount%></h5>
                       <span>제휴-모니터링</span>
                     </div>
                   </div>
                 </div><div class="col-sm-4 card-block-big">
                   <div class="row">
                     <div class="col-sm-12 text-center">
-                      <h5><%=naCount%></h5>
+                      <h5 id="cntsCount3"><%=naCount%></h5>
                       <span>비제휴-모니터링</span>
                     </div>
                   </div>
@@ -80,12 +100,8 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div id="chart1">
-            <!-- <div id="chart1" style="margin: 0 auto;width:200px;"></div> -->
-          </div>
-          <div id="chart2">
-            <!-- <div id="chart2" style="margin: 0 auto; min-width:262px"></div> -->
-          </div>
+          <div id="chart1"></div>
+          <div id="chart2"></div>
         </div>
         <div class="col-md-4">
           <div class="card table-1-card">
@@ -131,9 +147,9 @@
                   <tbody>
                     <tr class="table-info">
                       <th colspan="3">합계</th>
-                      <td><%=ospTotalCount.total%></td>
-                      <td><%=ospTotalCount.atotal%></td>
-                      <td><%=ospTotalCount.natotal%></td>
+                      <td id="totalCount1"><%=ospTotalCount.total%></td>
+                      <td id="totalCount2"><%=ospTotalCount.atotal%></td>
+                      <td id="totalCount3"><%=ospTotalCount.natotal%></td>
                       <td>0</td>
                       <td>0</td>
                     </tr>
@@ -323,10 +339,50 @@
           selected: true
         }, {
           name: '비제휴',
-          y: Number(aCountList.natotal.replace(/,/gi,'')) 
+          y: Number(aCountList.natotal.replace(/,/gi,''))
         }]
       }]
     };
     Highcharts.chart(options);
   }
+
+  $(document).on('change','#selectMCP,#selectCP',function(){
+    $.ajax({
+      url: '/dashBoard/setting',
+      type: 'post',
+      data: {
+        mid:$('#selectMCP option:selected').val(),
+        cid:$('#selectCP option:selected').val()
+      },
+      error:function(request,status,error){
+        console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+        errorMSG();
+      },
+      success:function(data){
+        // 그래프
+        $('#chart1').empty();
+        $('#chart2').empty();
+        $('#contentsArr').val(JSON.stringify(data.ospTotalCountList));
+        $('#aCountArr').val(JSON.stringify(data.ospTotalCount));
+        chart1Road();
+        chart2Road();
+        // osp현황
+        $('#ospCount1').text(data.ospCount);
+        $('#ospCount2').text(data.ospACount+' / '+data.ospNACount);
+        // 관리,제휴,비제휴
+        $('#cntsCount1').text(data.contentsCount);
+        $('#cntsCount2').text(data.aCount);
+        $('#cntsCount3').text(data.naCount);
+        // 리스트 표
+        $('#totalCount1').text(data.total);
+        $('#totalCount2').text(data.atotal);
+        $('#totalCount3').text(data.natotal);
+        $('#list tbody tr').not('.table-info').remove();
+        data.ospTotalCountList.forEach(function(ele) {
+          var html = '<tr><th>'+ele.osp_sname+'</th><th>'+ele.cnt_osp+'</th><th class="'+((ele.osp_tstate == '0')? 'text-danger': 'text-success')+'">'+((ele.osp_tstate == '0')? '비제휴': '제휴')+'</th><td>'+ele.total+'</td><td>'+ele.atotal+'</td><td>'+ele.natotal+'</td><td>0</td><td>0</td></tr>';
+          $('#list tbody').append(html);
+        });
+      }
+    });
+  });
 </script>

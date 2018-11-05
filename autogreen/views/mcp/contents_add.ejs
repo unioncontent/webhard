@@ -21,6 +21,9 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-block">
+              <input type="hidden" id="user_class" value="<%=userCLASS%>">
+              <input type="hidden" id="user_id" value="<%=userID%>">
+              <% if(userCLASS == 'a'){ %>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 관리사(MCP)</label>
                 <div class="col-sm-9">
@@ -33,11 +36,17 @@
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
+              <% } %>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 저작권사(CP)</label>
                 <div class="col-sm-9">
                   <select name="select" class="form-control" id="selectCP">
                     <option value="">선택</option>
+                    <% if(userCLASS == 'm'){
+                        for(var i=0; i < cpList.length; i++) {%>
+                          <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+                    <% }
+                      } %>
                   </select>
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
@@ -426,7 +435,6 @@ table.table-columned th, table.table-columned td,
   function insertContents(){
     var check=false;
     var param = {
-      cnt_mcp:$("#selectMCP option:selected").val(),
       cnt_cp:$("#selectCP option:selected").val(),
       cnt_title:$("#cnt_title").val(),
       cnt_price:$("#cnt_price").val(),
@@ -436,6 +444,12 @@ table.table-columned th, table.table-columned td,
       k_apply:$("input:radio[name='k_apply']:checked").val(),
       k_mailing:$("input:radio[name='k_mailing']:checked").val()
     };
+    if($('#user_class').val() == 'm'){
+      param.cnt_mcp = $('#user_id').val();
+    }
+    else{
+      param.cnt_mcp = $("#selectMCP option:selected").val();
+    }
     // 필수
     if(param.cnt_mcp == ""){
       check = requiredMessage("selectMCP","관리사를 선택해주세요.");
