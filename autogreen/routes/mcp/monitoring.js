@@ -17,6 +17,13 @@ var isAuthenticated = function (req, res, next) {
 
 router.get('/:type',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.params.type,req.query);
+  if(req.user.U_class == 'm'){
+    data.cpList = await contents.getCPList({mcp:req.user.U_id});
+  }
+  else if(req.user.U_class == 'a'){
+    data.mcpList = await contents.getMCPList('m');
+    data.cpList = [];
+  }
   res.render('mcp/monitoring',data);
 });
 
@@ -195,6 +202,11 @@ router.post('/getInfo',isAuthenticated,async function(req, res, next) {
 });
 
 async function getListPageData(type,param){
+  var dt = datetime.create();
+  var end = dt.format('Y-m-d');
+  dt.offsetInDays(-7);
+  var start = dt.format('Y-m-d');
+
   var data = {
     pType:type,
     list:[],
@@ -204,15 +216,15 @@ async function getListPageData(type,param){
     searchType:'',
     search:'',
     page:1,
-    mcpList:await contents.getMCPList('m'),
-    cpList:await contents.getMCPList('c')
+    sDate:start,
+    eDate:end
   };
   var limit = 20;
   // sql qeury ? 파라미터 : osp_tstate,limit
   var typeVal = (type == 'alliance')? '1':'0';
   var searchParam = [typeVal,0,limit];
   var currentPage = 1;
-  var searchBody = {};
+  var searchBody = {sDate:start,eDate:end};
   if (typeof param.page !== 'undefined') {
     currentPage = param.page;
     data['page'] = currentPage;
@@ -246,6 +258,9 @@ async function getListPageData(type,param){
   try{
     data['list'] = await monitoring.selectView(searchBody,searchParam);
     data['listCount'] = await monitoring.selectViewCount(searchBody,searchParam);
+    if(user.U_class == 'a' && param.type == 'selectMCP'){
+      data.cpList = await contents.getCPList({mcp:data.mcp});
+    }
   }
   catch(e){
     console.log(e);

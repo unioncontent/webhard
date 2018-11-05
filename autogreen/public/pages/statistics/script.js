@@ -1,14 +1,70 @@
 $(document).ready(function(){
   startSetting();
 });
-// 제휴사/비제휴사 선택시
-$('#selectTState').on("change",function(){
+// 프린트
+function onPrint() {
+  const html = document.querySelector('html');
+  const printContents = document.querySelector('#printEle .card-block').outerHTML;
+  const printContents1 = document.querySelector('#printEle .col-md-6').outerHTML;
+  const printContents2 = document.querySelector('#printEle .col-md-4').outerHTML;
+  const printDiv = document.createElement('div');
+  printDiv.className = 'print-div';
 
+  html.appendChild(printDiv);
+  printDiv.style.fontSize = '12px';
+  printDiv.innerHTML += '<div class="col-md-12" style="margin-bottom:30px">'+printContents1+printContents2+'</div><div class="col-md-12">'+printContents+'</div>';
+  printDiv.getElementsByClassName("col-md-6")[0].classList.remove("f-left");
+  printDiv.getElementsByClassName("col-md-4")[0].classList.remove("f-right");
+
+  printDiv.getElementsByClassName("col-md-6").minWidth = '400px';
+  printDiv.getElementsByClassName("col-md-6").maxWidth = '400px';
+  printDiv.getElementsByClassName("col-md-4").minWidth = '290px';
+  printDiv.getElementsByClassName("col-md-4").maxWidth = '290px';
+  document.body.style.display = 'none';
+  window.print();
+  document.body.style.display = 'block';
+  printDiv.remove(printDiv.selectedIndex);
+}
+// 제휴사/비제휴사 선택시
+$('#selectTState').on("change",searchFun);
+// cp선택시
+$(document).on('change','#selectCP',searchFun);
+// mcp선택시
+$(document).on('change','#selectMCP',function(){
+  $("#selectCP").empty();
+  $("#selectCP").append('<option value="">CP사선택</option>');
+
+  var mcpValue = $("#selectMCP option:selected").val();
+  var param = {};
+  if(mcpValue != ''){
+    param.mcp = mcpValue;
+  }
+  $.ajax({
+    url: '/kwd/getCP',
+    type: 'post',
+    data : param,
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert('cp리스트 불러올 수 없습니다. 다시 시도해주세요.');
+    },
+    success:function(data){
+      if(data.status != true){
+        alert('cp리스트 불러올 수 없습니다. 다시 시도해주세요.');
+        return false;
+      }
+      data.result.forEach(function(item,idx){
+        var html = '<option value="'+item.cp_id+'">'+item.cp_cname+'</option>';
+        $("#selectCP").append(html);
+      });
+    }
+  });
+
+  param = settingParams(1);
+  ajaxGetPageList(param);
 });
 // osp/콘텐츠 선택시
-$('#selectOC').on("change",function(){
-  $('#listTable td:nth-child(3),#listTable th:nth-child(3)').toggle();
-});
+$('#selectOC').on("change",searchFun);
 // 리스트 조건 세팅
 function startSetting(){
   var mcp = $.urlParam("mcp");
@@ -68,22 +124,26 @@ function ajaxGetPageList(param){
         return false;
       }
       $('#listTable tbody').empty();
-      var tstate = $('#selectTState option:selected').text();
+      var oc = $('#selectOC option:selected').val();
+      if(oc == '1'){
+        $('#ocnt').text("콘텐츠");
+        $('#mcp').show();
+      }
+      else{
+        $('#ocnt').text("OSP");
+        $('#mcp').hide();
+      }
+
       data.result.list.forEach(function(item,idx){
         var numIdx = Math.ceil(data.result.listCount-idx-(data.result.page-1)).toString();
-        var html = '<tr><td>'+numIdx+'</td>\
-          <td>fileis</td>\
-          <td>'+tstate+'</td>\
-          <td>1234</td>\
-          <td>0</td>\
-          <td>123</td>\
-          <td>123</td>\
-          <td>0</td>\
-          <td>0</td>\
-        </tr>';
+        var html = '<tr><td>'+numIdx+'</td><td>'+item.osp_sname+'</td><td></td><td>'+((item.osp_tstate == '1')?'제휴':'비제휴')+'</td><td>'+item.total+'</td><td>'+item.atotal+'</td><td>'+item.natotal+'</td><td>0</td><td>0</td><td>0</td></tr>';
+        if(oc == '1'){
+          html = '<tr><td>'+numIdx+'</td><td>'+item.osp_sname+'</td><td>'+((item.osp_tstate == '1')?'제휴':'비제휴')+'</td><td>'+item.cnt_mcp+' / '+item.cnt_cp+'</td><td>'+((item.osp_tstate == '1')?'제휴':'비제휴')+'</td><td>'+item.total+'</td><td>'+item.atotal+'</td><td>'+item.natotal+'</td><td>0</td><td>0</td><td>0</td></tr>';
+        }
+
         $('#listTable tbody').append(html);
       });
-      var limit = 20;
+      var limit = 10;
       var pageCount = Math.ceil(data.result.listCount/limit);
       $('#listTable tfoot').empty();
       if(pageCount > 1) {
@@ -171,7 +231,7 @@ function settingParams(num){
   if(tsValue != ''){
     param.tstate = tsValue;
     if(typeof history.pushState == 'function' && Number.isInteger(num)){
-      renewURL += '&tstate='+param.tstate;
+      renewURL += '&c='+param.tstate;
       history.pushState(null, null,renewURL);
     }
   }
@@ -180,7 +240,7 @@ function settingParams(num){
   if(ocValue != ''){
     param.oc = ocValue;
     if(typeof history.pushState == 'function' && Number.isInteger(num)){
-      renewURL += '&oc='+param.ocValue;
+      renewURL += '&oc='+param.oc;
       history.pushState(null, null,renewURL);
     }
   }
@@ -199,6 +259,12 @@ function settingParams(num){
   }
   return param;
 }
+function searchFun(){
+  var param = settingParams(1);
+  ajaxGetPageList(param);
+}
+//날짜 선택 시
+$(document).on('click','.applyBtn',searchFun);
 //날짜 설정
 var cb = function(start, end, label) {
   console.log('FUNC: cb',start.toISOString(), end.toISOString(), label);

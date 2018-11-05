@@ -38,18 +38,26 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
+              <input type="hidden" id="user_class" value="<%=userCLASS%>">
+              <input type="hidden" id="user_id" value="<%=userID%>">
+              <% if(userCLASS == 'a'){ %>
               <select name="select" class="col-md-1 form-control form-control-inverse p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
                 <option value=''>MCP사선택</option>
                 <% for(var i=0; i < mcpList.length; i++) {%>
                   <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
                 <% }; %>
               </select>
+              <% } %>
+              <% if(userCLASS != 'c'){ %>
               <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectCP">
                 <option value=''>CP사선택</option>
-                <% for(var i=0; i < cpList.length; i++) {%>
-                  <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
-                <% }; %>
+                <% if(userCLASS == 'm'){
+                  for(var i=0; i < cpList.length; i++) {%>
+                    <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+                <% };
+                } %>
               </select>
+              <% } %>
               <div class="col-12 col-md-3 f-right col-sm-9 m-l-10 p-l-0 p-r-0 right-icon-control">
                 <input type="text" class="form-control p-t-10 form-control-inverse search-text" id="searchInput">
                 <div class="form-icon" id="searchBtn">
@@ -88,7 +96,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% for(var i=0; i < list.length; i++) { %>
+                  <%
+                  for(var i=0; i < list.length; i++) { %>
                     <tr>
                       <th><%= listCount - i - (page-1) %></th>
                       <td><%= list[i].osp_sname %></td>

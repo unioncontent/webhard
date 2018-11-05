@@ -1,3 +1,6 @@
+#mcp{
+  display: none;
+}
 .table td,.table th{
   text-align: center;
 }

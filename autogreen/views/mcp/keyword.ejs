@@ -285,15 +285,6 @@
           errorMSG();
           return false;
         }
-        // cpList
-        if('cpList' in data.result){
-          $('#selectCP').empty();
-          $('#selectCP').append('<option value=\'\'>CP사선택</option>');
-          data.result.cpList.forEach(function(ele) {
-            var html = '<option value="'+ele.cp_id+'">'+ele.cp_cname+'</option>';
-            $('#selectCP').append(html);
-          });
-        }
         $('#listTable tbody').empty();
         data.result.list.forEach(function(item,idx){
           var numIdx = Math.ceil(data.result.listCount-idx-(data.result.page-1)).toString();
@@ -421,7 +412,7 @@
     } else if($('#user_class').val() == 'c'){
       param.cp = $('#user_id').val();
       if(typeof history.pushState == 'function'){
-        renewURL += '&cp='+param.mcp;
+        renewURL += '&cp='+param.cp;
         history.pushState(null, null,renewURL);
       }
     }
