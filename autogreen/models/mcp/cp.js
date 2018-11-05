@@ -14,11 +14,17 @@ var cp = {
         case 'n': sql+=' and cp_cname like \'%'+body.search+'%\''; break;
       }
     }
+    if(param.length > 2){
+      sql +=' and ((cp_class = ? and cp_id = ?) or cp_mcp=?)';
+    }
     sql += ' and (cp_class != \'a\' and cp_class != \'t\') order by n_idx desc limit ?,?';
     return await getResult(sql,param);
   },
   selectViewCount: async function(body,param){
     var sql = 'select count(*) as total from cp_list where n_idx is not null  and (cp_class != \'a\' and cp_class != \'t\')';
+    if(param.length > 2){
+      sql +=' and ((cp_class = ? and cp_id = ?) or cp_mcp=?)';
+    }
     if('cp' in body){
       sql += ' and cnt_cp = \''+body['cp']+'\'';
     }

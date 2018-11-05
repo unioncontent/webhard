@@ -24,7 +24,7 @@ router.get('/:pType',isAuthenticated2,async function(req, res, next) {
     data = await getOSPListPageData(req.query);
   }
   else if(req.params.pType == 'cp'){
-    data = await getCPListPageData(req.query);
+    data = await getCPListPageData(req.query,req.user);
   }
   else{
     data = await getMailListPageData(req.query);
@@ -38,7 +38,7 @@ router.post('/:pType/getNextPage',isAuthenticated,async function(req, res, next)
     data = await getOSPListPageData(req.body);
   }
   else if(req.params.pType == 'cp'){
-    data = await getCPListPageData(req.body);
+    data = await getCPListPageData(req.body,req.user);
   }
   res.send({state:true,result:data});
 });
@@ -84,7 +84,7 @@ async function getOSPListPageData(param){
   return data;
 }
 
-async function getCPListPageData(param){
+async function getCPListPageData(param,user){
   var data = {
     list:[],
     listCount:{total:0},
@@ -116,6 +116,11 @@ async function getCPListPageData(param){
     data['search'] = param.search;
   }
   try{
+    if(user.U_class != 'a'){
+      searchParam.unshift(user.U_id);
+      searchParam.unshift(user.U_id);
+      searchParam.unshift(user.U_class);
+    }
     data['list'] = await cp.selectView(searchBody,searchParam);
     data['listCount'] = await cp.selectViewCount(searchBody,searchParam);
   }
