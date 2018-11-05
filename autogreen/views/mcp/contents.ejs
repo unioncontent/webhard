@@ -658,7 +658,7 @@
     } else if($('#user_class').val() == 'c'){
       param.cp = $('#user_id').val();
       if(typeof history.pushState == 'function'){
-        renewURL += '&cp='+param.mcp;
+        renewURL += '&cp='+param.cp;
         history.pushState(null, null,renewURL);
       }
     }

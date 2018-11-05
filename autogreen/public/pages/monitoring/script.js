@@ -328,6 +328,8 @@ function startSetting(){
   $('#reportrange').daterangepicker(optionSet1,cb);
   if((sDate != '' && eDate != '') && (sDate != null && eDate != null)){
     $('#reportrange span').html(moment(new Date(sDate)).format('YYYY.MM.DD') + ' - ' + moment(new Date(eDate)).format('YYYY.MM.DD'));
+  } else{
+    $('#reportrange span').html(moment().subtract(7,'d').format('YYYY.MM.DD') + ' - ' + moment().format('YYYY.MM.DD'));
   }
 }
 // 리스트 조건 param 세팅
@@ -342,19 +344,35 @@ function settingParams(num){
     }
   }
   // MCP
-  var mcpValue = $('#selectMCP option:selected').val();
-  if(mcpValue != ''){
-    param.mcp = mcpValue;
-    if(typeof history.pushState == 'function' && Number.isInteger(num)){
+  if($('#selectMCP option:selected').val() != undefined){
+    var mcpValue = $('#selectMCP option:selected').val();
+    if(mcpValue != ''){
+      param.mcp = mcpValue;
+      if(typeof history.pushState == 'function'){
+        renewURL += '&mcp='+param.mcp;
+        history.pushState(null, null,renewURL);
+      }
+    }
+  } else if($('#user_class').val() == 'm'){
+    param.mcp = $('#user_id').val();
+    if(typeof history.pushState == 'function'){
       renewURL += '&mcp='+param.mcp;
       history.pushState(null, null,renewURL);
     }
   }
   // CP
-  var cpValue = $('#selectCP option:selected').val();
-  if(cpValue != ''){
-    param.cp = cpValue;
-    if(typeof history.pushState == 'function' && Number.isInteger(num)){
+  if($('#selectCP option:selected').val() != undefined){
+    var cpValue = $('#selectCP option:selected').val();
+    if(cpValue != ''){
+      param.cp = cpValue;
+      if(typeof history.pushState == 'function'){
+        renewURL += '&cp='+param.cp;
+        history.pushState(null, null,renewURL);
+      }
+    }
+  } else if($('#user_class').val() == 'c'){
+    param.cp = $('#user_id').val();
+    if(typeof history.pushState == 'function'){
       renewURL += '&cp='+param.cp;
       history.pushState(null, null,renewURL);
     }
@@ -405,7 +423,7 @@ var ranges = {
 var sDateParams = $.urlParam("sDate");
 var eDateParams = $.urlParam("eDate");
 var optionSet1 = {
-  startDate: (sDateParams != '' && sDateParams != null) ? moment(new Date(sDateParams)) : moment(),
+  startDate: (sDateParams != '' && sDateParams != null) ? moment(new Date(sDateParams)) : moment().subtract(7,'d'),
   endDate:  (eDateParams != '' && eDateParams != null) ? moment(new Date(eDateParams)) : moment(),
   showDropdowns: true,
   showRangeInputsOnCustomRangeOnly: false,

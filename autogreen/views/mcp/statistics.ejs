@@ -19,30 +19,44 @@
     <div class="page-body">
       <div class="row">
         <div class="col-md-12 m-b-10">
+          <input type="hidden" id="user_class" value="<%=userCLASS%>">
+          <input type="hidden" id="user_id" value="<%=userID%>">
+          <% if(userCLASS == 'a'){ %>
           <select name="select" class="col-md-1 form-control form-control-inverse p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
             <option value=''>MCP사선택</option>
+            <% for(var i=0; i < mcpList.length; i++) {%>
+              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+            <% }; %>
           </select>
+          <% } %>
+          <% if(userCLASS != 'c'){ %>
           <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectCP">
             <option value=''>CP사선택</option>
+            <% if(userCLASS == 'm'){
+              for(var i=0; i < cpList.length; i++) {%>
+                <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+            <% };
+            } %>
           </select>
+          <% } %>
           <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectTState">
-            <option value=''>제휴사</option>
-            <option value=''>비제휴사</option>
+            <option value='1'>제휴사</option>
+            <option value='0'>비제휴사</option>
           </select>
           <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectOC">
-            <option value=''>OSP</option>
-            <option value=''>콘텐츠</option>
+            <option value='0'>OSP</option>
+            <option value='1'>콘텐츠</option>
           </select>
           <div id="reportrange" class="col-md-3 form-control form-control-inverse m-l-5 p-b-10 p-r-5 f-left">
             <i class="glyphicon glyphicon-calendar far fa-calendar-alt"></i>
             <span></span>
             <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
           </div>
-          <button class="btn btn-inverse btn-view f-left m-l-5 p-r-5 p-l-5">
+          <button class="btn btn-inverse btn-view f-left m-l-5 p-r-5 p-l-5" onclick="onPrint()">
             <i class="fas fa-chart-bar"></i>통계보기
           </button>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" id="printEle">
           <div class="card">
             <div class="card-header">
               <div class="col-md-6 card-table f-left">
@@ -59,10 +73,10 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>1</td>
-                          <td>1</td>
-                          <td>1</td>
-                          <td>1</td>
+                          <td><%=totalCountList.total%></td>
+                          <td><%=totalCountList.atotal%></td>
+                          <td><%=totalCountList.natotal%></td>
+                          <td>0</td>
                         </tr>
                       </tbody>
                     </table>
@@ -101,8 +115,8 @@
                 <thead>
                   <tr>
                     <th width="1%">NO</th>
-                    <th width="5%">OSP</th>
-                    <th width="5%">MCP/CP</th>
+                    <th width="5%" id="ocnt">OSP</th>
+                    <th width="5%" id="mcp">MCP/CP</th>
                     <th width="5%">제휴현황</th>
                     <th width="5%">검출건</th>
                     <th width="5%">제휴건</th>
@@ -113,20 +127,85 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <% for(var i=0; i < list.length; i++) { %>
                   <tr>
-                    <td>1</td>
-                    <td>fileis</td>
-                    <td>MCP/CP</td>
-                    <td>비제휴</td>
-                    <td>1234</td>
+                    <td><%= listCount - i - (page-1) %></td>
+                    <td><%= list[i].osp_sname %></td>
+                    <td></td>
+                    <td><%= (list[i].osp_tstate == '1')?'제휴':'비제휴' %></td>
+                    <td><%= list[i].total %></td>
+                    <td><%= list[i].atotal %></td>
+                    <td><%= list[i].natotal %></td>
                     <td>0</td>
-                    <td>123</td>
-                    <td>123</td>
                     <td>0</td>
                     <td>0</td>
                   </tr>
+                  <% }; %>
                 </tbody>
                 <tfoot>
+                  <%
+                    var limit = 10;
+                    var pageCount = Math.ceil(listCount/limit);
+                    if(pageCount > 1) {
+                    %>
+                    <tr>
+                      <td colspan="21">
+                        <ul class="pagination float-right">
+                          <%
+                            var pageSize = 5;
+                            var pRCnt = parseInt(page / pageSize);
+                            if(page % pageSize == 0){
+                              pRCnt = parseInt(page / pageSize) - 1;
+                            }
+                            if(page > 5) {
+                          %>
+                            <li class="page-item">
+                              <a class="page-link" data-value="1" aria-label="Previous">
+                                <i class="ti-angle-double-left f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" data-value=="<%=(pRCnt * pageSize)%>" aria-label="Previous">
+                                <i class="ti-angle-left f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                          <% } %>
+                          <% for(var index=pRCnt * pageSize + 1;index<(pRCnt + 1)*pageSize + 1;index++){%>
+                            <li class= "<%=(page == index) ? 'active' : ''%> page-item">
+                              <a class="page-link" data-value="<%=index%>" >
+                                <%= index %>
+                              </a>
+                            </li>
+                          <%
+                              if(index == pageCount) {
+                                break;
+                              }
+                            }
+                          %>
+                          <% if((pRCnt + 1) * pageSize < pageCount) { %>
+                            <li class="page-item">
+                              <a class="page-link" data-value="<%=(pRCnt + 1)*pageSize+1%>" aria-label="Next">
+                                <i class="ti-angle-right f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" data-value="<%=pageCount%>" aria-label="Next">
+                                <i class="ti-angle-double-right f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                          <% } %>
+                        </ul>
+                      </td>
+                    </tr>
+                    <% } %>
                 </tfoot>
               </table>
             </div>
