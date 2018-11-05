@@ -12,6 +12,9 @@ var notice = {
         case 'w': sql+=' and writer like \'%'+body.search+'%\''; break;
       }
     }
+    if(param.length > 2){
+      sql +=' and type=?';
+    }
     sql += ' order by n_idx desc limit ?,?';
     return await getResult(sql,param);
   },
@@ -23,6 +26,9 @@ var notice = {
         case 'c': sql+=' and content like \'%'+body.search+'%\''; break;
         case 'w': sql+=' and writer like \'%'+body.search+'%\''; break;
       }
+    }
+    if(param.length > 2){
+      sql +=' and type=?';
     }
     var count = await getResult(sql,param);
     if(count.length == 0){

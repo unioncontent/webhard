@@ -11,16 +11,16 @@ var isAuthenticated = function (req, res, next) {
 };
 
 router.get('/',isAuthenticated,async function(req, res, next) {
-  var data = await getListPageData(req.query);
+  var data = await getListPageData(req.query,req.user);
   res.render('mcp/notice',data);
 });
 
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
-  var data = await getListPageData(req.body);
+  var data = await getListPageData(req.body,req.user);
   res.send({state:true,result:data});
 });
 
-async function getListPageData(param){
+async function getListPageData(param,user){
   var data = {
     list:[],
     listCount:{total:0},
@@ -47,6 +47,9 @@ async function getListPageData(param){
     data['search'] = param.search;
   }
   try{
+    if(user.U_class != 'a'){
+      searchParam.unshift(user.U_class);
+    }
     data['list'] = await notice.selectTable(searchBody,searchParam);
     data['listCount'] = await notice.selectTableCount(searchBody,searchParam);
   }
