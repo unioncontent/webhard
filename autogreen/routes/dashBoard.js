@@ -55,20 +55,25 @@ router.get('/',isAuthenticated,async function(req, res, next) {
     var data = await getResultStats(req.user.U_class,mid,cid);
     console.log(req.user.U_class);
     if(req.user.U_class == 'm'){
-      data.cpList = await contents.getMCPList('c');
+      data.cpList = await contents.getCPList({mcp:mid});
     }
     else if(req.user.U_class == 'a'){
       data.mcpList = await contents.getMCPList('m');
-      data.cpList = await contents.getMCPList('c');
+      data.cpList = [];
     }
     res.render('mcp/dashBoard',data);
   }
 });
 
 router.post('/dashBoard/setting',isAuthenticated,async function(req, res, next){
-  console.log('/dashBoard/setting');
   console.log(req.body);
+  if(req.user.U_class == 'm'){
+    req.body.mid = req.user.U_id;
+  }
   var data = await getResultStats(req.user.U_class,req.body.mid,req.body.cid);
+  if(req.user.U_class == 'a' && req.body.type == 'selectMCP'){
+    data.cpList = await contents.getCPList({mcp:req.body.mid});
+  }
   res.send(data);
 });
 
