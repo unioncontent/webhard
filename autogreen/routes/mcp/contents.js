@@ -20,6 +20,13 @@ var isAuthenticated2 = function (req, res, next) {
 
 router.get('/',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.query,req.user);
+  if(req.user.U_class == 'm'){
+    data.cpList = await contents.getCPList({mcp:req.user.U_id});
+  }
+  else if(req.user.U_class == 'a'){
+    data.mcpList = await contents.getMCPList('m');
+    data.cpList = [];
+  }
   res.render('mcp/contents',data);
 });
 
@@ -69,20 +76,13 @@ async function getListPageData(param,user){
   var data = {
     list:[],
     listCount:{total:0},
-    cp:(user.U_class == 'c') ?  user.user_id:'',
-    mcp:(user.U_class == 'm') ? user.user_id:'',
+    cp:(user.U_class == 'c') ?  user.U_id:'',
+    mcp:(user.U_class == 'm') ? user.U_id:'',
     searchType:'',
     search:'',
     page:1,
     country: array
   };
-  if(user.U_class == 'm'){
-    data.cpList = await contents.getMCPList('c');
-  }
-  else if(user.U_class == 'a'){
-    data.mcpList = await contents.getMCPList('m');
-    data.cpList = await contents.getMCPList('c');
-  }
   var limit = 20;
   var searchParam = [0,limit];
   var currentPage = 1;
@@ -112,6 +112,9 @@ async function getListPageData(param,user){
   try{
     data['list'] = await contents.selectView(searchBody,searchParam);
     data['listCount'] = await contents.selectViewCount(searchBody,searchParam);
+    if(user.U_class == 'a' && param.type == 'selectMCP'){
+      data.cpList = await contents.getCPList({mcp:data.mcp});
+    }
   }
   catch(e){
     console.log(e);
@@ -125,11 +128,11 @@ router.get('/add',isAuthenticated2,async function(req, res, next) {
     country: array
   };
   if(req.user.U_class == 'm'){
-    data.cpList = await contents.getMCPList('c');
+    data.cpList = await contents.getCPList({mcp:req.user.U_id});
   }
   else if(req.user.U_class == 'a'){
     data.mcpList = await contents.getMCPList('m');
-    data.cpList = await contents.getMCPList('c');
+    data.cpList = [];
   }
   res.render('mcp/contents_add',data);
 });

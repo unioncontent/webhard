@@ -14,6 +14,13 @@ var isAuthenticated = function (req, res, next) {
 
 router.get('/',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.query);
+  if(req.user.U_class == 'm'){
+    data.cpList = await contents.getCPList({mcp:req.user.U_id});
+  }
+  else if(req.user.U_class == 'a'){
+    data.mcpList = await contents.getMCPList('m');
+    data.cpList = [];
+  }
   res.render('mcp/keyword',data);
 });
 
@@ -40,9 +47,7 @@ async function getListPageData(param){
     listCount:{total:0},
     cp:'',
     mcp:'',
-    page:1,
-    mcpList:await contents.getMCPList('m'),
-    cpList:await contents.getMCPList('c')
+    page:1
   };
   var limit = 20;
   var searchParam = [0,limit];
@@ -196,7 +201,6 @@ async function asyncForEach(array, callback) {
 router.post('/getCP',isAuthenticated,async function(req, res, next) {
   try{
     var data = await contents.getCPList(req.body);
-    console.log('getCP:',data);
     res.send({status:true,result:data});
   } catch(e){
     res.status(500).send(e);
