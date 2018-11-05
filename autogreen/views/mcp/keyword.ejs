@@ -22,18 +22,24 @@
     </div>
     <div class="page-body">
       <div class="row">
+        <input type="hidden" id="user_class" value="<%=userCLASS%>">
+        <input type="hidden" id="user_id" value="<%=userID%>">
         <div class="col-md-12">
+          <% if(userCLASS == 'a'){ %>
           <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
             <option value=''>MCP사선택</option>
             <% for(var i=0; i < mcpList.length; i++) {%>
               <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
             <% }; %>
           </select>
+          <% } %>
           <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 m-l-5 p-r-5 f-left" id="selectCP">
             <option value=''>CP사선택</option>
-            <% for(var i=0; i < cpList.length; i++) {%>
-              <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
-            <% }; %>
+            <% if(userCLASS == 'm'){
+                for(var i=0; i < cpList.length; i++) {%>
+                  <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+            <% };
+            } %>
           </select>
         </div>
         <div class="col-md-12">
@@ -279,6 +285,15 @@
           errorMSG();
           return false;
         }
+        // cpList
+        if('cpList' in data.result){
+          $('#selectCP').empty();
+          $('#selectCP').append('<option value=\'\'>CP사선택</option>');
+          data.result.cpList.forEach(function(ele) {
+            var html = '<option value="'+ele.cp_id+'">'+ele.cp_cname+'</option>';
+            $('#selectCP').append(html);
+          });
+        }
         $('#listTable tbody').empty();
         data.result.list.forEach(function(item,idx){
           var numIdx = Math.ceil(data.result.listCount-idx-(data.result.page-1)).toString();
@@ -377,20 +392,36 @@
       history.pushState(null, null,renewURL);
     }
     // MCP
-    var mcpValue = $('#selectMCP option:selected').val();
-    if(mcpValue != ''){
-      param.mcp = mcpValue;
+    if($('#selectMCP option:selected').val() != undefined){
+      var mcpValue = $('#selectMCP option:selected').val();
+      if(mcpValue != ''){
+        param.mcp = mcpValue;
+        if(typeof history.pushState == 'function'){
+          renewURL += '&mcp='+param.mcp;
+          history.pushState(null, null,renewURL);
+        }
+      }
+    } else if($('#user_class').val() == 'm'){
+      param.mcp = $('#user_id').val();
       if(typeof history.pushState == 'function'){
         renewURL += '&mcp='+param.mcp;
         history.pushState(null, null,renewURL);
       }
     }
     // CP
-    var cpValue = $('#selectCP option:selected').val();
-    if(cpValue != ''){
-      param.cp = cpValue;
+    if($('#selectCP option:selected').val() != undefined){
+      var cpValue = $('#selectCP option:selected').val();
+      if(cpValue != ''){
+        param.cp = cpValue;
+        if(typeof history.pushState == 'function'){
+          renewURL += '&cp='+param.cp;
+          history.pushState(null, null,renewURL);
+        }
+      }
+    } else if($('#user_class').val() == 'c'){
+      param.cp = $('#user_id').val();
       if(typeof history.pushState == 'function'){
-        renewURL += '&cp='+param.cp;
+        renewURL += '&cp='+param.mcp;
         history.pushState(null, null,renewURL);
       }
     }
