@@ -347,11 +347,13 @@
   }
 
   $(document).on('change','#selectMCP,#selectCP',function(){
+    var type = $(this).attr('id');
     $.ajax({
       url: '/dashBoard/setting',
       type: 'post',
       data: {
-        mid:$('#selectMCP option:selected').val(),
+        type:type,
+        mid:($('#selectMCP option:selected').val() == undefined) ? '':$('#selectMCP option:selected').val(),
         cid:$('#selectCP option:selected').val()
       },
       error:function(request,status,error){
@@ -382,6 +384,15 @@
           var html = '<tr><th>'+ele.osp_sname+'</th><th>'+ele.cnt_osp+'</th><th class="'+((ele.osp_tstate == '0')? 'text-danger': 'text-success')+'">'+((ele.osp_tstate == '0')? '비제휴': '제휴')+'</th><td>'+ele.total+'</td><td>'+ele.atotal+'</td><td>'+ele.natotal+'</td><td>0</td><td>0</td></tr>';
           $('#list tbody').append(html);
         });
+        // cpList
+        if('cpList' in data){
+          $('#selectCP').empty();
+          $('#selectCP').append('<option value=\'\'>CP사선택</option>');
+          data.cpList.forEach(function(ele) {
+            var html = '<option value="'+ele.cp_id+'">'+ele.cp_cname+'</option>';
+            $('#selectCP').append(html);
+          });
+        }
       }
     });
   });
