@@ -4,6 +4,7 @@ var bcrypt = require('bcrypt-nodejs');
 var LocalStrategy = require('passport-local').Strategy;
 var router = express.Router();
 // DB module
+var contents = require('../models/mcp/contents.js');
 var User = require('../models/osp/user.js');
 var DashBoard = require('../models/dashBoard.js');
 var Cp = require('../models/mcp/cp.js');
@@ -43,42 +44,61 @@ router.get('/',isAuthenticated,async function(req, res, next) {
     return false;
   }
   else{
-    req.user.cp_mcp = req.user.cp_id;
-    if(req.user.U_class == "c"){
-      req.user.cp_mcp = await Cp.selectView({searchType:'i',search:req.user.cp_id},[0,1]);
+    var mid = '';
+    var cid = '';
+    if(req.user.U_class == 'm'){
+      mid = req.user.U_id;
     }
-    var data = {
-      ospCount:0,
-      ospACount:0,
-      ospNACount:0,
-      contentsCount:0,
-      aCount:0,
-      naCount:0,
-      ospTotalCount:[],
-      ospTotalCountList:[],
-      notice:[]
-    };
-    var result1 = await DashBoard.call_dashBoard(1,req.user);
-    data.ospCount = (result1.length > 2) ? result1[0][0].total:0;
-    data.ospACount = (result1.length > 2) ? result1[0][0].atotal:0;
-    data.ospNACount = (result1.length > 2) ? result1[0][0].natotal:0;
-    data.contentsCount = (result1.length > 2) ? result1[1][0].total:0;
-    data.notice = (result1.length > 2) ? result1[2]:[];
-    var result2 = await DashBoard.call_dashBoard(2,req.user);
-    data.aCount = (result2.length > 0) ? result2[0][0].atotal:0;
-    data.naCount = (result2.length > 0) ? result2[0][0].natotal:0;
-    var result3 = await DashBoard.call_dashBoard(3,req.user);
-    data.ospTotalCount = (result3.length > 1) ? result3[1][0]:0;
-    data.ospTotalCountList = (result3.length > 1) ? result3[0]:0;
-    console.log(result1[0]);
-    console.log(result1[1]);
-    console.log(result1[2]);
-    console.log(result2[0]);
-    console.log(result3[0]);
-    console.log(result3[1]);
+    else if(req.user.U_class == 'c'){
+      cid = req.user.U_id;
+    }
+    var data = await getResultStats(req.user.U_class,mid,cid);
+    console.log(req.user.U_class);
+    if(req.user.U_class == 'm'){
+      data.cpList = await contents.getMCPList('c');
+    }
+    else if(req.user.U_class == 'a'){
+      data.mcpList = await contents.getMCPList('m');
+      data.cpList = await contents.getMCPList('c');
+    }
     res.render('mcp/dashBoard',data);
   }
 });
+
+router.post('/dashBoard/setting',isAuthenticated,async function(req, res, next){
+  console.log('/dashBoard/setting');
+  console.log(req.body);
+  var data = await getResultStats(req.user.U_class,req.body.mid,req.body.cid);
+  res.send(data);
+});
+
+async function getResultStats(uclass,mcpid,cpid){
+  var data = {
+    ospCount:0,
+    ospACount:0,
+    ospNACount:0,
+    contentsCount:0,
+    aCount:0,
+    naCount:0,
+    ospTotalCount:[],
+    ospTotalCountList:[],
+    notice:[]
+  };
+  var result1 = await DashBoard.call_dashBoard([1,uclass,mcpid,cpid]);
+  data.ospCount = (result1.length > 2) ? result1[0][0].total:0;
+  data.ospACount = (result1.length > 2) ? result1[0][0].atotal:0;
+  data.ospNACount = (result1.length > 2) ? result1[0][0].natotal:0;
+  data.contentsCount = (result1.length > 2) ? result1[1][0].total:0;
+  data.notice = (result1.length > 2) ? result1[2]:[];
+  var result2 = await DashBoard.call_dashBoard([2,uclass,mcpid,cpid]);
+  data.aCount = (result2.length > 0) ? result2[0][0].atotal:0;
+  data.naCount = (result2.length > 0) ? result2[0][0].natotal:0;
+  var result3 = await DashBoard.call_dashBoard([3,uclass,mcpid,cpid]);
+  data.ospTotalCount = (result3.length > 1) ? result3[1][0]:0;
+  data.ospTotalCountList = (result3.length > 1) ? result3[0]:0;
+
+  return data;
+}
 
 router.post('/get24DataList', async function(req, res, next) {
   console.log('get24DataList');

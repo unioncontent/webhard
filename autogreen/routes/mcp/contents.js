@@ -7,19 +7,19 @@ var keyword = require('../../models/mcp/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
   console.log(req.isAuthenticated());
-  if (req.isAuthenticated())
+  if (req.isAuthenticated() && req.user.U_class != 'c')
     return next();
   res.redirect('/login');
 };
 
 router.get('/',isAuthenticated,async function(req, res, next) {
-  var data = await getListPageData(req.query);
+  var data = await getListPageData(req.query,req.user);
   res.render('mcp/contents',data);
 });
 
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
   try{
-    var data = await getListPageData(req.body);
+    var data = await getListPageData(req.body,req.user);
     res.send({status:true,result:data});
   } catch(e){
     res.status(500).send(e);
@@ -58,20 +58,25 @@ router.post('/update',isAuthenticated,async function(req, res, next) {
   res.send(true);
 });
 
-async function getListPageData(param){
+async function getListPageData(param,user){
   var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
   var data = {
     list:[],
     listCount:{total:0},
-    cp:'',
-    mcp:'',
+    cp:(user.U_class == 'c') ?  user.user_id:'',
+    mcp:(user.U_class == 'm') ? user.user_id:'',
     searchType:'',
     search:'',
     page:1,
-    country: array,
-    mcpList:await contents.getMCPList('m'),
-    cpList:await contents.getMCPList('c')
+    country: array
   };
+  if(user.U_class == 'm'){
+    data.cpList = await contents.getMCPList('c');
+  }
+  else if(user.U_class == 'a'){
+    data.mcpList = await contents.getMCPList('m');
+    data.cpList = await contents.getMCPList('c');
+  }
   var limit = 20;
   var searchParam = [0,limit];
   var currentPage = 1;
@@ -110,13 +115,17 @@ async function getListPageData(param){
 
 router.get('/add',isAuthenticated,async function(req, res, next) {
   var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
-  var mcpList = await contents.getMCPList('m');
-  var cpList = await contents.getMCPList('c');
-  res.render('mcp/contents_add',{
-    country: array,
-    mcpList:mcpList,
-    cpList:cpList
-  });
+  var data = {
+    country: array
+  };
+  if(req.user.U_class == 'm'){
+    data.cpList = await contents.getMCPList('c');
+  }
+  else if(req.user.U_class == 'a'){
+    data.mcpList = await contents.getMCPList('m');
+    data.cpList = await contents.getMCPList('c');
+  }
+  res.render('mcp/contents_add',data);
 });
 
 router.post('/add/getCP',isAuthenticated,async function(req, res, next) {
