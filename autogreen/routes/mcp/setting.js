@@ -269,7 +269,9 @@ router.post('/file_delete',async function (req, res) {
   // fs.unlinkSync(filePath);
   // res.send(true);
   fs.unlink('C:/gitProject/webhard/autogreen/'+req.body.path, function (err) {
-    if (err) throw err;
+    if (err){
+      console.log(err);
+    }
     console.log('successfully deleted');
     res.send(true);
   });
