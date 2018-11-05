@@ -7,7 +7,7 @@ var keyword = require('../../models/mcp/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
   console.log(req.isAuthenticated());
-  if (req.isAuthenticated())
+  if (req.isAuthenticated() && req.user.U_class != 'c')
     return next();
   res.redirect('/login');
 };
