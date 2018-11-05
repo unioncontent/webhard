@@ -7,6 +7,12 @@ var keyword = require('../../models/mcp/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
   console.log(req.isAuthenticated());
+  if (req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+};
+
+var isAuthenticated2 = function (req, res, next) {
   if (req.isAuthenticated() && req.user.U_class != 'c')
     return next();
   res.redirect('/login');
@@ -113,7 +119,7 @@ async function getListPageData(param,user){
   return data;
 }
 
-router.get('/add',isAuthenticated,async function(req, res, next) {
+router.get('/add',isAuthenticated2,async function(req, res, next) {
   var array = fs.readFileSync('public/file/country.txt').toString().split("\n");
   var data = {
     country: array
@@ -128,7 +134,7 @@ router.get('/add',isAuthenticated,async function(req, res, next) {
   res.render('mcp/contents_add',data);
 });
 
-router.post('/add/getCP',isAuthenticated,async function(req, res, next) {
+router.post('/add/getCP',isAuthenticated2,async function(req, res, next) {
   console.log('/add/getCP');
   try{
     console.log(req.body);
@@ -139,7 +145,7 @@ router.post('/add/getCP',isAuthenticated,async function(req, res, next) {
   }
 });
 
-router.post('/add',isAuthenticated,async function(req, res, next) {
+router.post('/add',isAuthenticated2,async function(req, res, next) {
   var kParam = {
     k_title:req.body.k_title,
     k_key:1,

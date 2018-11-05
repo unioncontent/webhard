@@ -6,14 +6,19 @@ var cp = require('../../models/mcp/cp.js');
 var contents = require('../../models/mcp/contents.js');
 var keyword = require('../../models/mcp/keyword.js');
 
-
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated())
     return next();
   res.redirect('/login');
 };
 
-router.get('/:pType',isAuthenticated,async function(req, res, next) {
+var isAuthenticated2 = function (req, res, next) {
+  if (req.isAuthenticated() && (req.params.pType != 'mailing' || (req.params.pType == 'mailing' && req.user.U_class != 'c')))
+    return next();
+  res.redirect('/login');
+};
+
+router.get('/:pType',isAuthenticated2,async function(req, res, next) {
   var data;
   if(req.params.pType == 'osp'){
     data = await getOSPListPageData(req.query);
