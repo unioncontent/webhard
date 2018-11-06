@@ -117,7 +117,7 @@
                   <tbody>
                     <% for(var i=0; i < notice.length; i++) { %>
                     <tr>
-                      <td colspan="4"><%= notice[i].title %></td>
+                      <td colspan="4"><span class="view" data-idx="<%= notice[i].n_idx %>"><%= notice[i].title %></span></td>
                       <td><%= notice[i].regdate %></td>
                     </tr>
                     <% }; %>
@@ -175,6 +175,66 @@
         </div>
       </div>
     </div>
+    <!-- Modal start-->
+    <div class='modal fade' id='view-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+      <div class='modal-dialog modal-lg' role='document'>
+        <div class='modal-content'>
+          <div class='modal-body'>
+            <div class='card'>
+              <div class="card-block table-border-style">
+                <div class="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table" id='modal-cnt'>
+                      <colgroup>
+                        <col width="20%" />
+                        <col width="80%" />
+                      </colgroup>
+                      <tbody>
+                        <tr>
+                          <th class="b-r-1 text-left">글쓴이</th>
+                          <td>
+                            <p id="view_writer"></p>
+                          </td>
+                        </tr>
+                        <tr id="regdate_tr">
+                          <th class="b-r-1 text-left">등록일</th>
+                          <td>
+                            <p id="view_regdate"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="b-r-1 text-left">제목</th>
+                          <td>
+                            <p id="view_title"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="b-r-1 text-left">내용</th>
+                          <td>
+                            <p id="view_content"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="b-r-1 text-left">첨부파일</th>
+                          <td>
+                            <ul id="view_uploadFileList">
+                            </ul>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary mobtn" data-dismiss='modal' aria-label='Close' type="button">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal end-->
   </div>
 </div>
 <input type="hidden" id="contentsArr" value="<%=JSON.stringify(ospTotalCountList)%>">
@@ -188,6 +248,15 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <style type="text/css">
+  #view-Modal p {
+    margin:0;
+  }
+  #view-Modal .file-name:hover{
+    color:blue;
+  }
+  .view:hover{
+    font-weight: bold;
+  }
   .card-block-big {
     padding: 2.75em 0;
   }
@@ -393,6 +462,51 @@
             $('#selectCP').append(html);
           });
         }
+      }
+    });
+  });
+
+  // 게시물 제목(이용자) 눌렀을 시
+  $(document).on('click','.view',function(){
+    $('#view-Modal p').text('');
+    $('#view-Modal #view_uploadFileList').empty();
+    var idx = $(this).data('idx');
+    var modalInputEle = {
+      writer: $('#view_writer'),
+      title: $('#view_title'),
+      content: $('#view_content'),
+      file: $('#view_file'),
+      regdate: $('#view_regdate')
+    };
+    $.ajax({
+      url: 'notice/getInfo',
+      type: 'post',
+      data: {idx:idx},
+      error: function(request,status,error){
+        errorMSG();
+      },
+      success: function(data){
+        console.log(data);
+        for (var key in modalInputEle) {
+          if(key == 'file'){
+            if(data.result[key] != '' && data.result[key] != null){
+              var arr = data.result[key].split(',');
+              $.each(arr, function( i, val ) {
+                var fileName = val.split('/')[3];
+                var filePath = val.replace('public/uploads/','http://localhost:8080/notice/download/');
+                var html = '<li><a href="'+filePath+'" class="file-name">'+fileName+'</a></li>';
+                $('#view_uploadFileList').append(html);
+              });
+            }
+          }
+          else if(key == 'content'){
+            modalInputEle[key].html(data.result[key].replace(/(?:\r\n|\r|\n)/g, '<br />'));
+          }
+          else{
+            modalInputEle[key].text(data.result[key]);
+          }
+        }
+        $('#view-Modal').modal('show');
       }
     });
   });
