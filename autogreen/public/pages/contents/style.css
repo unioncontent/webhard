@@ -1,0 +1,44 @@
+/* 상태 */
+#key-toolbar{
+  width: 15px;
+  height: 14px;
+  padding: 8px;
+  display: inline-block;
+  vertical-align: top;
+}
+#key-toolbar > i{
+  margin: 0px;
+  font-size: 15px;
+  vertical-align: top;
+}
+/* table */
+.table th,.table td{
+  text-align: center;
+  vertical-align: middle;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  width: 1280px;
+  /* width: 500px; */
+  /* margin: auto; */
+  /* max-width: 100%; */
+  z-index: 10000;
+}
+/* 글줄임 */
+.title_nobr{
+  font-size: 15px;
+  padding-left: 3px;
+  text-overflow: ellipsis;
+  width: 400px;
+  overflow: hidden;
+}
+/* alert */
+.swal-text{
+  text-align: center;
+}
