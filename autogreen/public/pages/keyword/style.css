@@ -1,0 +1,18 @@
+.table td, .table th{
+  text-align:  center;
+  vertical-align: middle;
+}
+.table td{
+  font-size: 15px;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  width: 1280px;
+  z-index: 10000;
+}

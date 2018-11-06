@@ -1,0 +1,50 @@
+#view-Modal p {
+  margin:0;
+}
+#view-Modal .file-name:hover{
+  color:blue;
+}
+.view:hover{
+  font-weight: bold;
+}
+.card-block-big {
+  padding: 2.75em 0;
+}
+/* 웹하드 모니터링 현황 */
+.col-md-8{
+  margin-bottom: 30px;
+}
+#chart1,#chart2{
+  float:left;
+  padding-left:15px;
+  padding-right:15px;
+  min-width:415px;
+  background-color:white;
+}
+#chart2{
+  min-width:217px;
+}
+/* 공지사항*/
+#notice-block{
+  padding: 0;
+  font-size: 13px;
+}
+#notice-block th:nth-child(even),
+#notice-block td:nth-child(even){
+  text-align:right;
+}
+#notice-more{
+  text-decoration: underline;
+  cursor: defaul;
+}
+#notice-more a{
+  font-size: 13px;
+}
+.table-1-card .card-block {
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 12px;
+}
+#list th,#list td{
+  text-align: center;
+}
