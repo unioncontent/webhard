@@ -53,7 +53,7 @@
                   <% for(var i=0; i < list.length; i++) { %>
                   <tr>
                     <th><%= listCount - i - (page-1) %></th>
-                    <td><div class="edit" data-idx="<%= list[i].n_idx %>"><%= list[i].title %></div></td>
+                    <td><div class="<%= ((userCLASS != 'a') ? 'view':'edit')%>" data-idx="<%= list[i].n_idx %>"><%= list[i].title %></div></td>
                     <td><%= list[i].writer %></td>
                     <td><%= list[i].regdate %></td>
                   </tr>
@@ -128,10 +128,13 @@
             </div>
           </div>
         </div>
+        <% if(userCLASS == 'a'){ %>
         <div class="col-md-12">
           <button class="btn btn-inverse btn-add m-b-50 f-right"><i class="fas fa-plus"></i>글등록</button>
         </div>
+        <%}%>
       </div>
+      <input type="hidden" id="uclass" value="<%=userCLASS%>">
       <!-- Modal start-->
       <div class='modal fade' id='edit-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
         <div class='modal-dialog modal-lg' role='document'>
@@ -238,10 +241,73 @@
         </div>
       </div>
       <!-- Modal end-->
+      <!-- Modal start-->
+      <div class='modal fade' id='view-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <div class="table-responsive">
+                      <table class="table" id='modal-cnt'>
+                        <colgroup>
+                          <col width="20%" />
+                          <col width="80%" />
+                        </colgroup>
+                        <tbody>
+                          <tr>
+                            <th class="b-r-1 text-left">글쓴이</th>
+                            <td>
+                              <p id="view_writer"></p>
+                            </td>
+                          </tr>
+                          <tr id="regdate_tr">
+                            <th class="b-r-1 text-left">등록일</th>
+                            <td>
+                              <p id="view_regdate"></p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">제목</th>
+                            <td>
+                              <p id="view_title"></p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">내용</th>
+                            <td>
+                              <p id="view_content"></p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">첨부파일</th>
+                            <td>
+                              <ul id="view_uploadFileList">
+                              </ul>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary mobtn" data-dismiss='modal' aria-label='Close' type="button">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
     </div>
   </div>
 </div>
 <style>
+  .b-r-1{
+    border-right:2px solid #e6e6e6;
+  }
   /* 파일 업로드 */
   .file-name{
     width: 282px;
@@ -269,7 +335,7 @@
   .edit{
     text-decoration:underline;
   }
-  .edit:hover{
+  .edit:hover,.view:hover{
     font-weight: bold;
   }
   /* loader */
@@ -290,6 +356,12 @@
   .form-radio label{
     margin-bottom: 0px;
   }
+  #view-Modal #modal-cnt p{
+    margin:0;
+  }
+  #view-Modal .file-name:hover{
+    color:blue;
+  }
 </style>
 <!-- Bootstrap daterangepicker js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
@@ -298,13 +370,14 @@
 <!-- alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <script>
+  var str = ($('#uclass').val() != 'a')? 'view_':'';
   var modalInputEle = {
-    writer: $('#writer'),
-    title: $('#title'),
-    content: $('#content'),
-    file: $('#file'),
-    type: $('#type'),
-    regdate: $('#regdate')
+    writer: $('#'+str+'writer'),
+    title: $('#'+str+'title'),
+    content: $('#'+str+'content'),
+    file: $('#'+str+'file'),
+    type: $('#'+str+'type'),
+    regdate: $('#'+str+'regdate')
   };
   $(document).ready(function(){
     startSetting();
@@ -456,7 +529,44 @@
     });
 
   });
-  // 게시물 수정버튼 눌렀을 시
+  // 게시물 제목(이용자) 눌렀을 시
+  $(document).on('click','.view',function(){
+    $('#view-Modal p').text('');
+    $('#view-Modal #view_uploadFileList').empty();
+    var idx = $(this).data('idx');
+    $.ajax({
+      url: 'notice/getInfo',
+      type: 'post',
+      data: {idx:idx},
+      error: function(request,status,error){
+        errorMSG();
+      },
+      success: function(data){
+        console.log(data);
+        for (var key in modalInputEle) {
+          if(key == 'file'){
+            if(data.result[key] != '' && data.result[key] != null){
+              var arr = data.result[key].split(',');
+              $.each(arr, function( i, val ) {
+                var fileName = val.split('/')[3];
+                var filePath = val.replace('public/uploads/','http://localhost:8080/notice/download/');
+                var html = '<li><a href="'+filePath+'" class="file-name">'+fileName+'</a></li>';
+                $('#view_uploadFileList').append(html);
+              });
+            }
+          }
+          else if(key == 'content'){
+            modalInputEle[key].html(data.result[key].replace(/(?:\r\n|\r|\n)/g, '<br />'));
+          }
+          else{
+            modalInputEle[key].text(data.result[key]);
+          }
+        }
+        $('#view-Modal').modal('show');
+      }
+    });
+  });
+  // 게시물 제목(관리자) 눌렀을 시
   $(document).on('click','.edit',function(){
     var idx = $(this).data('idx');
     $('.modal-title').text('공지 수정');
@@ -632,7 +742,7 @@
         $('#listTable tbody').empty();
         data.result.list.forEach(function(item,idx){
           var numIdx = Math.ceil(data.result.listCount-idx-(data.result.page-1)).toString();
-          var html = '<tr><th>'+numIdx+'</th><td><div class="edit" data-idx="'+item.n_idx+'">'+item.title+'</div></td>\
+          var html = '<tr><th>'+numIdx+'</th><td><div class="'+((str == 'view_') ? 'view':'edit')+'" data-idx="'+item.n_idx+'">'+item.title+'</div></td>\
             <td>'+item.writer+'</td>\
             <td>'+item.regdate+'</td></tr>';
           $('#listTable tbody').append(html);
