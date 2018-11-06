@@ -28,6 +28,9 @@ File: style.css
 /**  =====================
       Custom css start
 ==========================  **/
+.modal-open {
+  padding-right: 0px !important;
+}
 body {
   background-color: #f3f3f3;
   font-size: 0.875em;
