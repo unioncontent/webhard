@@ -15,6 +15,46 @@ router.get('/',isAuthenticated,async function(req, res, next) {
   res.render('mcp/notice',data);
 });
 
+// 첨부파일 다운로드
+router.get('/download/:date/:fileName',async function(req, res) {
+  // console.log('/download/:date/:fileName = ',req.params);
+  var filePath = __dirname.replace('\\routes\\mcp','') +'/public/uploads/'+req.params.date;
+  var fs = require('fs');
+  var fileListLength = fs.readdirSync(filePath).length;
+  var count = 1;
+  if(fileListLength == 0){
+    res.send('해당 날짜의 파일이 없습니다.');
+    return false;
+  }
+  if(req.params.fileName.indexOf('.') == -1){
+    var walk    = require('walk');
+    var files   = [];
+
+    // Walker options
+    var walker  = walk.walk(filePath, { followLinks: false });
+
+    walker.on('file', function(root, stat, next) {
+        // Add this file to the list of files
+        var sFileArr = stat.name.split('.');
+        if(req.params.fileName == sFileArr[0]){
+          filePath +='/'+stat.name;
+          res.download(filePath); // Set disposition and send it.
+          return false;
+        }
+        if(fileListLength == count){
+          res.send('해당 파일이 삭제되었습니다.');
+          return false;
+        }
+        count += 1;
+        next();
+    });
+  }
+  else{
+    filePath +='/'+req.params.fileName;
+    res.download(filePath);
+  }
+});
+
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.body,req.user);
   res.send({state:true,result:data});
