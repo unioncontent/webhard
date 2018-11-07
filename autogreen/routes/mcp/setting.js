@@ -4,6 +4,7 @@ var router = express.Router();
 var osp = require('../../models/mcp/osp.js');
 var cp = require('../../models/mcp/cp.js');
 var contents = require('../../models/mcp/contents.js');
+var mailing = require('../../models/mcp/mailing.js');
 var keyword = require('../../models/mcp/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
@@ -28,6 +29,13 @@ router.get('/:pType',isAuthenticated2,async function(req, res, next) {
   }
   else{
     data = await getMailListPageData(req.query);
+    data.ospList = await osp.selectOSPList();
+    if(req.user.U_class == 'm'){
+      data.cpList = await contents.getCPList({mcp:req.user.U_id});
+    }
+    else if(req.user.U_class == 'a'){
+      data.cpList = await contents.getMCPList('c');
+    }
   }
   res.render('mcp/'+req.params.pType,data);
 });
@@ -39,6 +47,9 @@ router.post('/:pType/getNextPage',isAuthenticated,async function(req, res, next)
   }
   else if(req.params.pType == 'cp'){
     data = await getCPListPageData(req.body,req.user);
+  }
+  else{
+    data = await getMailListPageData(req.body);
   }
   res.send({state:true,result:data});
 });
@@ -134,11 +145,7 @@ async function getMailListPageData(param){
   var data = {
     list:[],
     listCount:{total:0},
-    cp:'',
-    mcp:'',
-    page:1,
-    mcpList:await contents.getMCPList('m'),
-    cpList:await contents.getMCPList('c')
+    page:1
   };
   var limit = 20;
   var searchParam = [0,limit];
@@ -156,17 +163,21 @@ async function getMailListPageData(param){
     searchBody['cp'] = param.cp;
     data['cp'] = param.cp;
   }
-  if (typeof param.mcp !== 'undefined') {
-    searchBody['mcp'] = param.mcp;
-    data['mcp'] = param.mcp;
+  if (typeof param.state !== 'undefined') {
+    searchBody['state'] = param.state;
+    data['state'] = param.state;
   }
-  // try{
-  //   data['list'] = await contents.selectView(searchBody,searchParam);
-  //   data['listCount'] = await contents.selectViewCount(searchBody,searchParam);
-  // }
-  // catch(e){
-  //   console.log(e);
-  // }
+  if (typeof param.osp !== 'undefined') {
+    searchBody['osp'] = param.osp;
+    data['osp'] = param.osp;
+  }
+  try{
+    data['list'] = await mailing.selectView(searchBody,searchParam);
+    data['listCount'] = await mailing.selectViewCount(searchBody,searchParam);
+  }
+  catch(e){
+    console.log(e);
+  }
   return data;
 }
 
@@ -177,6 +188,9 @@ router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
   }
   else if(req.params.pType == 'cp'){
     data = await cp.update(req.body);
+  }
+  else{
+    data = await mailing.update(req.body);
   }
   if(data.length == 0){
     res.send({state:false});
@@ -236,9 +250,15 @@ router.post('/:pType/add',isAuthenticated,async function(req, res, next) {
   var result;
   if(req.params.pType == 'osp'){
     result = await osp.insert(req.body);
+    if('insertId' in result){
+      result = await osp.insertMail('osp',result.insertId);
+    }
   }
   else if(req.params.pType == 'cp'){
     result = await cp.insert(req.body);
+    if(('insertId' in result) && req.body.cp_class == 'c'){
+      result = await osp.insertMail('cp',[req.body.cp_mcp,req.body.cp_id]);
+    }
   }
   if(!('insertId' in result)){
     res.send({state:false,msg:req.params.pType+' 등록이 실패했습니다.'});

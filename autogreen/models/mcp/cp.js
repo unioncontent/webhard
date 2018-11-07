@@ -3,7 +3,7 @@ const DBpromise = require('../../db/db_promise.js');
 
 var cp = {
   selectView: async function(body,param){
-    var sql = 'SELECT n_idx, cp_id, if(cp_cname is null,\'\',cp_cname) as cp_cname, cp_class, cp_state, if(cp_mcp is null,\'-1\',cp_mcp) as cp_mcp,\
+    var sql = 'SELECT n_idx, cp_id, if(cp_cname is null,\'\',cp_cname) as cp_cname, cp_class, cp_state, if(cp_mcp is null,\'-1\',cp_mcp) as cp_mcp, cp_mail,\
     DATE_FORMAT(cp_regdate, \'%Y-%m-%d %H:%i:%s\') AS cp_regdate FROM cp_list where n_idx is not null ';
     if('class' in body){
       sql += ' and cp_class = \''+body['class']+'\'';
@@ -43,7 +43,7 @@ var cp = {
     }
   },
   selectCPInfo: async function(param) {
-    var sql = 'select n_idx,cp_id, cp_pw, cp_cname, cp_cnum, cp_ceoname, cp_pname, cp_addrs, cp_tel, cp_hp, cp_email, cp_class, cp_mcp, cp_logo, cp_state, DATE_FORMAT(cp_regdate, \'%Y-%m-%d %H:%i:%s\') AS cp_regdate';
+    var sql = 'select n_idx, cp_id, cp_pw, cp_cname, cp_cnum, cp_ceoname, cp_pname, cp_addrs, cp_tel, cp_hp, cp_email, cp_class, cp_mcp, cp_logo, cp_state, DATE_FORMAT(cp_regdate, \'%Y-%m-%d %H:%i:%s\') AS cp_regdate,cp_mail';
     sql += ' from cp_list where n_idx = ?';
     var info = await getResult(sql,param);
     var result;

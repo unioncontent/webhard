@@ -13,7 +13,8 @@ var modalInputEle = {
   cp_class: $('#cp_class'),
   cp_mcp: $('#cp_mcp'),
   cp_state: $('#cp_state'),
-  cp_regdate: $('#cp_regdate')
+  cp_regdate: $('#cp_regdate'),
+  cp_mail: $('#cp_mail')
 };
 $(document).ready(function(){
   startSetting();
@@ -138,7 +139,7 @@ $('.btn-update').on('click',function(){
         if(key == 'cp_id' || key == 'cp_regdate'){
           continue;
         }
-        if(key == 'cp_state' || key == 'cp_class'){
+        if(key == 'cp_state' || key == 'cp_class' || key == 'cp_mail'){
           param[key] = $('#'+key+' input[type=radio]:checked').val();
         }
         else{
@@ -212,8 +213,14 @@ $(document).on('click','.edit',function(){
     },
     success: function(data){
       $('#cp_mcp').empty();
+      if(data.result['cp_class'] == 'c'){
+        $('#div-mail').css('display','table-row');
+      }
+      else if(data.result['cp_class'] == 'm'){
+        $('#div-mail').hide();
+      }
       for (var key in modalInputEle) {
-        if(key == 'cp_state' || key == 'cp_class'){
+        if(key == 'cp_state' || key == 'cp_class' || key == 'cp_mail'){
           $('#'+key+' input[type=radio][value='+data.result[key]+']').prop('checked',true);
           if( key == 'cp_class' && data.result[key] == 'c'){
             var mcpVal = data.result['cp_mcp'];
@@ -322,9 +329,11 @@ function ajaxGetPageList(param){
           <td>'+item.cp_id+'</td>\
           <td>'+((item.cp_class == 'm')?'MCP':'CP')+'</td>\
           <td>'+((item.cp_class == 'm')? 'MCP':item.cp_mcp)+'</td>\
-          <td>'+((item.cp_state == "0") ? 'OFF' : 'ON')+'</td>\
-          <td>'+item.cp_regdate+'</td>\
-        </tr>';
+          <td>'+((item.cp_state == "0") ? 'OFF' : 'ON')+'</td><td>';
+        if(item.cp_class == 'c'){
+          html+=((item.cp_mail == "1") ? '발송' : '미발송');
+        }
+        html+='</td><td>'+item.cp_regdate+'</td></tr>';
         $('#listTable tbody').append(html);
       });
       var limit = 20;

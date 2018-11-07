@@ -52,6 +52,16 @@ var osp = {
     var sql = insertSqlSetting(Object.keys(param));
     return await getResult(sql,pValue);
   },
+  insertMail: async function(type,param){
+    var sql = 'insert into osp_m_list(osp_o_idx, cp_mcp, cp_id, m_mail) ';
+    if(type == 'osp'){
+      sql += 'SELECT ?,cp_mcp,cp_id,\'0\' FROM site.cp_list where cp_class=\'c\'';
+    }
+    else{
+      sql += 'SELECT n_idx,?,?,\'0\' FROM site.osp_o_list';
+    }
+    return await getResult(sql,param);
+  },
   delete: async function(param) {
     var sql = 'delete from osp_o_list where n_idx = ?';
     return await getResult(sql,param);
@@ -77,6 +87,10 @@ var osp = {
     else{
       return 'success';
     }
+  },
+  selectOSPList:async function(id) {
+    var sql = 'select n_idx,osp_sname from osp_o_list order by osp_sname';
+    return await getResult(sql);
   }
 }
 
