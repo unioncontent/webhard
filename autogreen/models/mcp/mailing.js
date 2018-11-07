@@ -44,6 +44,10 @@ var mailing = {
     pValue.push(idx);
     var sql = "update osp_m_list set "+placeholders+" where n_idx=?;";
     return await getResult(sql,pValue);
+  },
+  delete: async function(column,param) {
+    var sql = "delete from osp_m_list where "+column+" = ?";
+    return await getResult(sql,param);
   }
 }
 

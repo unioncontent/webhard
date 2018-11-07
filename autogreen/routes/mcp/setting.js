@@ -201,30 +201,33 @@ router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
 
 router.post('/:pType/delete',isAuthenticated,async function(req, res, next) {
   var data;
-  if(req.params.pType == 'osp'){
-    data = await osp.delete(req.body.idx);
-  }
-  else if(req.params.pType == 'cp'){
-    data = await cp.delete({type:'idx',val:req.body.idx});
-    if(data.length == 0){
-      res.send({state:false});
-      return false;
+  try {
+    if(req.params.pType == 'osp'){
+      data = await osp.delete(req.body.idx);
+      if(data.length == 0) throw new Error('deleteOspError');
+      data = await mailing.delete('osp_o_idx',req.body.idx);
     }
-    if(req.body['class'] == 'm'){
-      data = await cp.delete({type:'mcp',val:req.body.id});
-      if(data.length == 0){
-        res.send({state:false});
-        return false;
+    else if(req.params.pType == 'cp'){
+      // cp 삭제
+      data = await cp.delete({type:'idx',val:req.body.idx});
+      if(data.length == 0) throw new Error('deleteCpError');
+      if(req.body['class'] == 'm'){
+        // mcp 삭제
+        data = await cp.delete({type:'mcp',val:req.body.id});
+        if(data.length == 0) throw new Error('deleteMcpError');
+        data = await mailing.delete('cp_mcp',req.body.id);
+        if(data.length == 0) throw new Error('deleteMailingError');
+      } else{
+        data = await mailing.delete('cp_id',req.body.id);
+        if(data.length == 0) throw new Error('deleteMailingError');
       }
+      data = await contents.delete2(req.body);
+      if(data.length == 0) throw new Error('deleteContentsError');
+      data = await keyword.delete2(req.body);
     }
-    data = await contents.delete2(req.body);
-    if(data.length == 0){
-      res.send({state:false});
-      return false;
-    }
-    data = await keyword.delete2(req.body);
-  }
-  if(data.length == 0){
+    if(data.length == 0) throw new Error('deleteError');
+  } catch (e) {
+    console.log(e);
     res.send({state:false});
     return false;
   }
