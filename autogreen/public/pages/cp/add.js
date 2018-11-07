@@ -130,6 +130,15 @@ $('input[name=cp_class]').on('change',function(){
     $('#mcpSelect').hide();
   }
 });
+// cp사 선택 시
+$(document).on("change","input:radio[name='cp_class']",function(){
+  if($(this).val() == 'c'){
+    $('#div-mail').css('display','flex');
+  }
+  else{
+    $('#div-mail').hide();
+  }
+});
 
 // 등록버튼 클릭시
 $("#btn-add").on("click",function(){
@@ -205,6 +214,9 @@ function insertcp(param){
   }
   if($("input:radio[name='cp_state']:checked").val() != ""){
     param.cp_state = $("input:radio[name='cp_state']:checked").val();
+  }
+  if($("input:radio[name='cp_mail']:checked").val() != ""){
+    param.cp_mail = $("input:radio[name='cp_mail']:checked").val();
   }
   $.ajax({
     url: '/setting/cp/add',
