@@ -79,7 +79,7 @@ var monitoring = {
       }
     }
     if(('sDate' in body) && ('eDate' in body)){
-      sql+=' and b.cnt_regdate between \''+body.sDate+' 00:00:00\' and \''+body.eDate+' 23:59:59\'';
+      sql+=' and a.cnt_date_1 between \''+body.sDate+' 00:00:00\' and \''+body.eDate+' 23:59:59\'';
     }
     sql += ' order by a.f_idx desc ';
     return await getResult(sql,param);
