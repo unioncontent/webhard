@@ -30,6 +30,9 @@ $('#cancelUpload').on('click', function () {
   $('#fileInfoEles').show();
 });
 $('#imgUpload').on('click', function () {
+  if($('#cp_logo_file').val() == ""){
+    return false;
+  }
   var form = $('#fileForm')[0];
   var formData = new FormData(form);
 
