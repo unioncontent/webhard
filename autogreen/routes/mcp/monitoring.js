@@ -32,7 +32,7 @@ router.post('/:type/getNextPage',isAuthenticated,async function(req, res, next) 
   res.send({status:true,result:data});
 });
 
-const aDir = 'C:/gitProject/webhard/autogreen/';
+const aDir = 'C:/Users/user/Documents/webhard/autogreen/';
 router.get('/:type/excel',async function(req, res) {
   var typeVal = (req.params.type == 'alliance')? '1':'0';
   var list = await monitoring.selectView(req.query,[typeVal]);
