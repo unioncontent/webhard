@@ -190,8 +190,26 @@ router.post('/file_delete',async function (req, res) {
 
 // 공지사항 파일 업록드
 var multer = require('multer');
+var fs_extra = require('fs-extra');
+
+async function mkdirsFun (directory) {
+  try {
+    await fs_extra.ensureDir(directory)
+    return directory;
+    console.log('success!')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const aPath = 'C:/Users/user/Documents/webhard/autogreen/';
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    var date = datetime.create();
+    var today = date.format('Ymd');
+    var time = date.format('HMS');
+    await mkdirsFun(aPath+'public/notice/'+today);
+
     cb(null, 'public/notice/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
   },
   filename: function (req, file, cb) {
@@ -199,12 +217,31 @@ var storage = multer.diskStorage({
   }
 });
 var upload = multer({ storage: storage });
-router.post('/upload', upload.single('file'), function(req, res){
+router.post('/file_upload2', upload.single('file'), function(req, res){
   if (!req.file) {
     console.log("No file passed");
     return res.send(false);
   }
   return res.send(true);
+});
+
+router.post('/file_upload', upload.single('file'), function(req, res){
+  if (!req.file) {
+    console.log("No file passed");
+    return res.send(false);
+  }
+  return res.send(true);
+});
+
+router.post('/file_delete', function(req, res){
+  fs.unlink(aPath+req.body.path, function (err) {
+    if (err){
+      throw err;
+      res.send(false);
+    }
+    console.log('successfully deleted');
+    res.send(true);
+  });
 });
 
 module.exports = router;
