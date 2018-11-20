@@ -8,6 +8,7 @@ var  session = require('express-session');
 var  passport = require('passport');
 var  flash = require('connect-flash');
 var  bodyParser = require('body-parser');
+var  cors = require('cors')();
 
 var  app = express();
 
@@ -28,6 +29,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({limit: '500mb', extended: true}));
+
+app.use(cors);
 
 //로그인
 app.use(session({
