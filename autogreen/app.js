@@ -25,8 +25,10 @@ app.use(expressLayouts);
 app.use(favicon(path.join(__dirname, 'public/images/favicon', 'favicon.ico')));// uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '500mb'}));
+app.use(bodyParser.urlencoded({limit: '500mb', extended: true}));
+
 //로그인
 app.use(session({
   secret: '1@%24^%$3^*&98&^%$', // 쿠키에 저장할 connect.sid값을 암호화할 키값 입력
