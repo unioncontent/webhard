@@ -145,38 +145,39 @@ async function mkdirsFun (directory) {
     console.error(err)
   }
 }
-// 
-// router.post('/file_upload',async function (req, res) {
-//   var date = datetime.create();
-//   var today = date.format('Ymd');
-//   var time = date.format('HMS');
-//   await mkdirsFun('public/uploads/'+today);
-//
-//   var form = new multiparty.Form({
-//       autoFiles: false, // 요청이 들어오면 파일을 자동으로 저장할 것인가
-//       uploadDir: 'public/uploads/'+today// 파일이 저장되는 경로(프로젝트 내의 temp 폴더에 저장됩니다.)
-//   });
-//
-//   form.parse(req, function (error, fields, files) {
-//       if (error){
-//         res.status(500).send(error);
-//       }
-//
-//       // 파일 전송이 요청되면 이곳으로 온다.
-//       // 에러와 필드 정보, 파일 객체가 넘어온다.
-//       var o_path = files.fileInput[0].path;
-//       var path = 'public/uploads/'+today+'/';
-//       var fileRName = time+'_'+files.fileInput[0].originalFilename;
-//       res.send({
-//         filePath : path+fileRName,
-//         fileName : fileRName
-//       }); // 파일과 예외 처리를 한 뒤 브라우저로 응답해준다.
-//       fs.rename(o_path, path+fileRName, function(err) {
-//         if (err) throw err;
-//         res.end();
-//       });
-//   });
-// });
+
+router.post('/file_upload',async function (req, res) {
+  var date = datetime.create();
+  var today = date.format('Ymd');
+  var time = date.format('HMS');
+  await mkdirsFun('public/notice/'+today);
+
+  var form = new multiparty.Form({
+      autoFiles: false, // 요청이 들어오면 파일을 자동으로 저장할 것인가
+      uploadDir: 'public/notice/'+today// 파일이 저장되는 경로(프로젝트 내의 temp 폴더에 저장됩니다.)
+  });
+
+  form.parse(req, function (error, fields, files) {
+      if (error){
+        res.status(500).send(error);
+      }
+
+      // 파일 전송이 요청되면 이곳으로 온다.
+      // 에러와 필드 정보, 파일 객체가 넘어온다.
+      var o_path = files.fileInput[0].path;
+      var path = 'public/notice/'+today+'/';
+      var path = '/'+today+'/';
+      var fileRName = time+'_'+files.fileInput[0].originalFilename;
+      res.send({
+        filePath : path+fileRName,
+        fileName : fileRName
+      }); // 파일과 예외 처리를 한 뒤 브라우저로 응답해준다.
+      fs.rename(o_path, path+fileRName, function(err) {
+        if (err) throw err;
+        res.end();
+      });
+  });
+});
 
 router.post('/file_delete',async function (req, res) {
   // fs.unlinkSync(filePath);
@@ -189,35 +190,35 @@ router.post('/file_delete',async function (req, res) {
 });
 
 // 공지사항 파일 업록드
-var multer = require('multer');
-var fs_extra = require('fs-extra');
-
-const aPath = 'C:/Users/user/Documents/webhard/autogreen/';
-var storage = multer.diskStorage({
-  destination: async function (req, file, cb) {
-    var date = datetime.create();
-    var today = date.format('Ymd');
-    await mkdirsFun(aPath+'public/notice/'+today);
-
-    cb(null, 'public/notice/'+today) // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
-  },
-  filename: async function (req, file, cb) {
-    var date = datetime.create();
-    var time = date.format('HMS');
-    cb(null,  time+'_'+file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
-  }
-});
-var upload = multer({ storage: storage });
-router.post('/file_upload', upload.single('file'), function(req, res){
-  if (!req.file) {
-    console.log("No file passed");
-    return res.send(false);
-  }
-  res.send({
-    filePath : req.file.path,
-    fileName : req.file.filename
-  });
-});
+// var multer = require('multer');
+// var fs_extra = require('fs-extra');
+//
+// const aPath = 'C:/Users/user/Documents/webhard/autogreen/';
+// var storage = multer.diskStorage({
+//   destination: async function (req, file, cb) {
+//     var date = datetime.create();
+//     var today = date.format('Ymd');
+//     await mkdirsFun(aPath+'public/notice/'+today);
+//
+//     cb(null, 'public/notice/'+today) // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+//   },
+//   filename: async function (req, file, cb) {
+//     var date = datetime.create();
+//     var time = date.format('HMS');
+//     cb(null,  time+'_'+file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
+//   }
+// });
+// var upload = multer({ storage: storage });
+// router.post('/file_upload', upload.single('file'), function(req, res){
+//   if (!req.file) {
+//     console.log("No file passed");
+//     return res.send(false);
+//   }
+//   res.send({
+//     filePath : req.file.path,
+//     fileName : req.file.filename
+//   });
+// });
 // router.post('/file_delete', function(req, res){
 //   fs.unlink(aPath+req.body.path, function (err) {
 //     if (err){
