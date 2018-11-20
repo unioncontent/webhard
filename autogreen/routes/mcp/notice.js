@@ -207,41 +207,36 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     var date = datetime.create();
     var today = date.format('Ymd');
-    var time = date.format('HMS');
     await mkdirsFun(aPath+'public/notice/'+today);
 
-    cb(null, 'public/notice/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+    cb(null, 'public/notice/'+today) // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
+    var date = datetime.create();
+    var time = date.format('HMS');
+    cb(null,  time+'_'+file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
   }
 });
 var upload = multer({ storage: storage });
-router.post('/file_upload2', upload.single('file'), function(req, res){
-  if (!req.file) {
-    console.log("No file passed");
-    return res.send(false);
-  }
-  return res.send(true);
-});
-
 router.post('/file_upload', upload.single('file'), function(req, res){
   if (!req.file) {
     console.log("No file passed");
     return res.send(false);
   }
-  return res.send(true);
-});
-
-router.post('/file_delete', function(req, res){
-  fs.unlink(aPath+req.body.path, function (err) {
-    if (err){
-      throw err;
-      res.send(false);
-    }
-    console.log('successfully deleted');
-    res.send(true);
+  res.send({
+    filePath : req.file.path,
+    fileName : req.file.filename
   });
 });
+// router.post('/file_delete', function(req, res){
+//   fs.unlink(aPath+req.body.path, function (err) {
+//     if (err){
+//       throw err;
+//       res.send(false);
+//     }
+//     console.log('successfully deleted');
+//     res.send(true);
+//   });
+// });
 
 module.exports = router;
