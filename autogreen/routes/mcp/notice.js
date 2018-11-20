@@ -166,10 +166,9 @@ router.post('/file_upload',async function (req, res) {
       // 에러와 필드 정보, 파일 객체가 넘어온다.
       var o_path = files.fileInput[0].path;
       var path = 'public/notice/'+today+'/';
-      var path = '/'+today+'/';
       var fileRName = time+'_'+files.fileInput[0].originalFilename;
       res.send({
-        filePath : path+fileRName,
+        filePath : '/'+today+'/'+fileRName,
         fileName : fileRName
       }); // 파일과 예외 처리를 한 뒤 브라우저로 응답해준다.
       fs.rename(o_path, path+fileRName, function(err) {
