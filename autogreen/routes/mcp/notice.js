@@ -192,26 +192,16 @@ router.post('/file_delete',async function (req, res) {
 var multer = require('multer');
 var fs_extra = require('fs-extra');
 
-async function mkdirsFun (directory) {
-  try {
-    await fs_extra.ensureDir(directory)
-    return directory;
-    console.log('success!')
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 const aPath = 'C:/Users/user/Documents/webhard/autogreen/';
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: async function (req, file, cb) {
     var date = datetime.create();
     var today = date.format('Ymd');
     await mkdirsFun(aPath+'public/notice/'+today);
 
     cb(null, 'public/notice/'+today) // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
   },
-  filename: function (req, file, cb) {
+  filename: async function (req, file, cb) {
     var date = datetime.create();
     var time = date.format('HMS');
     cb(null,  time+'_'+file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
