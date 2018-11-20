@@ -45,7 +45,7 @@
     "passport-local": "^1.0.0",
     "promise": "^8.0.1",
     "raphael": "^2.2.7",
-    "request": "^2.85.0",
+    "request": "^2.88.0",
     "serve-favicon": "~2.4.5",
     "sweetalert": "^2.1.0",
     "tether": "^1.4.3",
