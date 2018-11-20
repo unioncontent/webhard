@@ -1,7 +1,5 @@
 autogreen/bin/
 autogreen/node_modules/
 autogreen/public/images/company/
-autogreen/public/monitoring_img
-autogreen/public/uploads/
 autogreen/package.json
 autogreen/package-lock.json
