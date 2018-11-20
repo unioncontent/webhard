@@ -177,7 +177,7 @@ $(document).on('click','.view',function(){
             var arr = data.result[key].split(',');
             $.each(arr, function( i, val ) {
               var fileName = val.split('/')[3];
-              var filePath = val.replace('public/uploads/','http://autogreen.co.kr/notice/download/');
+              var filePath = val.replace('public/notice/','http://autogreen.co.kr/notice/download/');
               var html = '<li><a href="'+filePath+'" class="file-name">'+fileName+'</a></li>';
               $('#view_uploadFileList').append(html);
             });
