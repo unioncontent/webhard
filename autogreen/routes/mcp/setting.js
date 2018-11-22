@@ -197,10 +197,8 @@ router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
     res.send({state:false});
     return false;
   }
-  if(req.body.cp_logo != ''){
-    req.user.U_logo = req.body.cp_logo;
-    console.log('req.user.U_logo:',req.user.U_logo);
-  }
+  req.user.U_logo = req.body.cp_logo;
+  console.log('req.user.U_logo:',req.user.U_logo);
   res.send({state:true,result:data});
 });
 
