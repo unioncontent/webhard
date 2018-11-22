@@ -77,6 +77,16 @@ var cp = {
     var sql = "update cp_list set "+placeholders+" where n_idx=?;";
     return await getResult(sql,pValue);
   },
+  updateWhereId: async function(param) {
+    var id = param.id;
+    delete param.id;
+    var arr = [].map.call(Object.keys(param), function(obj) { return obj+'=?'; });
+    placeholders = arr.join(', ');
+    var pValue = Object.values(param);
+    pValue.push(id);
+    var sql = "update cp_list set "+placeholders+" where cp_id=?;";
+    return await getResult(sql,pValue);
+  },
   checkCPId:async function(id) {
     var sql = 'select count(*) as total from cp_list where cp_id=?';
     var param = [id];

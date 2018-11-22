@@ -19,16 +19,30 @@ var modalInputEle = {
 $(document).ready(function(){
   startSetting();
 });
+
+// 모달 취소 버튼 클릭시
+$('.btn-close').on('click',function(){
+  var filePath = $('#file-delete').data('file');
+  if($('#fileInfoEles').css('display') == 'none' &&filePath != null && filePath != undefined && filePath != ''){
+    var cpid = $('#cp_id').val();
+    ajaxFileDel(filePath,cpid,'close');
+  } else {
+    $('#edit-Modal').modal('hide');
+  }
+});
+
 // 이미지 변경시
 $('#imgChange').on('click', function(){
   $('#uploadEles').show();
   $('#fileInfoEles').hide();
   $('#cancelUpload').show();
 });
+
 $('#cancelUpload').on('click', function () {
   $('#uploadEles').hide();
   $('#fileInfoEles').show();
 });
+
 $('#imgUpload').on('click', function () {
   if($('#cp_logo_file').val() == ""){
     return false;
@@ -44,45 +58,51 @@ $('#imgUpload').on('click', function () {
       contentType: false,
       success: function (data) {
         console.log(data);
+        alert('이미지 업로드에 성공했습니다.');
         var html = '<span id="file-delete"><i class="fas fa-times"></i>삭제</span>';
+        $('.btn-check').find('#file-delete').remove();
         $('.btn-check').append(html);
         $('#file-delete').data('file',data);
         $('#cp_logo').val(data);
       },
       error: function (err) {
           console.log(err);
+          alert('이미지 업로드에 실패했습니다.');
       }
   });
 });
 
 $(document).on('click','#file-delete',function(){
   var filePath = $('#file-delete').data('file');
+  var cpid = $('#cp_id').val();
   swal({
-    title: "회사로고를 삭제하시겠습니까?",
+    title: "로고를 삭제하시겠습니까?",
+    text: "로고를 삭제하면 완전히 삭제 처리됩니다.",
     icon: "warning",
     buttons: ["취소", true],
     dangerMode: true
   })
   .then(function(value) {
     if (value != null) {
-      ajaxFileDel(filePath);
+      ajaxFileDel(filePath,cpid);
     }
   });
 });
-function ajaxFileDel(filePath){
+function ajaxFileDel(filePath,id,type){
   console.log(filePath);
-  if(filePath.indexOf('public/') == -1){
-    filePath = 'public/'+filePath;
-  }
   $.ajax({
     type: 'post',
     url: '/setting/file_delete',
-    data: {path:filePath},
+    data: {path:filePath,id:id},
     success: function (data) {
-      console.log(data);
-      $('#file-delete').remove();
+      console.log('data:',data);
       $('#cp_logo').val('');
       $('#cp_logo_file').val('');
+      $('#cp_logo_txt').val('');
+      $('#file-delete').remove();
+      if(type == 'close'){
+        $('#edit-Modal').modal('hide');
+      }
     },
     error: function (err) {
         console.log(err);
@@ -173,7 +193,7 @@ $('.btn-update').on('click',function(){
         alert("MCP를 선택해주세요.");
         return false;
       }
-
+      var cp_id = $(cp_id)
       $.ajax({
         url: '/setting/cp/update',
         type: 'post',
@@ -184,8 +204,8 @@ $('.btn-update').on('click',function(){
         success: function(data){
           if(data.state){
             alert('수정 완료했습니다.');
-            if($('#cp_logo').val() != ''){
-              ajaxFileDel('public/'+$('#cp_logo_txt').val());
+            if($('#cp_logo').val() != '' && $('#cp_logo_txt').val() != ''){
+              ajaxFileDel($('#cp_logo_txt').val(),modalInputEle['cp_id'].val());
             }
             reloadPage();
             $('#edit-Modal').modal('hide');
@@ -206,6 +226,8 @@ $(document).on('click','.edit',function(){
   $('.btn-delete').data('idx',idx);
   $('#edit-Modal input[type=text]').val('');
   $('#edit-Modal input[type=checkbox]').prop('checked',false);
+  $('#cp_logo_file').val('');
+  $('#file-delete').remove();
 
   $.ajax({
     url: '/setting/cp/getInfo',
@@ -258,6 +280,7 @@ $(document).on('click','.edit',function(){
             if(data.result[key] != '' && data.result[key] != null){
               $('#cp_logo_txt').val(data.result[key]);
               $('#fileInfoEles').show();
+              $('#file-delete').data('file',data.result[key]);
               $('#uploadEles').hide();
               $('#cancelUpload').show();
             }
