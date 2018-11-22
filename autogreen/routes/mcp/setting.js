@@ -182,6 +182,7 @@ async function getMailListPageData(param){
 }
 
 router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
+  console.log('/:pType/update');
   var data;
   if(req.params.pType == 'osp'){
     data = await osp.update(req.body);
@@ -195,6 +196,10 @@ router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
   if(data.length == 0){
     res.send({state:false});
     return false;
+  }
+  if(req.body.cp_logo != ''){
+    req.user.U_logo = req.body.cp_logo;
+    console.log('req.user.U_logo:',req.user.U_logo);
   }
   res.send({state:true,result:data});
 });
@@ -301,11 +306,19 @@ router.post('/file_upload',async function (req, res) {
 router.post('/file_delete',async function (req, res) {
   // fs.unlinkSync(filePath);
   // res.send(true);
-  fs.unlink('C:/Users/user/Documents/webhard/autogreen/'+req.body.path, function (err) {
+  // 'C:/gitProject/webhard/autogreen/public/images/company'
+  // 'C:/Users/user/Documents/webhard/autogreen/'
+  console.log('C:/gitProject/webhard/autogreen/public/'+req.body.path);
+  fs.unlink('C:/gitProject/webhard/autogreen/public/'+req.body.path, async function (err) {
     if (err){
       console.log(err);
+      res.status(500).send(err);
+      return false;
     }
     console.log('successfully deleted');
+    var result = await cp.updateWhereId({cp_logo:'',id:req.body.id});
+    req.user.U_logo = '';
+    console.log('result : ',result);
     res.send(true);
   });
 });
