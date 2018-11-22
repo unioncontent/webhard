@@ -309,7 +309,7 @@ router.post('/file_delete',async function (req, res) {
   // 'C:/gitProject/webhard/autogreen/public/images/company'
   // 'C:/Users/user/Documents/webhard/autogreen/'
   // console.log('C:/gitProject/webhard/autogreen/public/'+req.body.path);
-  fs.unlink('C:/Users/user/Documents/webhard/autogreen/'+req.body.path, async function (err) {
+  fs.unlink('C:/Users/user/Documents/webhard/autogreen/public/'+req.body.path, async function (err) {
     if (err){
       console.log(err);
       res.status(500).send(err);
