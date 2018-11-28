@@ -93,7 +93,7 @@ var Contents = {
     return await getResult(sql,pVal);
   },
   getCPlistID: async function(param){
-    var sql = 'select cp_id from cp_list where (cp_class=\'m\' and (cp_cname=? || cp_id=?)) || (cp_class=\'c\' and (cp_cname=? || cp_id=?))';
+    var sql = 'select cp_id from cp_list where (cp_class=\'m\' and (cp_cname=? || cp_id=?)) || (cp_class=\'c\' and (cp_cname=? || cp_id=?)) order by field(cp_class,\'m\',\'c\')';
     return await getResult(sql,param);
   }
 }

@@ -239,6 +239,7 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
         return res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg=1_ExcelSysError');
       }
       totalCount = result.length;
+      res.redirect('http://otogreen.co.kr/cnts/add?upload=true&msg=wait');
       asyncForEach(result, async (item, index, array) => {
         // if(index == 0){
         //   var headerCheck = await compare(Object.keys(array[0]));
@@ -264,7 +265,7 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
         console.log('count:',count);
         console.log('totalCount:',totalCount);
         if(returnValue[0] && count == totalCount){
-          res.redirect('/cnts/add?upload=true');
+          res.redirect('http://otogreen.co.kr/cnts/add?upload=true&msg=success');
           return true;
         }
         else if(returnValue[0] == false){
