@@ -765,7 +765,7 @@ function ajaxGetPageList(param,pageNum){
       }
 
       $('#listTable tbody').empty();
-      var userNAME = $('#more-details').text();
+      var userNAME = $.trim($('#more-details').text());
       data.aList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
         var url;
