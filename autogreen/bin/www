@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 /**
  * Module dependencies.
@@ -12,9 +12,9 @@ var http = require('http');
  * Get port from environment and store in Express. 'autogreen.co.kr';
  */
 
-var port = normalizePort(process.env.PORT || '8080');
-//var host = '192.168.0.43';
-//var host = 'www.autogreen.co.kr';
+var port = normalizePort(process.env.PORT || '8090');
+var host = '192.168.0.5';
+//var host = 'overware.iptime.org';
 app.set('port', port);
 
 /**
@@ -26,9 +26,9 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port, function(){
-//server.listen(port, host, function(){
-  //console.log( "Server listening = %s:%s", host ,port );
+// server.listen(port, function(){
+server.listen(port, host, function(){
+  // console.log( "Server listening = %s:%s", host ,port );
 });
 server.on('error', onError);
 server.on('listening', onListening);
