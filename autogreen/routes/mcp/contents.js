@@ -212,15 +212,12 @@ var compare = function(a){
 };
 
 router.post('/add/upload', upload.single('excel'), function(req, res){
-  if(!req.user){
-    return res.redirect('/login');
-  }
   count = 0;
   totalCount = 0;
 
   if (!req.file) {
     console.log("No file passed");
-    return res.redirect('/cnts/add?upload=false&msg=1_NoFileError');
+    return res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg=1_NoFileError');
   }
 
   var xlstojson = require("xls-to-json-lc");
@@ -239,7 +236,7 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
     }, function(err, result) {
       if (err) {
         console.log("exceltojson err:",err);
-        return res.redirect('/cnts/add?upload=false&msg=1_ExcelSysError');
+        return res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg=1_ExcelSysError');
       }
       totalCount = result.length;
       asyncForEach(result, async (item, index, array) => {
@@ -256,7 +253,7 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
         if(item["cnt_title"] == '' || item["cnt_price"] == ''){
           // data는 없고 배열 마지막이라면
           if((index+1) == totalCount){
-            res.redirect('/cnts/add?upload=true');
+            res.redirect('http://otogreen.co.kr/cnts/add?upload=true');
             return true;
           }
           return 'notData';
@@ -271,14 +268,14 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
           return true;
         }
         else if(returnValue[0] == false){
-          res.redirect('/cnts/add?upload=false&msg='+count.toString()+'_'+returnValue[1]);
+          res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg='+count.toString()+'_'+returnValue[1]);
           return false;
         }
       });
     });
   } catch (e) {
     console.log("Corupted excel file err:",e);
-    return res.redirect('/cnts/add?upload=false&msg=1_ExcelSysError');
+    return res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg=1_ExcelSysError');
   }
   var fs = require('fs');
   try {
