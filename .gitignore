@@ -1,4 +1,5 @@
 autogreen/bin/
+autogreen/uploads/
 autogreen/node_modules/
 autogreen/public/monitoring_img/
 autogreen/public/notice/
