@@ -265,11 +265,12 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
         console.log('count:',count);
         console.log('totalCount:',totalCount);
         if(returnValue[0] && count == totalCount){
-          res.redirect('http://otogreen.co.kr/cnts/add?upload=true&msg=success');
+          console.log('성공');
           return true;
         }
         else if(returnValue[0] == false){
-          res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg='+count.toString()+'_'+returnValue[1]);
+          console.log('실패:'+count.toString()+'_'+returnValue[1]);
+          // res.redirect('http://otogreen.co.kr/cnts/add?upload=false&msg='+count.toString()+'_'+returnValue[1]);
           return false;
         }
       });
