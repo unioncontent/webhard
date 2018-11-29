@@ -156,7 +156,7 @@
                     <% for(var i=0; i < ospTotalCountList.length; i++) { %>
                     <tr>
                       <th><%=ospTotalCountList[i].osp_sname%></th>
-                      <th><%=ospTotalCountList[i].cnt_osp%></th>
+                      <th><%=ospTotalCountList[i].osp_id%></th>
                       <th class="<%=((ospTotalCountList[i].osp_tstate == '0')? 'text-danger': 'text-success')%>">
                         <%=((ospTotalCountList[i].osp_tstate == '0')? '비제휴': '제휴')%>
                       </th>
@@ -248,5 +248,5 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <!-- custom -->
-<link rel="stylesheet" href="/pages/dashBoard/style.css">
-<script type="text/javascript" src="/pages/dashBoard/script.js"></script>
+<link rel="stylesheet" href="/pages/dashboard/style.css">
+<script type="text/javascript" src="/pages/dashboard/script.js"></script>
