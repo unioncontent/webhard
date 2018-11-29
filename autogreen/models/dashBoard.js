@@ -2,8 +2,8 @@ const mysql = require('mysql');
 const DBpromise = require('../db/db_promise.js');
 
 var DashBoard = {
-  call_dashBoard: async function(param){
-    var sql = "call site.dashboard(?,?,?,?)";
+  call_dashBoard: async function(type,param){
+    var sql = "call site.dashboard"+type+"(?,?,?)";
     return await getResult2(sql,param);
   },
   getStatistics: async function(osp,cp){

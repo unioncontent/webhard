@@ -89,18 +89,18 @@ async function getResultStats(uclass,mcpid,cpid){
     ospTotalCountList:[],
     notice:[]
   };
-  var result1 = await DashBoard.call_dashBoard([1,uclass,mcpid,cpid]);
+  var result1 = await DashBoard.call_dashBoard(1,[uclass,mcpid,cpid]);
   data.ospCount = (result1.length > 2) ? result1[0][0].total:0;
-  data.ospACount = (result1.length > 2) ? result1[0][0].atotal:0;
-  data.ospNACount = (result1.length > 2) ? result1[0][0].natotal:0;
-  data.contentsCount = (result1.length > 2) ? result1[1][0].total:0;
-  data.notice = (result1.length > 2) ? result1[2]:[];
-  var result2 = await DashBoard.call_dashBoard([2,uclass,mcpid,cpid]);
+  data.ospACount = (result1.length > 2) ? result1[1][0].atotal:0;
+  data.ospNACount = (result1.length > 2) ? result1[1][0].natotal:0;
+  data.contentsCount = (result1.length > 2) ? result1[2][0].total:0;
+  data.notice = (result1.length > 2) ? result1[3]:[];
+  var result2 = await DashBoard.call_dashBoard(2,[uclass,mcpid,cpid]);
   data.aCount = (result2.length > 0) ? result2[0][0].atotal:0;
   data.naCount = (result2.length > 0) ? result2[0][0].natotal:0;
-  var result3 = await DashBoard.call_dashBoard([3,uclass,mcpid,cpid]);
-  data.ospTotalCount = (result3.length > 1) ? result3[1][0]:0;
-  data.ospTotalCountList = (result3.length > 1) ? result3[0]:0;
+  var result3 = await DashBoard.call_dashBoard(3,[uclass,mcpid,cpid]);
+  data.ospTotalCount = (result3.length > 1) ? result3[0][0]:{total:0,atotal:0,natotal:0};
+  data.ospTotalCountList = (result3.length > 1) ? result3[1]:[];
 
   return data;
 }
