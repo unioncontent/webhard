@@ -277,4 +277,30 @@ async function asyncForEach(array, callback) {
   }
 }
 
+var multer = require('multer');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    var date = datetime.create();
+    var today = date.format('Y-m-d');
+    await mkdirsFun(aPath+'public/monitoring_img/'+today);
+
+    cb(null, 'public/monitoring_img/'+today) // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
+  }
+});
+
+var upload = multer({ storage: storage });
+router.post('/imageUpload', upload.single('file'), function(req, res){
+  if (!req.file) {
+    console.log("No file passed");
+    return res.send(false);
+  }
+  res.send({
+    filePath : req.file.path,
+    fileName : req.file.filename
+  });
+});
+
 module.exports = router;
