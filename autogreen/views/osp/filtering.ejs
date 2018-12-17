@@ -163,6 +163,9 @@
   </div>
 </div>
 <style type="text/css">
+  .table-bordered td, .table-bordered th{
+    vertical-align: middle;
+  }
   .title_nobr,.cp_nobr,.cntId_nobr,.kwd_nobr{
     font-size: 15px;
     padding-left: 3px;
@@ -455,7 +458,7 @@ function ajaxGetPageList(param,pageNum){
       }
 
       $('tbody').empty();
-      var userNAME = $('#more-details').text();
+      var userNAME = $.trim($('#more-details').text());
       data.cList.forEach(function(item,idx){
         var numIdx = Math.ceil(data.total-(param.start+idx)).toString();
         var url;
@@ -472,9 +475,9 @@ function ajaxGetPageList(param,pageNum){
           <td><div class="cp_nobr">'+item.cp_name+'</div></td>\
           <td>'+item.osp_idx+'</td>';
         if ($("#more-details").text() != 'test'){
-          html += '<td><div class="cntId_nobr">'+item.cnt_id+'</div></td>';
+          html += '<td><div class="cntId_nobr">'+((item.cnt_id == null)?'':item.cnt_id)+'</div></td>';
         }
-        html += '<td><div class="kwd_nobr">'+item.K_keyword+'</div></td>\
+        html += '<td><div class="kwd_nobr">'+((item.K_keyword == null)?'':item.K_keyword)+'</div></td>\
           <td><a href="'+url+'" target="_blank"><div class="title_nobr">'+item.title+'</div></a></td>\
           <td>'+item.price+'</th>\
           <td>'+moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')+'</td>\
