@@ -279,7 +279,7 @@ async function asyncForEach(array, callback) {
 
 const aPath = 'D:/webhard/autogreen/';
 var fs_extra = require('fs-extra');
-async function mkdirsFun (directory) {
+async function mkdirsFun(directory) {
   try {
     await fs_extra.ensureDir(directory)
     return directory;
@@ -291,7 +291,7 @@ async function mkdirsFun (directory) {
 
 var multer = require('multer');
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: async function (req, file, cb) {
     var date = datetime.create();
     var today = date.format('Y-m-d');
     await mkdirsFun(aPath+'public/monitoring_img/'+today);

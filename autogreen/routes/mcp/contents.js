@@ -289,7 +289,7 @@ router.post('/add/upload', upload.single('excel'), function(req, res){
 
 async function addContents(data){
   try{
-    var idArray = await contents.getCPlistID([data.cnt_mcp,data.cnt_mcp,data.cnt_cp,data.cnt_cp]);
+    var idArray = await contents.getCPlistID([data.cnt_mcp,data.cnt_cp]);
     if(idArray.length < 2){
       throw new Error('IdError');
     }
