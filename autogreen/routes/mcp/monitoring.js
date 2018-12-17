@@ -293,6 +293,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 router.post('/imageUpload', upload.single('file'), function(req, res){
+  console.log('-imageUpload-');
   if (!req.file) {
     console.log("No file passed");
     return res.send(false);
