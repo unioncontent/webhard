@@ -277,6 +277,17 @@ async function asyncForEach(array, callback) {
   }
 }
 
+var fs_extra = require('fs-extra');
+async function mkdirsFun (directory) {
+  try {
+    await fs_extra.ensureDir(directory)
+    return directory;
+    console.log('success!')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
