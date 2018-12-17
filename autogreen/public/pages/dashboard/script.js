@@ -128,6 +128,7 @@ $(document).on('change','#selectMCP,#selectCP',function(){
       errorMSG();
     },
     success:function(data){
+      console.log(data);
       // 그래프
       $('#chart1').empty();
       $('#chart2').empty();
@@ -143,9 +144,9 @@ $(document).on('change','#selectMCP,#selectCP',function(){
       $('#cntsCount2').text(data.aCount);
       $('#cntsCount3').text(data.naCount);
       // 리스트 표
-      $('#totalCount1').text(data.total);
-      $('#totalCount2').text(data.atotal);
-      $('#totalCount3').text(data.natotal);
+      $('#totalCount1').text(data.ospTotalCount.total);
+      $('#totalCount2').text(data.ospTotalCount.atotal);
+      $('#totalCount3').text(data.ospTotalCount.natotal);
       $('#list tbody tr').not('.table-info').remove();
       data.ospTotalCountList.forEach(function(ele) {
         var html = '<tr><th>'+ele.osp_sname+'</th><th>'+ele.cnt_osp+'</th><th class="'+((ele.osp_tstate == '0')? 'text-danger': 'text-success')+'">'+((ele.osp_tstate == '0')? '비제휴': '제휴')+'</th><td>'+ele.total+'</td><td>'+ele.atotal+'</td><td>'+ele.natotal+'</td><td>0</td><td>0</td></tr>';
