@@ -277,6 +277,7 @@ async function asyncForEach(array, callback) {
   }
 }
 
+const aPath = 'D:/webhard/autogreen/';
 var fs_extra = require('fs-extra');
 async function mkdirsFun (directory) {
   try {
