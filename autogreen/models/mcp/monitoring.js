@@ -54,7 +54,33 @@ var monitoring = {
       return count[0]['total'];
     }
   },
-  selectImage: async function(body,param){
+  selectImage: async function(body,param,num){
+    var sql = 'select a.f_idx,a.cnt_img_'+num+' as cnt_img_name\
+    FROM site.cnt_f_detail as a\
+    left join site.cnt_f_list as b on a.f_idx = b.n_idx\
+    left join site.osp_o_list as o on b.cnt_osp = o.osp_id\
+    where o.osp_tstate = ? and a.cnt_img_'+num+' is not null and a.cnt_img_'+num+' != \'/untitled.jpg\'';
+    if('cp' in body){
+      sql += ' and b.cnt_cp = \''+body['cp']+'\'';
+    }
+    if('mcp' in body){
+      sql += ' and b.cnt_mcp = \''+body['mcp']+'\'';
+    }
+    if('searchType' in body){
+      switch (body.searchType) {
+        case 't': sql+=' and replace(b.title,\' \', \'\') like \'%'+body.search.replace(/ /gi, '')+'%\''; break;
+        case 'c': sql+=' and b.cnt_L_id =\''+body.search+'\''; break;
+        case 'n': sql+=' and b.cnt_num =\''+body.search+'\''; break;
+        case 'k': sql+=' and b.k_title =\''+body.search+'\''; break;
+      }
+    }
+    if(('sDate' in body) && ('eDate' in body)){
+      sql+=' and a.cnt_date_1 between \''+body.sDate+' 00:00:00\' and \''+body.eDate+' 23:59:59\'';
+    }
+    sql += ' order by a.f_idx desc ';
+    return await getResult(sql,param);
+  },
+  selectImage_: async function(body,param){
     var sql = 'select a.f_idx,i.cnt_img_name,SUBSTRING_INDEX(a.cnt_img_1,\'/\',2) as path FROM site.cnt_f_detail as a\
     left join site.cnt_f_list as b\
     on a.f_idx = b.n_idx\
