@@ -32,7 +32,7 @@ router.post('/:type/getNextPage',isAuthenticated,async function(req, res, next) 
   res.send({status:true,result:data});
 });
 
-const aDir = 'C:/Users/user/Documents/webhard/autogreen/';
+const aDir = 'D:/webhard/autogreen/';
 router.get('/:type/excel',async function(req, res) {
   var typeVal = (req.params.type == 'alliance')? '1':'0';
   var list = await monitoring.selectView(req.query,[typeVal]);
@@ -135,35 +135,51 @@ router.get('/:type/excel',async function(req, res) {
 router.get('/:type/image',async function(req, res) {
   var zip = new require('node-zip')();
   var typeVal = (req.params.type == 'alliance')? '1':'0';
-  var list = await monitoring.selectImage(req.query,[typeVal]);
+  console.log(req.params.type);
+  console.log(typeVal);
+  var list1 = await monitoring.selectImage(req.query,[typeVal],'1');
+  var list2 = await monitoring.selectImage(req.query,[typeVal],'2');
+  var list3 = await monitoring.selectImage(req.query,[typeVal],'3');
+  var list = list1.concat(list2).concat(list3);
+
   var count = 0;
   await asyncForEach(list, async (item, index, array) => {
     try {
-      zip.file(item.cnt_img_name, fs.readFileSync(aDir+'/public/monitoring_img'+item.path+'/'+item.cnt_img_name));
+      // zip.file(item.cnt_img_name, fs.readFileSync(aDir+'/public/monitoring_img'+item.path+'/'+item.cnt_img_name));
+      var fResult = fs.readFileSync(aDir+'/public/monitoring_img'+item.cnt_img_name);
+      zip.file(item.cnt_img_name,fResult);
       count += 1;
     } catch (e) {
-        console.log('ERROR : ',e);
+        console.log('file ERROR : ',e);
     }
   });
+  console.log('count : ',count);
   if(count == 0){
-    res.redirect('/monitoring/'+req.params.type+'?z-result=false');
+    res.redirect('http://otogreen.co.kr/monitoring/'+req.params.type+'?z-result=false');
     return false;
   }
+
   var date = datetime.create();
   var today = date.format('YmdHM');
   var filename = 'autogreen_images_'+today+'.zip';
   var filepath = aDir+filename;
-  var data = zip.generate({base64:false, compression:'DEFLATE'});
-  fs.writeFileSync(filename, data, 'binary');
-  res.setHeader("Content-Type", "application/x-msdownload");
-  res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+
+  try {
+    var data = zip.generate({base64:false, compression:'DEFLATE'});
+    fs.writeFileSync(filename, data, 'binary');
+    res.setHeader("Content-Type", "application/x-msdownload");
+    res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+  } catch (e) {
+    res.redirect('http://otogreen.co.kr/monitoring/'+req.params.type+'?z-result=zipError');
+    console.log('zip Error :',e);
+  }
+
   var filestream = fs.createReadStream(filepath);
   fs.unlink(filepath,function(err){
     if(err) return console.log(err);
     console.log('zip file deleted successfully');
   });
   filestream.pipe(res);
-
 });
 
 router.post('/delete',isAuthenticated,async function(req, res, next) {
