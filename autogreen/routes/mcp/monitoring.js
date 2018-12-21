@@ -35,7 +35,8 @@ router.post('/:type/getNextPage',isAuthenticated,async function(req, res, next) 
 const aDir = 'D:/webhard/autogreen/';
 router.get('/:type/excel',async function(req, res) {
   var typeVal = (req.params.type == 'alliance')? '1':'0';
-  var list = await monitoring.selectView(req.query,[typeVal]);
+  // var list = await monitoring.selectView(req.query,[typeVal]);
+  var list = await monitoring.selectExcel(req.query,[typeVal]);
   var wb = new xl.Workbook({
     defaultFont: {
       size: 12,
@@ -83,16 +84,25 @@ router.get('/:type/excel',async function(req, res) {
   var row = 0;
   await asyncForEach(list, async (item, index, array) => {
     row = index+2;
-    var dateStr = (item.go_regdate == null) ? '':item.go_regdate;
-    var dateArr = dateStr.split(',');
-    if(dateArr.length == 3){
-      dateStr = '1차 :'+dateArr[0]+', 2차 :'+dateArr[1]+', 3차 :'+dateArr[2];
+    // var dateStr = (item.cnt_regdate == null) ? '':item.cnt_regdate;
+    // var dateArr = dateStr.split(',');
+    // if(dateArr.length == 3){
+    var dateStr = '';
+    var imgStr = '';
+    if(item.cnt_img_1 != '/untitled.jpg' && item.cnt_img_1 != null){
+      // dateStr = '1차 :'+dateArr[0]+', 2차 :'+dateArr[1]+', 3차 :'+dateArr[2];
+      dateStr += '1차 :'+item.cnt_date_1;
+      imgStr += '1차 :'+item.cnt_img_1;
     }
-    else if(dateArr.length == 2){
-      dateStr = '1차 :'+dateArr[0]+', 2차 :'+dateArr[1]
+    // else if(dateArr.length == 2){
+    if(item.cnt_img_2 != '/untitled.jpg' && item.cnt_img_2 != null){
+      dateStr += '\n2차 :'+item.cnt_date_2;
+      imgStr += '\n2차 :'+item.cnt_img_2;
     }
-    else if(dateArr.length == 1){
-      dateStr = '1차 :'+dateArr[0]
+    // else if(dateArr.length == 1){
+    if(item.cnt_img_3 != '/untitled.jpg'  && item.cnt_img_3 != null){
+      dateStr += '\n3차 :'+item.cnt_date_3;
+      imgStr += '\n3차 :'+item.cnt_img_3;
     }
     ws.cell(row,1).string((index+1).toString());
     ws.cell(row,2).string(item.osp_sname);
@@ -102,12 +112,12 @@ router.get('/:type/excel',async function(req, res) {
     ws.cell(row,6).string(item.k_title);
     ws.cell(row,7).string(item.title);
     ws.cell(row,8).string(item.cnt_num);
-    ws.cell(row,9).string((item.cnt_price == null) ? '':item.cnt_price);
+    ws.cell(row,9).string((item.cnt_price == null) ? '':item.cnt_price.toString());
     ws.cell(row,10).string((item.cnt_writer == null) ? '':item.cnt_writer);
     ws.cell(row,11).string(dateStr);
     ws.cell(row,12).string('');
     ws.cell(row,13).string(item.cnt_url);
-    ws.cell(row,14).string(item.cnt_img_name);
+    ws.cell(row,14).string(imgStr);
   });
 
   var date = datetime.create();
