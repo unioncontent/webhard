@@ -2,6 +2,37 @@ const mysql = require('mysql');
 const DBpromise = require('../../db/db_promise.js');
 
 var monitoring = {
+  selectExcel: async function(body,param){
+    var sql = "select b.* from (select f.n_idx,f.cnt_L_idx, f.cnt_L_id, f.cnt_num, f.cnt_osp, f.cnt_title as title, f.cnt_url, f.cnt_price, f.cnt_writer, f.cnt_vol, f.cnt_cate, f.cnt_fname, f.cnt_mcp, f.cnt_cp, f.cnt_keyword, f.cnt_f_regdate,o.osp_sname,o.osp_tstate,k.k_title,c.cnt_title as cnt_title,SUBSTRING_INDEX(d.cnt_img_1, '/', 2) AS path,\
+        d.cnt_img_1,d.cnt_img_2,d.cnt_img_3,\
+        DATE_FORMAT(d.cnt_date_1, '%Y-%m-%d %H:%i:%s') AS cnt_date_1,DATE_FORMAT(d.cnt_date_2, '%Y-%m-%d %H:%i:%s') AS cnt_date_2,DATE_FORMAT(d.cnt_date_3, '%Y-%m-%d %H:%i:%s') AS cnt_date_3,\
+        d.cnt_chk_1,d.cnt_chk_2,d.cnt_chk_3\
+        from cnt_f_list as f\
+    		left join cnt_f_detail as d ON f.n_idx = d.f_idx\
+    		join osp_o_list as o on f.cnt_osp = o.osp_id\
+    		left join k_word as k on f.cnt_keyword = k.n_idx\
+    		left join cnt_l_list as c on f.cnt_L_idx = c.n_idx\
+        where  o.osp_tstate = ? ";
+    if('cp' in body){
+      sql += ' and f.cnt_cp = \''+body['cp']+'\'';
+    }
+    if('mcp' in body){
+      sql += ' and f.cnt_mcp = \''+body['mcp']+'\'';
+    }
+    if('searchType' in body){
+      switch (body.searchType) {
+        case 't': sql+=' and replace(f.cnt_title,\' \', \'\') like \'%'+body.search.replace(/ /gi, '')+'%\''; break;
+        case 'c': sql+=' and f.cnt_L_id =\''+body.search+'\''; break;
+        case 'n': sql+=' and f.cnt_num =\''+body.search+'\''; break;
+        case 'k': sql+=' and k.k_title =\''+body.search+'\''; break;
+      }
+    }
+    if(('sDate' in body) && ('eDate' in body)){
+      sql+=' and f.cnt_f_regdate between \''+body.sDate+' 00:00:00\' and \''+body.eDate+' 23:59:59\'';
+    }
+    sql += "order by f.n_idx desc)  b join cnt_f_list a on b.n_idx = a.n_idx";
+    return await getResult(sql,param);
+  },
   selectView: async function(body,param){
     var sql = 'select * from monitoring where osp_tstate = ?';
     if('cp' in body){
@@ -59,6 +90,7 @@ var monitoring = {
     FROM site.cnt_f_detail as a\
     left join site.cnt_f_list as b on a.f_idx = b.n_idx\
     left join site.osp_o_list as o on b.cnt_osp = o.osp_id\
+    left join site.k_word as k on b.cnt_keyword = k.n_idx\
     where o.osp_tstate = ? and a.cnt_img_'+num+' is not null and a.cnt_img_'+num+' != \'/untitled.jpg\'';
     if('cp' in body){
       sql += ' and b.cnt_cp = \''+body['cp']+'\'';
@@ -71,7 +103,7 @@ var monitoring = {
         case 't': sql+=' and replace(b.title,\' \', \'\') like \'%'+body.search.replace(/ /gi, '')+'%\''; break;
         case 'c': sql+=' and b.cnt_L_id =\''+body.search+'\''; break;
         case 'n': sql+=' and b.cnt_num =\''+body.search+'\''; break;
-        case 'k': sql+=' and b.k_title =\''+body.search+'\''; break;
+        case 'k': sql+=' and k.k_title =\''+body.search+'\''; break;
       }
     }
     if(('sDate' in body) && ('eDate' in body)){
