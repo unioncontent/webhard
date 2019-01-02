@@ -3,6 +3,23 @@ const promise = require('../../db/db_promise.js');
 // const info = require('../../db/db_con.js');
 
 var Contents = {
+  callContentsList : function(item,callback) {
+    var sql = 'call contents_page(?,?,?,?,?,?)';
+    var DBpromise = new promise(global.osp);
+    console.log('sql:',sql);
+    console.log('param:',item.param);
+    DBpromise.query(sql,item.param)
+    .then(rows => {
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      return callback(err,null);
+    });
+  },
   getContentsList : function(item,callback) {
     var sql = 'select * from cnts_list where search is not null';
     var param = [];
@@ -59,6 +76,24 @@ var Contents = {
     DBpromise.query(sql,param)
     .then(rows => {
 
+      return callback(null,rows);
+    })
+    .then(rows => {
+      DBpromise.close();
+    })
+    .catch(function (err) {
+      DBpromise.close();
+      console.log(err);
+      return callback(err,null);
+    });
+  },
+  getSearchCnt: function(search,callback){
+    var sql = 'select * from cnts_list where search like \'%'+search+'%\'';
+    // var connection = mysql.createConnection(info.changeDB(global.osp));
+    // connection.query(sql,callback);
+    var DBpromise = new promise(global.osp);
+    DBpromise.query(sql)
+    .then(rows => {
       return callback(null,rows);
     })
     .then(rows => {
@@ -139,24 +174,6 @@ var Contents = {
     // connection.query(sql,n_idx,callback);
     var DBpromise = new promise(global.osp);
     DBpromise.query(sql,n_idx)
-    .then(rows => {
-      return callback(null,rows);
-    })
-    .then(rows => {
-      DBpromise.close();
-    })
-    .catch(function (err) {
-      DBpromise.close();
-      console.log(err);
-      return callback(err,null);
-    });
-  },
-  getSearchCnt: function(search,callback){
-    var sql = 'select * from cnts_list where search like \'%'+search+'%\'';
-    // var connection = mysql.createConnection(info.changeDB(global.osp));
-    // connection.query(sql,callback);
-    var DBpromise = new promise(global.osp);
-    DBpromise.query(sql)
     .then(rows => {
       return callback(null,rows);
     })

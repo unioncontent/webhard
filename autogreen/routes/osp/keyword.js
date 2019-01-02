@@ -122,13 +122,26 @@ router.post('/searchCnt',function(req, res, next) {
   if(!req.user){
     return res.redirect('/login');
   }
-  Contents.getSearchCnt(req.body.CP_title, function(err,result){
+  var searchObject = {
+    param: ['2','0','s',req.body.CP_title,'','']
+  };
+  Contents.callContentsList(searchObject, function(err, result) {
     if (err) {
       res.status(500).send('새로고침 후 다시 시도해주세요.');
     } else {
-      res.send(result);
+      if(result.length > 1){
+        res.send(result[0]);
+      }
     }
   });
+
+  // Contents.getSearchCnt(req.body.CP_title, function(err,result){
+  //   if (err) {
+  //     res.status(500).send('새로고침 후 다시 시도해주세요.');
+  //   } else {
+  //     res.send(result);
+  //   }
+  // });
 });
 
 router.post('/add',function(req, res, next) {

@@ -18,30 +18,16 @@ var isAuthenticated = function (req, res, next) {
 /* GET home page. */
 router.get('/',isAuthenticated,async function(req, res, next) {
   if(res.locals.userSite != "autogreen"){
-    var countObj = await DashBoard.getStatistics(global.osp);
-    var CPList = await DashBoard.getCPList(global.osp);
-    var arr = await DashBoard.getStatistics(global.osp,CPList);
-    if(countObj === false){
-      res.render('osp/dashBoard',{
-        count : [0,0,0,0],
-        countList : []
-      });
-      return false;
-    }
-    Promise.all(arr).then(function(entry) {
-      res.render('osp/dashBoard',{
-        count : countObj,
-        countList : entry
-      });
-    }).catch(function(err) {
-      // dispatch a failure and throw error
-      throw err;
-      res.render('osp/dashBoard',{
-        count : countObj,
-        countList : []
-      });
-    });
-    return false;
+    var data = {
+      count : [0,0,0,0],
+      countList : []
+    };
+    var count = await DashBoard.getStatistics(global.osp);
+    data.count = (count.length > 0)?count[0]:data.count;
+    // var CPList = await DashBoard.getCPList(global.osp);
+    data.countList = await DashBoard.getStatistics(global.osp,'cp');
+    console.log(data);
+    return res.render('osp/dashBoard',data);
   }
   else{
     var mid = '';

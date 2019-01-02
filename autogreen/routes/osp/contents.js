@@ -18,50 +18,86 @@ router.get('/', function(req, res, next) {
   if (!req.user) {
     return res.redirect('/login');
   }
+
   var searchObject = {
     cp_name: '0',
     offset: 0,
-    limit: 40
+    limit: 40,
+    param: ['1','0','0','','0','40']
   }
   if (typeof req.query.cp_name !== 'undefined') {
     searchObject.cp_name = req.query.cp_name;
+    searchObject.param[1] = searchObject.cp_name;
   }
   if (typeof req.query.searchType !== 'undefined') {
     searchObject.searchType = req.query.searchType;
+    searchObject.param[2] = searchObject.searchType;
   }
   if (typeof req.query.search !== 'undefined') {
     searchObject.search = req.query.search;
+    searchObject.param[3] = searchObject.search;
   }
 
-  Contents.contentsCount(searchObject, function(err, result) {
-    if (err) throw err;
-    totalUser = result[0].total;
-    pageCount = Math.ceil(totalUser / searchObject.limit);
+  if (typeof req.query.page !== 'undefined') {
+    currentPage = req.query.page;
+  } else {
+    currentPage = 1
+  }
+  searchObject.currentPage = currentPage;
 
-    if (typeof req.query.page !== 'undefined') {
-      currentPage = req.query.page;
+  if (parseInt(currentPage) > 0) {
+    searchObject.offset = (currentPage - 1) * searchObject.limit;
+  }
+
+  Contents.callContentsList(searchObject, function(err, result) {
+    if (err) {
+      res.json(err);
     } else {
-      currentPage = 1
-    }
-
-    if (parseInt(currentPage) > 0) {
-      searchObject.offset = (currentPage - 1) * searchObject.limit;
-    }
-
-    Contents.getContentsList(searchObject, function(err, result) {
-      if (err) {
-        res.json(err);
-      } else {
-        res.render('osp/contents', {
-          data: searchObject,
-          cList: result || [],
-          totalUser: totalUser,
-          pageCount: pageCount,
-          currentPage: currentPage
-        });
+      var data = {
+        data: searchObject,
+        cList: [],
+        totalUser: 0,
+        pageCount: 0,
+        currentPage: searchObject.currentPage
+      };
+      if(result.length > 1){
+        data.cList= result[0];
+        data.totalUser= result[1][0].total;
+        data.pageCount = Math.ceil(data.totalUser / searchObject.limit);
       }
-    });
+
+      res.render('osp/contents', data);
+    }
   });
+  // Contents.contentsCount(searchObject, function(err, result) {
+  //   if (err) throw err;
+  //   totalUser = result[0].total;
+  //   pageCount = Math.ceil(totalUser / searchObject.limit);
+  //
+  //   if (typeof req.query.page !== 'undefined') {
+  //     currentPage = req.query.page;
+  //   } else {
+  //     currentPage = 1
+  //   }
+  //
+  //   if (parseInt(currentPage) > 0) {
+  //     searchObject.offset = (currentPage - 1) * searchObject.limit;
+  //   }
+  //
+  //   Contents.getContentsList(searchObject, function(err, result) {
+    //   if (err) {
+    //     res.json(err);
+    //   } else {
+    //     res.render('osp/contents', {
+    //       data: searchObject,
+    //       cList: result || [],
+    //       totalUser: totalUser,
+    //       pageCount: pageCount,
+    //       currentPage: currentPage
+    //     });
+    //   }
+    // });
+  // });
 });
 
 router.post('/getNextPage', function(req, res, next) {
@@ -70,32 +106,52 @@ router.post('/getNextPage', function(req, res, next) {
   }
   var searchObject = {
     cp_name: req.body.cp_name || '0',
-    offset: Number(req.body.start) || 0,
-    limit: 40
+    offset: req.body.start,
+    limit: 40,
+    param: ['1',req.body.cp_name,'0','',req.body.start,'40']
   }
   console.log(req.body);
   if('searchType' in req.body){
     searchObject.searchType = req.body.searchType;
     searchObject.search = req.body.search;
+    searchObject.param[2] = searchObject.searchType;
+    searchObject.param[3] = searchObject.search;
   }
-  var currentPage = req.body.start;
-  Contents.contentsCount(searchObject, function(err, result) {
-    if (err) throw err;
-    total = result[0].total;
-    pageCount = Math.ceil(total / searchObject.limit);
-    Contents.getContentsList(searchObject, function(err, result) {
-      if (err) {
-        throw err;
-      } else {
-        res.send({
-          total: total,
-          data: searchObject,
-          pageCount: pageCount,
-          cList: result || []
-        });
+  Contents.callContentsList(searchObject, function(err, result) {
+    if (err) {
+      res.json(err);
+    } else {
+      var data = {
+        data: searchObject,
+        cList: [],
+        total: 0,
+        pageCount: 0
+      };
+      if(result.length > 1){
+        data.cList= result[0];
+        data.total= result[1][0].total;
+        data.pageCount = Math.ceil(data.total / searchObject.limit);
       }
-    });
+      res.send(data);
+    }
   });
+  // Contents.contentsCount(searchObject, function(err, result) {
+  //   if (err) throw err;
+  //   total = result[0].total;
+  //   pageCount = Math.ceil(total / searchObject.limit);
+  //   Contents.getContentsList(searchObject, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     } else {
+  //       res.send({
+  //         total: total,
+  //         data: searchObject,
+  //         pageCount: pageCount,
+  //         cList: result || []
+  //       });
+  //     }
+  //   });
+  // });
 });
 
 router.post('/getCPList', function(req, res, next) {
