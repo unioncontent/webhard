@@ -1,0 +1,449 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>매출통계현황</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">매출통계</a></li>
+          <li class="breadcrumb-item"><a href="/sales/add">매출통계현황</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <input type="hidden" id="user_class" value="<%=userCLASS%>">
+          <input type="hidden" id="user_id" value="<%=userID%>">
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
+            <option value=''>MCP사선택</option>
+            <% for(var i=0; i < mcpList.length; i++) {%>
+              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+          <% if(userCLASS != 'c'){ %>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 m-l-5 p-r-5 f-left" id="selectCP">
+            <option value=''>CP사선택</option>
+          </select>
+          <% } %>
+          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10  m-l-5 p-r-5 f-left" id="selectOSP" style="min-width: 122px;">
+            <option value=''>OSP사선택</option>
+            <% for(var i=0; i < ospList.length; i++) {%>
+              <option value="<%=ospList[i].osp_id%>"><%=ospList[i].osp_sname%></option>
+            <% }; %>
+          </select>
+          <button class="btn btn-default btn-excel f-left  m-l-5 p-r-5 p-l-5">
+            <i class="far fa-file-excel"></i>EXCEL
+          </button>
+          <div id="reportrange" class="col-md-2 form-control form-control-inverse f-right">
+            <i class="glyphicon glyphicon-calendar far fa-calendar-alt"></i>
+            <span></span>
+            <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div id="chart1" class="col-md-12"></div>
+        </div>
+        <div class="col-md-12 m-t-10">
+          <div class="col-md-3 f-right p-r-0">
+            <div class="card m-b-0">
+              <div class="card-block table-border-style  table-responsive">
+                <div class="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-bordered" id="totalTable">
+                      <thead>
+                        <tr>
+                          <th>총매출</th>
+                          <th>정산매출</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>0</td>
+                          <td>0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-10">
+          <div class="card">
+            <div class="card-block table-border-style  table-responsive">
+              <div class="preloader3 loader-block">
+                <div class="circ1 loader-primary"></div>
+                <div class="circ2 loader-primary"></div>
+                <div class="circ3 loader-primary"></div>
+                <div class="circ4 loader-primary"></div>
+              </div>
+              <table class="table table-bordered" id="listTable">
+                <thead>
+                  <tr>
+                    <th>NO</th>
+                    <th>정산일</th>
+                    <th>MCP/CP</th>
+                    <th>총매출</th>
+                    <th>정산매출</th>
+                    <th>총판매건</th>
+                    <th width="1%">상세보기</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>1</th>
+                    <td>2019-01</td>
+                    <td>bigfile</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>2019-01</td>
+                    <td>bigfile</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>2019-01</td>
+                    <td>bondisk</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>2019-01</td>
+                    <td>kdisk</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>2019-01</td>
+                    <td>ondisk</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>5</th>
+                    <td>2019-01</td>
+                    <td>mfile</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>6</th>
+                    <td>2019-01</td>
+                    <td>applefile</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>7</th>
+                    <td>2019-01</td>
+                    <td>yesfile</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>8</th>
+                    <td>2019-01</td>
+                    <td>filekuki</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>9</th>
+                    <td>2019-01</td>
+                    <td>filejo</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>10</th>
+                    <td>2019-01</td>
+                    <td>filecity</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>11</th>
+                    <td>2019-01</td>
+                    <td>pdpop</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>12</th>
+                    <td>2019-01</td>
+                    <td>filecast</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>13</th>
+                    <td>2019-01</td>
+                    <td>wedisk</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>14</th>
+                    <td>2019-01</td>
+                    <td>sedisk</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>15</th>
+                    <td>2019-01</td>
+                    <td>tple</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>16</th>
+                    <td>2019-01</td>
+                    <td>filekok</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>17</th>
+                    <td>2019-01</td>
+                    <td>smartfile</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>18</th>
+                    <td>2019-01</td>
+                    <td>sharebox</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>19</th>
+                    <td>2019-01</td>
+                    <td>fileguri</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>20</th>
+                    <td>2019-01</td>
+                    <td>filemaru</td>
+                    <td>1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>1</td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                        <span class="far fa-edit"></span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='detail-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">상세현황</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class='modal-body row'>
+              <div class="col-md-12">
+
+              </div>
+              <div class="col-md-12 m-t-10">
+                <table class="table table-bordered" id="listTable_m">
+                    <thead>
+                      <tr>
+                        <th width="1%">NO</th>
+                        <th width="5%">정산일</th>
+                        <th width="5%">MCP/CP</th>
+                        <th width="5%">콘텐츠ID</th>
+                        <th width="5%">콘텐츠제목</th>
+                        <th width="5%">총판매건</th>
+                        <th width="5%">총매출</th>
+                        <th width="15%">정산매출</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>1</th>
+                        <td>2019-01</td>
+                        <td>KBS</td>
+                        <td>KBS-0001-01</td>
+                        <td>1박2일</td>
+                        <td>1,000</td>
+                        <td>7,000,000</td>
+                        <td>7,000,000</td>
+                      </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                  </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-inverse btn-m-excel"><i class="far fa-file-excel"></i>EXCEL</button>
+              <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+    </div>
+  </div>
+</div>
+<!-- datePicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- alert -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+<!-- chart -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script type="text/javascript" src="/pages/sales/chart.js"></script>
+<!-- custom -->
+<link rel="stylesheet" href="/pages/sales/style.css">
+<script type="text/javascript" src="/pages/sales/script.js"></script>

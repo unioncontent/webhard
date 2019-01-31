@@ -94,6 +94,11 @@ app.use('/setting', setting);
 var notice = require('./routes/mcp/notice');
 app.use('/notice', notice);
 
+// 매출현황
+var sales = require('./routes/mcp/sales');
+app.use('/sales', sales);
+
+
 /* osp routes */
 //엑셀
 var excel = require('./routes/osp/excel');

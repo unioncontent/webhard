@@ -1,0 +1,51 @@
+/* add css start*/
+.name{
+  max-width: 349px;
+  word-break: break-all;
+  white-space: normal;
+}
+/* add css end*/
+.example{
+  font-size: 12px;
+}
+.example td,.example th{
+  border: 1px solid;
+  /* border-top: 1px solid black; */
+}
+.cancel{
+  cursor: pointer;
+}
+/* js css start*/
+.filelists{
+  font-size: 13px;
+}
+/* 날짜 선택 */
+#reportrange{
+  min-width: 233px;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* chart */
+#chart1{
+  padding: 0;
+  background: white;
+  border: 1px solid #34495e;
+  border-radius: 2px;
+}
+/* 통계 */
+#totalTable {
+  table-layout: fixed;
+  border-right: 0;
+}
+#totalTable td,#totalTable th{
+  text-align: center;
+}
