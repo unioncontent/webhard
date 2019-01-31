@@ -88,9 +88,16 @@ var osp = {
       return 'success';
     }
   },
-  selectOSPList:async function(id) {
-    var sql = 'select n_idx,osp_sname from osp_o_list order by osp_sname';
+  selectOSPList:async function() {
+    var sql = 'select n_idx,osp_id,osp_sname from osp_o_list order by osp_sname';
     return await getResult(sql);
+  },
+  selectOSPList_m:async function(tstate) {
+    var sql = 'select n_idx,osp_id,osp_sname from osp_o_list where osp_tstate = ? and osp_state = 1 order by osp_sname';
+    if(tstate == 2){
+      var sql = 'select n_idx,osp_id,osp_sname from osp_o_list where osp_state = 1';
+    }
+    return await getResult(sql,tstate);
   }
 }
 

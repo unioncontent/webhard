@@ -1,0 +1,13 @@
+nav.navbar.header-navbar.pcoded-header.iscollapsed {
+  background: #fafafafc;
+  border-bottom: 1px solid #ddd;
+}
+.header-navbar .navbar-wrapper .navbar-container .nav-left a, .header-navbar .navbar-wrapper .navbar-container .nav-right a{
+  color: #333;
+}
+.main-body .page-wrapper .page-header-title h4{
+  color: #313131;
+}
+.breadcrumb-title a{
+  color: #313131;
+}
