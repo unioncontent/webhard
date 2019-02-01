@@ -1,7 +1,11 @@
 const mysql = require('mysql');
 const DBpromise = require('../../db/db_promise.js');
 
-var revenue = {
+var sales = {
+  call_sales: async function(param){
+    var sql = "call site.sales(?,?,?,?,?)";
+    return await getResult(sql,param);
+  },
   selectCnt: async function(param){
     var sql = "select * from cnt_l_list where cnt_id  like '%"+param+"%' or replace(cnt_title,' ','') like '%"+param+"%'";
     return await getResult(sql);
@@ -47,4 +51,4 @@ async function getResult(sql,param) {
   }
 }
 
-module.exports = revenue;
+module.exports = sales;

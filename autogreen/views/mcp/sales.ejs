@@ -41,13 +41,26 @@
           <button class="btn btn-default btn-excel f-left  m-l-5 p-r-5 p-l-5">
             <i class="far fa-file-excel"></i>EXCEL
           </button>
-          <div id="reportrange" class="col-md-2 form-control form-control-inverse f-right">
+          <div class="tui-datetime-input-end tui-datepicker-input tui-datetime-input tui-has-focus form-control form-control-inverse f-right" style="height: 38px;">
+              <span class="dateTitle">끝:</span>
+              <input type="text" id="datepicker-input-end" aria-label="Year-Month" style="width: 105px;">
+              <span class="tui-ico-date"></span>
+          </div>
+          <div class="datepicker-cell f-right" id="datepicker-month-end"  style="margin-top: 38px;"></div>
+          <div class="tui-datetime-input-start tui-datepicker-input tui-datetime-input tui-has-focus form-control form-control-inverse f-right" style="height: 38px;">
+              <span class="dateTitle">시작:</span>
+              <input type="text" id="datepicker-input-start" aria-label="Year-Month" style="width: 105px;">
+              <span class="tui-ico-date"></span>
+          </div>
+          <div class="datepicker-cell f-right" id="datepicker-month-start"  style="margin-top: 38px;"></div>
+          <!-- <div id="reportrange" class="col-md-2 form-control form-control-inverse f-right">
             <i class="glyphicon glyphicon-calendar far fa-calendar-alt"></i>
             <span></span>
             <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
-          </div>
+          </div> -->
         </div>
         <div class="col-md-12">
+          <input type="hidden" id="graph" value="<%=graph%>">
           <div id="chart1" class="col-md-12"></div>
         </div>
         <div class="col-md-12 m-t-10">
@@ -65,8 +78,8 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>0</td>
-                          <td>0</td>
+                          <td><%=totalResult.s_total_money%></td>
+                          <td><%=totalResult.s_settlement_money%></td>
                         </tr>
                       </tbody>
                     </table>
@@ -88,289 +101,31 @@
               <table class="table table-bordered" id="listTable">
                 <thead>
                   <tr>
-                    <th>NO</th>
-                    <th>정산일</th>
-                    <th>MCP/CP</th>
-                    <th>총매출</th>
-                    <th>정산매출</th>
-                    <th>총판매건</th>
+                    <th width="1%">NO</th>
+                    <th width="5%">정산일</th>
+                    <th width="5%">OSP</th>
+                    <th width="5%">총매출</th>
+                    <th width="5%">정산매출</th>
+                    <th width="5%">총판매건</th>
                     <th width="1%">상세보기</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <%for(var i=0; i < list.length; i++) { %>
                   <tr>
-                    <th>1</th>
-                    <td>2019-01</td>
-                    <td>bigfile</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
+                    <th><%= i + 1 %></th>
+                    <td><%= ((sDate == eDate) ? sDate:(sDate+' ~ '+eDate)) %></td>
+                    <td><%= list[i].s_osp %></td>
+                    <td><%= list[i].s_total_money %></td>
+                    <td><%= list[i].s_settlement_money %></td>
+                    <td><%= list[i].s_total_sales %></td>
                     <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center" data-osp="<%= list[i].osp %>">
                         <span class="far fa-edit"></span>
                       </button>
                     </td>
                   </tr>
-                  <tr>
-                    <th>1</th>
-                    <td>2019-01</td>
-                    <td>bigfile</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>2</th>
-                    <td>2019-01</td>
-                    <td>bondisk</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>3</th>
-                    <td>2019-01</td>
-                    <td>kdisk</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>4</th>
-                    <td>2019-01</td>
-                    <td>ondisk</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>5</th>
-                    <td>2019-01</td>
-                    <td>mfile</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>6</th>
-                    <td>2019-01</td>
-                    <td>applefile</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>7</th>
-                    <td>2019-01</td>
-                    <td>yesfile</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>8</th>
-                    <td>2019-01</td>
-                    <td>filekuki</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>9</th>
-                    <td>2019-01</td>
-                    <td>filejo</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>10</th>
-                    <td>2019-01</td>
-                    <td>filecity</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>11</th>
-                    <td>2019-01</td>
-                    <td>pdpop</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>12</th>
-                    <td>2019-01</td>
-                    <td>filecast</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>13</th>
-                    <td>2019-01</td>
-                    <td>wedisk</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>14</th>
-                    <td>2019-01</td>
-                    <td>sedisk</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>15</th>
-                    <td>2019-01</td>
-                    <td>tple</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>16</th>
-                    <td>2019-01</td>
-                    <td>filekok</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>17</th>
-                    <td>2019-01</td>
-                    <td>smartfile</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>18</th>
-                    <td>2019-01</td>
-                    <td>sharebox</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>19</th>
-                    <td>2019-01</td>
-                    <td>fileguri</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>20</th>
-                    <td>2019-01</td>
-                    <td>filemaru</td>
-                    <td>1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>1</td>
-                    <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
-                        <span class="far fa-edit"></span>
-                      </button>
-                    </td>
-                  </tr>
+                  <% } %>
                 </tbody>
                 <tfoot></tfoot>
               </table>
@@ -398,9 +153,7 @@
                       <tr>
                         <th width="1%">NO</th>
                         <th width="5%">정산일</th>
-                        <th width="5%">MCP/CP</th>
-                        <th width="5%">콘텐츠ID</th>
-                        <th width="5%">콘텐츠제목</th>
+                        <th width="5%">OSP</th>
                         <th width="5%">총판매건</th>
                         <th width="5%">총매출</th>
                         <th width="15%">정산매출</th>
@@ -410,12 +163,10 @@
                       <tr>
                         <th>1</th>
                         <td>2019-01</td>
-                        <td>KBS</td>
-                        <td>KBS-0001-01</td>
-                        <td>1박2일</td>
-                        <td>1,000</td>
-                        <td>7,000,000</td>
-                        <td>7,000,000</td>
+                        <td>bigfile</td>
+                        <td>1</td>
+                        <td>1,000,000</td>
+                        <td>1,000,000</td>
                       </tr>
                     </tbody>
                     <tfoot></tfoot>
@@ -434,9 +185,12 @@
   </div>
 </div>
 <!-- datePicker -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script> -->
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 <!-- alert -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <!-- chart -->
