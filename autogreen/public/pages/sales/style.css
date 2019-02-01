@@ -5,6 +5,26 @@
   white-space: normal;
 }
 /* add css end*/
+/* 달력 */
+.dateTitle{
+  padding: 6px 0px 6px 0px;
+  font-size: 12px;
+}
+.tui-datepicker{
+  z-index: 1;
+}
+.tui-datetime-input-end.tui-datepicker-input.tui-datetime-input.tui-has-focus.form-control.form-control-inverse.f-right{
+  border: 1px solid #34495e;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-left: 0px;
+}
+.tui-datetime-input-start.tui-datepicker-input.tui-datetime-input.tui-has-focus.form-control.form-control-inverse.f-right{
+  border: 1px solid #34495e;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-right: 0px;
+}
 .example{
   font-size: 12px;
 }
