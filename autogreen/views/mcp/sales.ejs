@@ -21,6 +21,8 @@
         <div class="col-md-12">
           <input type="hidden" id="user_class" value="<%=userCLASS%>">
           <input type="hidden" id="user_id" value="<%=userID%>">
+          <input type="hidden" id="sDate" value="<%=sDate%>">
+          <input type="hidden" id="eDate" value="<%=eDate%>">
           <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
             <option value=''>MCP사선택</option>
             <% for(var i=0; i < mcpList.length; i++) {%>
@@ -78,8 +80,8 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td><%=totalResult.s_total_money%></td>
-                          <td><%=totalResult.s_settlement_money%></td>
+                          <td id="s_total_money"><%=totalResult.s_total_money%></td>
+                          <td id="s_settlement_money"><%=totalResult.s_settlement_money%></td>
                         </tr>
                       </tbody>
                     </table>
@@ -120,7 +122,7 @@
                     <td><%= list[i].s_settlement_money %></td>
                     <td><%= list[i].s_total_sales %></td>
                     <td class="text-center">
-                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center" data-osp="<%= list[i].osp %>">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-primary waves-effect waves-light text-center" data-osp="<%= list[i].s_osp %>">
                         <span class="far fa-edit"></span>
                       </button>
                     </td>
@@ -144,9 +146,6 @@
               </button>
             </div>
             <div class='modal-body row'>
-              <div class="col-md-12">
-
-              </div>
               <div class="col-md-12 m-t-10">
                 <table class="table table-bordered" id="listTable_m">
                     <thead>
@@ -160,14 +159,14 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      <!-- <tr>
                         <th>1</th>
                         <td>2019-01</td>
                         <td>bigfile</td>
                         <td>1</td>
                         <td>1,000,000</td>
                         <td>1,000,000</td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                     <tfoot></tfoot>
                   </table>

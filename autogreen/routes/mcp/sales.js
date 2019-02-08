@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var xl = require('excel4node');
+var datetime = require('node-datetime');
 var moment = require('moment');
+var fs = require('fs');
 // DB module
 var osp = require('../../models/mcp/osp.js');
 var sales = require('../../models/mcp/sales.js');
@@ -15,10 +18,22 @@ var isAuthenticated = function (req, res, next) {
 
 router.get('/',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.query,req.user);
-  console.log(data);
   data.ospList = await osp.selectOSPList_m(2);
   data.mcpList = await contents.getMCPList('m');
   res.render('mcp/sales',data);
+});
+
+router.post('/detail',isAuthenticated,async function(req, res, next) {
+  var data = {
+    list:[],
+    listCount:{total:0},
+    page:req.body.page
+  };
+  req.body.limit = Number(req.body.limit);
+  req.body.offset = Number(req.body.offset);
+  data['list'] = await sales.selectDetail(req.body);
+  data['listCount'] = await sales.selectDetailCount(req.body);
+  res.send({status:true,result:data});
 });
 
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
@@ -82,6 +97,97 @@ async function getListPageData(param,user){
     console.log(e);
   }
   return data;
+}
+
+const aDir = 'C:/gitProject/webhard/autogreen/';
+router.get('/excel',async function(req, res) {
+  var list = {};
+  if('type' in req.query){
+    list['list'] = await sales.selectDetail(req.query);
+  }
+  else{
+    list = await getListPageData(req.query,req.user);
+  }
+  var wb = new xl.Workbook({
+    defaultFont: {
+      size: 12,
+      color: '#000000'
+    },
+    fill: {
+      type: 'pattern',
+      patternType: 'solid',
+      fgColor: '#FFFFFF'
+    },
+    alignment: {
+      horizontal: 'left'
+    },
+    numberFormat: '$#,##0;-'
+  });
+  var ws = wb.addWorksheet('sheet1');
+  var tStyle = wb.createStyle({
+    font: {
+      bold: true
+    },
+    fill: {
+      type: 'pattern',
+      patternType: 'solid',
+      fgColor: '#ffeb3b',
+    },
+    alignment: {
+      horizontal: 'center'
+    }
+  });
+  ws.cell(1,1).string('NO').style(tStyle);
+  ws.cell(1,2).string('정산일').style(tStyle);
+  ws.cell(1,3).string('OSP').style(tStyle);
+  ws.cell(1,4).string('총매출').style(tStyle);
+  ws.cell(1,5).string('정산매출').style(tStyle);
+  ws.cell(1,6).string('총판매건').style(tStyle);
+  var row = 0;
+  await asyncForEach(list['list'], async (item, index, array) => {
+    row = index+2;
+    ws.cell(row,1).string((index+1).toString());
+    if(!('type' in req.query)){
+      ws.cell(row,2).string(((req.query.sDate == req.query.eDate) ? req.query.sDate:(req.query.sDate+' ~ '+req.query.eDate)));
+    }
+    else{
+      ws.cell(row,2).string(item.s_settlement_date);
+    }
+    ws.cell(row,3).string(item.s_osp);
+    ws.cell(row,4).string(item.s_total_money);
+    ws.cell(row,5).string(item.s_settlement_money);
+    ws.cell(row,6).string(item.s_total_sales);
+  });
+
+  var date = datetime.create();
+  var today = date.format('YmdHM');
+  var filename = 'otogreen_sales_'+today+'.xlsx';
+  var filepath = aDir+filename;
+  wb.write(filepath,function(err,stats){
+    if(err){
+      console.log(err);
+    }
+    else{
+      res.setHeader("Content-Type", "application/x-msdownload");
+      res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+
+      var filestream = fs.createReadStream(filepath);
+      fs.unlink(filepath,function(err){
+        if(err) return console.log(err);
+        console.log('file deleted successfully');
+      });
+      filestream.pipe(res);
+    }
+  });
+});
+
+async function asyncForEach(array, callback) {
+  for (var index = 0; index < array.length; index++) {
+   var done = await callback(array[index], index, array);
+    if(done == false){
+     break;
+    }
+  }
 }
 
 router.get('/add',isAuthenticated,async function(req, res, next) {
