@@ -2,6 +2,11 @@ const mysql = require('mysql');
 const DBpromise = require('../../db/db_promise.js');
 
 var monitoring = {
+  callMonitoring: async function(param){
+    var sql = "call site.monitoring(?,?,?,?,?,?,?,?,?,?)";
+    // call site.monitoring('1',' and f.cnt_mcp = \'kbs\'','','2018-12-17 00:00:00', '2018-12-19 23:59:59', '0', '20')
+    return await getResult(sql,param);
+  },
   selectExcel: async function(body,param){
     var sql = "select b.* from (select f.n_idx,f.cnt_L_idx, f.cnt_L_id, f.cnt_num, f.cnt_osp, f.cnt_title as title, f.cnt_url, f.cnt_price, f.cnt_writer, f.cnt_vol, f.cnt_cate, f.cnt_fname, f.cnt_mcp, f.cnt_cp, f.cnt_keyword, f.cnt_f_regdate,o.osp_sname,o.osp_tstate,k.k_title,c.cnt_title as cnt_title,SUBSTRING_INDEX(d.cnt_img_1, '/', 2) AS path,\
         d.cnt_img_1,d.cnt_img_2,d.cnt_img_3,\
@@ -113,6 +118,7 @@ var monitoring = {
     return await getResult(sql,param);
   },
   selectImage_: async function(body,param){
+    // if((a.cnt_img_1 is not null and a.cnt_img_1 != '/untitled.jpg'),a.cnt_img_1,'') as cnt_img_name1
     var sql = 'select a.f_idx,i.cnt_img_name,SUBSTRING_INDEX(a.cnt_img_1,\'/\',2) as path FROM site.cnt_f_detail as a\
     left join site.cnt_f_list as b\
     on a.f_idx = b.n_idx\
@@ -157,6 +163,16 @@ var monitoring = {
       return result[0];
     }
     return [];
+  },
+  updateDetail: async function(type,param){
+    var change = (type == 'all') ? 'cnt_img_1 = null,cnt_img_2 = null,cnt_img_3 = null':'cnt_img_'+param[1]+' = null';
+    var sql = 'update cnt_f_detail set '+change+' where cnt_num = ?';
+    return await getResult(sql,param[0]);
+  },
+  udpateImg: async function(type,param){
+    var where = (type == 'all') ? '':'and cnt_chknum = ?';
+    var sql = 'update go_img set go_chk = \'0\' where go_chk != 0 '+where+' and go_regdate is not null and cnt_img_name!=\'untitled.jpg\' and cnt_url = ?';
+    return await getResult(sql,((type == 'all') ? param[1]:param));
   }
 }
 

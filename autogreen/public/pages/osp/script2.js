@@ -17,6 +17,8 @@ var modalInputEle = {
   osp_img: $('#osp_img'),
   osp_addrs: $('#osp_addrs'),
   osp_tel: $('#osp_tel'),
+  osp_fax: $('#osp_fax'),
+  osp_mnum: $('#osp_mnum'),
   osp_email: $('#osp_email'),
   osp_mobile: $('#osp_mobile'),
   osp_mobile_url: $('#osp_mobile_url'),
@@ -86,6 +88,9 @@ $('.btn-update').on('click',function(){
           if(key == 'osp_tel'){
             param[key] = param[key].replace(/[-]/gi,'');
           }
+          if(key == 'osp_fax'){
+            param[key] = param[key].replace(/[-]/gi,'');
+          }
         }
       }
       // 필수
@@ -140,7 +145,7 @@ $('.btn-update').on('click',function(){
   });
 
 });
-
+// 날짜 클릭시
 $(document).on('click','.edit',function(){
   var idx = $(this).data('idx');
   // modal 초기화
@@ -184,6 +189,119 @@ $(document).on('click','.edit',function(){
   });
 });
 
+// 제목 클릭시
+$(document).on('click','.sname',function(){
+  $('#detail-Modal p').text('');
+  var idx = $(this).data('idx');
+  $.ajax({
+    url: '/setting/osp/getInfo',
+    type: 'post',
+    data: {idx:idx},
+    error: function(request,status,error){
+      errorMSG();
+    },
+    success: function(data){
+      console.log(data);
+      $.each($('#detail-Modal').find('p'),function(i,v){
+        // console.log(i,v);
+        if($(v).attr('id') in data.result){
+          $(v).text(data.result[$(v).attr('id')]);
+        }
+      });
+      $('#company-name').text(data.result['osp_cname']);
+      chart();
+      // for (var key in modalInputEle) {
+      //   if(key == 'osp_state' || key == 'osp_tstate'){
+      //     $('#'+key+' input[type=radio][value='+data.result[key]+']').prop('checked',true);
+      //   }
+      //   else if(key == 'osp_mobile'){
+      //     if(data.resultf[key] == '2'){
+      //       $('#'+key+' input[type=checkbox][value=1]').prop('checked',true);
+      //       $('#'+key+' input[type=checkbox][value=0]').prop('checked',true);
+      //     }
+      //     else{
+      //       if(data.result[key] != ''){
+      //         $('#'+key+' input[type=checkbox][value='+data.result[key]+']').prop('checked',true);
+      //       }
+      //     }
+      //   }
+      //   else{
+      //     modalInputEle[key].val(data.result[key]);
+      //   }
+      //   $('#o_'+key).val(data.result[key]);
+      // }
+      $('#detail-Modal').modal('show');
+    }
+  });
+});
+function chart(){
+  var options = {
+    colors: ['#1e75a3'],
+    chart: {
+      renderTo: 'chart1',
+      type: 'area'
+    },
+    title: {
+      text: 'Total Visits',
+      align: 'left',
+      margin:20,
+      style: { "color": "#636367","fontSize": "22px" }
+    },
+    navigation: {
+      buttonOptions: {
+        enabled: false
+      }
+    },
+    xAxis: {
+      type: 'datetime',
+      dateTimeLabelFormats: {
+        day: '%b\' %e'
+      }
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: null
+      },
+      labels: {
+          formatter: function () {
+              return this.value / 1000000 + 'm';
+          }
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    tooltip: {
+      pointFormat: '<span style="color:{point.color}"></span> {series.name}: <b>{point.y}</b><br/>',
+      shared: true
+    },
+    plotOptions: {
+      area: {
+        lineColor: '#ffffff',
+        lineWidth: 1,
+        marker: {
+          lineWidth: 1,
+          lineColor: '#ffffff',
+          symbol: 'circle',
+          states: {
+            hover: {
+                enabled: true
+            }
+          }
+        }
+      }
+    },
+    series: [{
+        name: 'ondisk.co.kr',
+        data: [2000000,2200000,3000000,3200000,1000000],
+        pointStart: Date.UTC(2019, 0, 1),
+        pointInterval: 24 * 3600 * 1000 * 31
+    }]
+  };
+  Highcharts.chart(options);
+}
+// 등록버튼 클릭시
 $('.btn-add').on('click',function(){
   location.href = '/setting/osp/add';
 });
@@ -252,10 +370,10 @@ function ajaxGetPageList(param){
       }
       $('#listTable tbody').empty();
       data.result.list.forEach(function(item,idx){
-        var numIdx = Math.ceil(data.result.listCount-idx-(data.result.page-1)).toString();
+        var numIdx = Math.ceil(data.result.listCount-(data.result.offset+idx)).toString();
         var html = '<tr><th>'+numIdx+'</th>\
           <td><div class="edit"  data-idx="'+item.n_idx+'">'+item.osp_open+'</div></td>\
-          <td>'+item.osp_sname+'</td>\
+          <td><div class="sname" data-idx="'+item.n_idx+'">'+item.osp_sname+'</div></td>\
           <td>'+item.osp_id+'</td>\
           <td>'+((item.osp_tstate == '1') ? '제휴':'비제휴')+'</td>\
           <td>\

@@ -2,169 +2,171 @@
   <div class="page-wrapper">
     <div class="page-header">
       <div class="page-header-title">
-        <h4>대시보드</h4>
+        <div class="title-div">
+          <ul>
+            <li>대시보드(24시간 기준)</li>
+          </ul>
+        </div>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">24시간 기준</li>
+          <li class="breadcrumb-item">
+            <input type="hidden" id="user_class" value="<%=userCLASS%>">
+            <input type="hidden" id="user_id" value="<%=userID%>">
+            <% if(userCLASS == 'a' || userCLASS == 'm'){ %>
+            <select name="select" class="col-xs-1 select-mini m-b-10 m-l-5 p-l-5 f-right" id="selectCP">
+              <option value=''>CP사선택</option>
+              <% for(var i=0; i < cpList.length; i++) {%>
+                <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+              <% }; %>
+            </select>
+            <% } %>
+            <% if(userCLASS == 'a'){ %>
+            <select name="select" class="col-xs-1 select-mini m-b-10 p-l-5 f-right" id="selectMCP">
+              <option value=''>MCP사선택</option>
+              <% for(var i=0; i < mcpList.length; i++) {%>
+                <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+              <% }; %>
+            </select>
+            <% } %>
+          </li>
         </ul>
       </div>
     </div>
     <div class="page-body">
       <div class="row">
-        <div class="col-md-12">
-          <input type="hidden" id="user_class" value="<%=userCLASS%>">
-          <input type="hidden" id="user_id" value="<%=userID%>">
-          <% if(userCLASS == 'a'){ %>
-          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
-            <option value=''>MCP사선택</option>
-            <% for(var i=0; i < mcpList.length; i++) {%>
-              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
-            <% }; %>
-          </select>
-          <% } %>
-          <% if(userCLASS == 'a' || userCLASS == 'm'){ %>
-          <select name="select" class="col-md-1 form-control form-control-inverse m-b-10 m-l-5 p-r-5 f-left" id="selectCP">
-            <option value=''>CP사선택</option>
-            <% for(var i=0; i < cpList.length; i++) {%>
-              <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
-            <% }; %>
-          </select>
-          <% } %>
+        <div class="preloader1 loader-block">
+          <svg id="loader2" viewBox="0 0 100 100">
+            <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+          </svg>
         </div>
-        <div class="col-md-3">
+        <!-- OSP 현황 card -->
+        <div class="col-xs-4">
           <div class="card">
-            <div class="card-block">
-              <span>OSP 현황</span>
-              <hr class="m-t-10 m-b-10">
-              <h3 class="f-left" id="ospCount1"><%=ospCount%></h3>
-              <span class="f-right f-12 text-info text-center m-b-0">
-                <span>제휴 / 비제휴</span><br>
-                <span id="ospCount2"><%=ospACount%> / <%=ospNACount%></span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 col-xl-5">
-          <div class="card table-card">
-            <div class="">
-              <div class="row-table">
-                <div class="col-sm-4 card-block-big">
-                  <div class="row">
-                    <div class="col-sm-12 text-center">
-                      <h5 id="cntsCount1"><%=contentsCount%></h5>
-                      <span>관리콘텐츠</span>
-                    </div>
+            <div class="card-type-1">
+              <div class="title">osp현황</div>
+              <div class="body col-xl-12">
+                <div class="row">
+                  <div class="col-xs-6 b-item">
+                    <p class="p-title">전체</p>
+                    <p class="p-body" id="ospCount1"><%=ospCount%></p>
                   </div>
-                </div>
-                <div class="col-sm-4 card-block-big">
-                  <div class="row">
-                    <div class="col-sm-12 text-center">
-                      <h5 id="cntsCount2"><%=aCount%></h5>
-                      <span>제휴-모니터링</span>
-                    </div>
-                  </div>
-                </div><div class="col-sm-4 card-block-big">
-                  <div class="row">
-                    <div class="col-sm-12 text-center">
-                      <h5 id="cntsCount3"><%=naCount%></h5>
-                      <span>비제휴-모니터링</span>
-                    </div>
+                  <div class="col-xs-6 b-item">
+                    <p class="p-title">제휴사/비제휴사</p>
+                    <p class="p-body"id="ospCount2"><%=ospACount%> / <%=ospNACount%></p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-12 col-xl-4">
-          <div class="card table-card">
-            <div class="">
-              <div class="row-table">
-                <div class="col-sm-6 card-block-big">
-                  <div class="row">
-                    <div class="col-sm-12 text-center">
-                      <h5>0</h5>
-                      <span>뮤레카 필터링</span>
-                    </div>
+        <!-- 검출상세현황 -->
+        <div class="col-xs-4">
+          <div class="card">
+            <%
+              function numberWithCommas(x) {
+                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              }
+
+              var nDate = new Date();
+              var yDate = new Date();
+              yDate.setDate(nDate.getDate() - 1);
+              var nStr = nDate.getFullYear()+'-'+((nDate.getMonth() < 10) ? '0'+(nDate.getMonth()+1) : (nDate.getMonth()+1))+nDate.getDate();
+              var yStr = yDate.getFullYear()+'-'+((yDate.getMonth() < 10) ? '0'+(yDate.getMonth()+1) : (yDate.getMonth()+1))+yDate.getDate();
+            %>
+            <div class="card-type-1">
+              <div class="title">검출상세현황</div>
+              <div class="body col-xl-12">
+                <div class="row">
+                  <div class="col-xs-4 b-item">
+                    <p class="p-title">전체검출건<i class="fas fa-question-circle m-l-5" data-container="body" data-toggle="popover" data-placement="top" data-content="전체검출건"></i></p>
+                    <p class="p-body" id="cntsCount1"><%=numberWithCommas(totalCount.total)%></p>
                   </div>
-                </div><div class="col-sm-6 card-block-big">
-                  <div class="row">
-                    <div class="col-sm-12 text-center">
-                      <h5>0</h5>
-                      <span>아컴스튜디오 필터링</span>
-                    </div>
+                  <div class="col-xs-4 b-item">
+                    <p class="p-title">제휴검출건<i class="fas fa-question-circle m-l-5" data-container="body" data-toggle="popover" data-placement="top" data-content="제휴검출건"></i></p>
+                    <p class="p-body" id="cntsCount2"><a class="mtag" href="http://otogreen.co.kr/monitoring/alliance?page=1&sDate=<%=yStr%>&eDate=<%=nStr%>"><%=numberWithCommas(totalCount.atotal)%></a></p>
+                  </div>
+                  <div class="col-xs-4 b-item">
+                    <p class="p-title">비제휴검출건<i class="fas fa-question-circle m-l-5" data-container="body" data-toggle="popover" data-placement="top" data-content="비제휴검출건"></i></p>
+                    <p class="p-body" id="cntsCount3"><a class="mtag" href="http://otogreen.co.kr/monitoring/nalliance?page=1&sDate=<%=yStr%>&eDate=<%=nStr%>"><%=numberWithCommas(totalCount.natotal)%></a></p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-8">
-          <div id="chart1"></div>
-          <div id="chart2"></div>
-        </div>
-        <div class="col-md-4">
-          <div class="card table-1-card">
-            <div class="card-block table-border-style" id="notice-block">
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr class="text-capitalize">
-                      <th colspan="4">공지사항</th>
-                      <th id="notice-more"><a href="/notice">더보기</a></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% for(var i=0; i < notice.length; i++) { %>
-                    <tr>
-                      <td colspan="4"><span class="view" data-idx="<%= notice[i].n_idx %>"><%= notice[i].title %></span></td>
-                      <td><%= notice[i].regdate %></td>
-                    </tr>
-                    <% }; %>
-                  </tbody>
-                </table>
+        <!-- 비제휴모니터링 -->
+        <div class="col-xs-4">
+          <div class="card">
+            <div class="card-type-1 card-na">
+              <div class="title">비제휴모니터링</div>
+              <div class="body col-xl-12">
+                <div class="row">
+                  <div class="col-xs-4 b-item">
+                    <p class="p-title">제휴전환건<i class="fas fa-question-circle m-l-5" data-container="body" data-toggle="popover" data-placement="top" data-content="제휴전환건"></i></p>
+                    <p class="p-body" id="cntsCount3-1"><%=numberWithCommas(naTotalCount.atotal)%></p>
+                  </div>
+                  <div class="col-xs-4 b-item">
+                    <p class="p-title">삭제건<i class="fas fa-question-circle m-l-5" data-container="body" data-toggle="popover" data-placement="top" data-content="삭제건"></i></p>
+                    <p class="p-body" id="cntsCount3-2"><%=numberWithCommas(naTotalCount.dtotal)%></p>
+                  </div>
+                  <div class="col-xs-4 b-item">
+                    <p class="p-title">비제휴잔류<i class="fas fa-question-circle m-l-5" data-container="body" data-toggle="popover" data-placement="top" data-content="비제휴잔류"></i></p>
+                    <p class="p-body" id="cntsCount3-3"><%=numberWithCommas(naTotalCount.natotal)%></p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-12">
+        <!-- 일별 제휴/비제휴 그래프 -->
+        <div id="chart1" class="col-xs-12"></div>
+        <!-- osp사 리스트 -->
+        <div class="col-xs-12 title-div m-t-30">
+          <ul>
+            <li>사이트 모니터링 현황</li>
+          </ul>
+        </div>
+        <div class="col-xs-12 m-t-10">
           <div class="card">
             <div class="card-block table-border-style">
               <div class="table-responsive">
                 <table class="table table-bordered" id="list">
                   <thead>
                     <tr>
-                      <th width="10%">회사명</th>
-                      <th>사이트</th>
-                      <th>상태</th>
-                      <th>합계</th>
-                      <th>제휴건</th>
-                      <th>비제휴건</th>
-                      <th>뮤레카필터</th>
-                      <th>아컴스튜디오필터</th>
+                      <th width="1%">NO</th>
+                      <th width="6%">회사명</th>
+                      <th width="5%">대표</th>
+                      <th width="6%">URL</th>
+                      <th width="3%">제휴/비제휴</th>
+                      <th width="5%">플랫폼</th>
+                      <th width="5%">개설일</th>
+                      <th width="5%">사이트분석</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="table-info">
-                      <th colspan="3">합계</th>
-                      <td id="totalCount1"><%=ospTotalCount.total%></td>
-                      <td id="totalCount2"><%=ospTotalCount.atotal%></td>
-                      <td id="totalCount3"><%=ospTotalCount.natotal%></td>
-                      <td>0</td>
-                      <td>0</td>
-                    </tr>
-                    <% for(var i=0; i < ospTotalCountList.length; i++) { %>
+                    <% for(var i=0; i < osplist.length; i++) { %>
                     <tr>
-                      <th><%=ospTotalCountList[i].osp_sname%></th>
-                      <th><%=ospTotalCountList[i].osp_id%></th>
-                      <th class="<%=((ospTotalCountList[i].osp_tstate == '0')? 'text-danger': 'text-success')%>">
-                        <%=((ospTotalCountList[i].osp_tstate == '0')? '비제휴': '제휴')%>
-                      </th>
-                      <td><%=ospTotalCountList[i].total%></td>
-                      <td><%=ospTotalCountList[i].atotal%></td>
-                      <td><%=ospTotalCountList[i].natotal%></td>
-                      <td>0</td>
-                      <td>0</td>
+                      <th><%=(i+1)%></th>
+                      <td class="text-left"><%=osplist[i].osp_cname%></td>
+                      <td><%=osplist[i].osp_ceoname%></td>
+                      <td class="text-left"><img src="<%=osplist[i].osp_img%>" class="ico"><a target="_blank" href="<%=osplist[i].osp_url%>"><%=osplist[i].osp_url%></a></th>
+                      <td>
+                        <%if(osplist[i].osp_tstate == '1'){%>
+                          <i class="fas fa-check-circle"></i>
+                        <%}else{%>
+                          <i class="fas fa-exclamation-circle"></i>
+                        <%}%>
+                      </td>
+                      <td>
+                        <%if(osplist[i].osp_mobile == 1 || osplist[i].osp_mobile == 2){%>
+                          <i class="fas fa-tv">
+                        <%} if(osplist[i].osp_mobile == 2 || osplist[i].osp_mobile == 0){%>
+                          <i class="fas fa-mobile-alt"></i>
+                        <%}%>
+                      </td>
+                      <td><%=osplist[i].o_date%></td>
+                      <td><button type="button" class="btn-site btn btn-md btn-default" data-osp="<%=osplist[i].osp_id%>">사이트분석</button></td>
                     </tr>
                     <% }; %>
                   </tbody>
@@ -176,57 +178,133 @@
       </div>
     </div>
     <!-- Modal start-->
-    <div class='modal fade' id='view-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class='modal fade' id='detail-Modal' aria-hidden="true" tabindex="-1" role="dialog">
       <div class='modal-dialog modal-lg' role='document'>
         <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class="modal-title" id="company-name"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
           <div class='modal-body'>
-            <div class='card'>
-              <div class="card-block table-border-style">
-                <div class="table-border-style">
-                  <div class="table-responsive">
-                    <table class="table" id='modal-cnt'>
-                      <colgroup>
-                        <col width="20%" />
-                        <col width="80%" />
-                      </colgroup>
-                      <tbody>
-                        <tr>
-                          <th class="b-r-1 text-left">글쓴이</th>
-                          <td>
-                            <p id="view_writer"></p>
-                          </td>
-                        </tr>
-                        <tr id="regdate_tr">
-                          <th class="b-r-1 text-left">등록일</th>
-                          <td>
-                            <p id="view_regdate"></p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th class="b-r-1 text-left">제목</th>
-                          <td>
-                            <p id="view_title"></p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th class="b-r-1 text-left">내용</th>
-                          <td>
-                            <p id="view_content"></p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th class="b-r-1 text-left">첨부파일</th>
-                          <td>
-                            <ul id="view_uploadFileList">
-                            </ul>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+            <div class="row">
+              <div class="col-md-6 col-xl-4">
+                <div class="card counter-card-3">
+                  <div class="card-block-big">
+                    <div>
+                      <h3>2.91M</h3>
+                      <p>Total Visits<span class="f-right text-default">
+                          <i class="icofont icofont-arrow-down"></i>6.92%
+                        </span></p>
+                      <div class="progress ">
+                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <i class="icofont icofont-upload"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="card counter-card-3">
+                  <div class="card-block-big">
+                    <div>
+                      <h3>10,500</h3>
+                      <p>Global Rank
+                        <span class="f-right text-default">
+                          <i class="icofont icofont-arrow-down"></i>
+                          22.34%
+                        </span></p>
+                      <div class="progress ">
+                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <i class="icofont icofont-upload"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="card counter-card-3">
+                  <div class="card-block-big">
+                    <div>
+                      <h3>118</h3>
+                      <p>Country Rank
+                        <span class="f-right text-default">
+                          <i class="icofont icofont-arrow-down"></i>
+                          22.34%
+                        </span></p>
+                      <div class="progress ">
+                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <i class="icofont icofont-upload"></i>
                   </div>
                 </div>
               </div>
             </div>
+            <div class='card'>
+              <div class="card-block table-border-style">
+                <div class="table-border-style">
+                  <table class="table table-sm">
+                    <colgroup>
+                      <col width="30%" />
+                      <col width="70%" />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>대표</th>
+                        <td>
+                          <p id="osp_ceoname"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>사업자등록번호</th>
+                        <td>
+                          <p id="osp_cnum"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>통신판매</th>
+                        <td>
+                          <p id="osp_mnum"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>부가통신사업등록번호</th>
+                        <td>
+                          <p id="osp_scnum"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>주소</th>
+                        <td>
+                          <p id="osp_addrs"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>이메일</th>
+                        <td>
+                          <p id="osp_email"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>TEL</th>
+                        <td>
+                          <p id="osp_tel"></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>FAX</th>
+                        <td>
+                          <p id="osp_fax"></p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div id="chart1" class="col-md-12"></div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary mobtn" data-dismiss='modal' aria-label='Close' type="button">취소</button>
@@ -237,8 +315,8 @@
     <!-- Modal end-->
   </div>
 </div>
-<input type="hidden" id="contentsArr" value="<%=JSON.stringify(ospTotalCountList)%>">
-<input type="hidden" id="aCountArr" value="<%=JSON.stringify(ospTotalCount)%>">
+<input type="hidden" id="dayArr" value="<%=JSON.stringify(dayResultlist)%>">
+<input type="hidden" id="dayArr_m" value="<%=JSON.stringify(dayResultlist_m)%>">
 <!-- morris -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>

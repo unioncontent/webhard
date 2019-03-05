@@ -3,7 +3,7 @@ const DBpromise = require('../../db/db_promise.js');
 
 var stats = {
   call_stats: async function(param){
-    var sql = "call site.stats(?,?,?, ?, ?, ?, ?, ?, ?)";
+    var sql = "call site.stats(?, ?,?, ?, ?, ?, ?, ?, ?, ?)";
     // call site.stats('0','','kbs', '', 'a.cnt_osp', '2018-11-01', '2018-11-01');
     return await getResult(sql,param);
   }

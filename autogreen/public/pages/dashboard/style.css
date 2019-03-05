@@ -1,50 +1,65 @@
-#view-Modal p {
-  margin:0;
+.main-body .page-wrapper .page-header{
+  margin-bottom: 10px;
 }
-#view-Modal .file-name:hover{
-  color:blue;
+.page-header-title{
+  height: 32px;
 }
-.view:hover{
+/* 테이블 */
+#list i{
+  font-size: 16px;
+}
+#list a{
+  font-size: 12px
+  font-weight: 400;
+}
+#list a:hover{
+  text-decoration: underline;
+}
+#list .ico{
+  height: 13px;
+  vertical-align: middle;
+  padding-right: 5px;
+}
+#list .btn-site{
+  font-size: 12px;
+  height: 20px;
+  vertical-align: middle;
+  line-height: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+i.fa-check-circle{
+  color:#82c91e;
+}
+i.fa-exclamation-circle{
+  color:#FFC107;
+}
+.table td,.table th{
+  font-size: 12px;
+  text-align: center;
+}
+/* loader */
+.preloader1{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* a태그 */
+.mtag{
+  color: #807373;
+}
+.mtag:hover{
+  text-decoration: underline;
   font-weight: bold;
 }
-.card-block-big {
-  padding: 2.75em 0;
-}
-/* 웹하드 모니터링 현황 */
-.col-md-8{
-  margin-bottom: 30px;
-}
-#chart1,#chart2{
-  float:left;
-  padding-left:15px;
-  padding-right:15px;
-  min-width:415px;
-  background-color:white;
-}
-#chart2{
-  min-width:217px;
-}
-/* 공지사항*/
-#notice-block{
-  padding: 0;
-  font-size: 13px;
-}
-#notice-block th:nth-child(even),
-#notice-block td:nth-child(even){
-  text-align:right;
-}
-#notice-more{
-  text-decoration: underline;
-  cursor: defaul;
-}
-#notice-more a{
-  font-size: 13px;
-}
-.table-1-card .card-block {
-  padding-top: 0;
-  padding-bottom: 0;
-  font-size: 12px;
-}
-#list th,#list td{
-  text-align: center;
+/* 그래프 */
+.highcharts-container{
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background: white;
 }

@@ -40,8 +40,8 @@
           </select>
           <% } %>
           <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectTState">
-            <option value='1'>제휴사</option>
             <option value='0'>비제휴사</option>
+            <option value='1'>제휴사</option>
           </select>
           <select name="select" class="col-md-1 form-control form-control-inverse m-l-5 p-r-5 f-left" id="selectOC">
             <option value='0'>OSP</option>
@@ -62,7 +62,7 @@
               <div class="col-md-6 card-table f-left">
                 <div class="table-border-style">
                   <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="totalTable">
                       <thead>
                         <tr>
                           <th>전체 검출합계</th>
@@ -115,8 +115,16 @@
                 <thead>
                   <tr>
                     <th width="1%">NO</th>
-                    <th width="5%" id="ocnt">OSP</th>
-                    <th width="5%" id="mcp">MCP/CP</th>
+                    <th width="5%" id="ocnt">
+                      <%if(oc == '1'){%>
+                        콘텐츠
+                      <%} else{%>
+                        OSP
+                      <%}%>
+                    </th>
+                    <%if(oc == '1'){%>
+                      <th width="5%" id="mcp">MCP/CP</th>
+                    <%}%>
                     <th width="5%">제휴현황</th>
                     <th width="5%">검출건</th>
                     <th width="5%">제휴건</th>
@@ -127,12 +135,29 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% for(var i=0; i < list.length; i++) { %>
+                  <%
+                  if(oc == '0'){
+                    for(var i=0; i < list.length; i++) {
+                  %>
                   <tr>
-                    <td><%= listCount - i - (page-1) %></td>
-                    <td><%= list[i].osp_sname %></td>
-                    <td></td>
+                    <td><%= listCount - i - offset %></td>
+                    <td><a class="mtag" href="http://otogreen.co.kr/monitoring/<%=((list[i].osp_tstate == '0')? 'nalliance': 'alliance')%>?page=1&osp=<%=list[i].cnt_osp%>&sDate=<%=sDate%>&eDate=<%=eDate%>"><%= list[i].osp_sname %></a></td>
                     <td><%= (list[i].osp_tstate == '1')?'제휴':'비제휴' %></td>
+                    <td><%= list[i].total %></td>
+                    <td><a class="mtag" href="http://otogreen.co.kr/monitoring/<%=((list[i].osp_tstate == '0')? 'nalliance': 'alliance')%>?page=1&osp=<%=list[i].cnt_osp%>&state=1&sDate=<%=sDate%>&eDate=<%=eDate%>"><%= list[i].atotal %></a></td>
+                    <td><a class="mtag" href="http://otogreen.co.kr/monitoring/<%=((list[i].osp_tstate == '0')? 'nalliance': 'alliance')%>?page=1&osp=<%=list[i].cnt_osp%>&state=0&sDate=<%=sDate%>&eDate=<%=eDate%>"><%= list[i].natotal %></a></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                  <% }
+                } else{
+                   for(var i=0; i < list.length; i++) { %>
+                  <tr>
+                    <td><%= listCount - i - offset %></td>
+                    <td><%= list[i].cnt_title %></td>
+                    <td><%= list[i].cnt_mcp_l+' / '+list[i].cnt_cp_l %></td>
+                    <td><%= ((list[i].k_method == '1')?'제휴':'비제휴') %></td>
                     <td><%= list[i].total %></td>
                     <td><%= list[i].atotal %></td>
                     <td><%= list[i].natotal %></td>
@@ -140,11 +165,12 @@
                     <td>0</td>
                     <td>0</td>
                   </tr>
-                  <% }; %>
+                  <% }
+                } %>
                 </tbody>
                 <tfoot>
                   <%
-                    var limit = 10;
+                    var limit = 20;
                     var pageCount = Math.ceil(listCount/limit);
                     if(pageCount > 1) {
                     %>

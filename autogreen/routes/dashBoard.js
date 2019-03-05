@@ -18,16 +18,30 @@ var isAuthenticated = function (req, res, next) {
 /* GET home page. */
 router.get('/',isAuthenticated,async function(req, res, next) {
   if(res.locals.userSite != "autogreen"){
-    var data = {
-      count : [0,0,0,0],
-      countList : []
-    };
-    var count = await DashBoard.getStatistics(global.osp);
-    data.count = (count.length > 0)?count[0]:data.count;
-    // var CPList = await DashBoard.getCPList(global.osp);
-    data.countList = await DashBoard.getStatistics(global.osp,'cp');
-    console.log(data);
-    return res.render('osp/dashBoard',data);
+    var countObj = await DashBoard.getStatistics(global.osp);
+    var CPList = await DashBoard.getCPList(global.osp);
+    var arr = await DashBoard.getStatistics(global.osp,CPList);
+    if(countObj === false){
+      res.render('osp/dashBoard',{
+        count : [0,0,0,0],
+        countList : []
+      });
+      return false;
+    }
+    Promise.all(arr).then(function(entry) {
+      res.render('osp/dashBoard',{
+        count : countObj,
+        countList : entry
+      });
+    }).catch(function(err) {
+      // dispatch a failure and throw error
+      throw err;
+      res.render('osp/dashBoard',{
+        count : countObj,
+        countList : []
+      });
+    });
+    return false;
   }
   else{
     var mid = '';
@@ -36,10 +50,10 @@ router.get('/',isAuthenticated,async function(req, res, next) {
       mid = req.user.U_id;
     }
     else if(req.user.U_class == 'c'){
+      mid = await Cp.selectMCPID(req.user.U_id);
       cid = req.user.U_id;
     }
     var data = await getResultStats(req.user.U_class,mid,cid);
-    console.log(req.user.U_class);
     if(req.user.U_class == 'm'){
       data.cpList = await contents.getCPList({mcp:mid});
     }
@@ -63,30 +77,61 @@ router.post('/dashBoard/setting',isAuthenticated,async function(req, res, next){
   res.send(data);
 });
 
+// async function getResultStats(uclass,mcpid,cpid){
+//   var data = {
+//     ospCount:0,
+//     ospACount:0,
+//     ospNACount:0,
+//     contentsCount:0,
+//     aCount:0,
+//     naCount:0,
+//     ospTotalCount:[],
+//     ospTotalCountList:[],
+//     notice:[]
+//   };
+//   var result1 = await DashBoard.call_dashBoard(1,[uclass,mcpid,cpid]);
+//   data.ospCount = (result1.length > 2) ? result1[0][0].total:'0';
+//   data.ospACount = (result1.length > 2) ? result1[1][0].atotal:'0';
+//   data.ospNACount = (result1.length > 2) ? result1[1][0].natotal:'0';
+//   data.contentsCount = (result1.length > 2) ? result1[2][0].total:'0';
+//   data.notice = (result1.length > 2) ? result1[3]:[];
+//   // var result2 = await DashBoard.call_dashBoard(2,[uclass,mcpid,cpid]);
+//   // data.aCount = (result2.length > 0) ? result2[0][0].atotal:'0';
+//   // data.naCount = (result2.length > 0) ? result2[0][0].natotal:'0';
+//   var result3 = await DashBoard.call_dashBoard(3,[uclass,mcpid,cpid]);
+//   data.ospTotalCount = (result3.length > 1) ? result3[0][0]:{total:'0',atotal:'0',natotal:'0'};
+//   data.aCount = data.ospTotalCount.atotal;
+//   data.naCount = data.ospTotalCount.natotal;
+//   data.ospTotalCountList = (result3.length > 1) ? result3[1]:[];
+//
+//   return data;
+// }
+
 async function getResultStats(uclass,mcpid,cpid){
   var data = {
     ospCount:0,
     ospACount:0,
     ospNACount:0,
-    contentsCount:0,
-    aCount:0,
-    naCount:0,
-    ospTotalCount:[],
-    ospTotalCountList:[],
-    notice:[]
+    dayResultlist:[],
+    dayResultlist_m:[],
+    totalCount:{total:'0',atotal:'0',natotal:'0'},
+    naTotalCount:{atotal:'0',dtotal:'0',natotal:'0'},
+    osplist:[]
   };
   var result1 = await DashBoard.call_dashBoard(1,[uclass,mcpid,cpid]);
-  data.ospCount = (result1.length > 2) ? result1[0][0].total:0;
-  data.ospACount = (result1.length > 2) ? result1[1][0].atotal:0;
-  data.ospNACount = (result1.length > 2) ? result1[1][0].natotal:0;
-  data.contentsCount = (result1.length > 2) ? result1[2][0].total:0;
-  data.notice = (result1.length > 2) ? result1[3]:[];
-  var result2 = await DashBoard.call_dashBoard(2,[uclass,mcpid,cpid]);
-  data.aCount = (result2.length > 0) ? result2[0][0].atotal:0;
-  data.naCount = (result2.length > 0) ? result2[0][0].natotal:0;
+  data.ospCount = (result1.length > 1) ? result1[0][0].total:'0';
+  data.ospACount = (result1.length > 2) ? result1[1][0].atotal:'0';
+  data.ospNACount = (result1.length > 2) ? result1[1][0].natotal:'0';
+  data.osplist = (result1.length > 3) ? result1[2]:[];
+  data.dayResultlist = (result1.length > 4) ? result1[3]:[];
+  data.dayResultlist_m = (result1.length > 5) ? result1[4]:[];
+  // var result2 = await DashBoard.call_dashBoard(2,[uclass,mcpid,cpid]);
+  // data.aCount = (result2.length > 0) ? result2[0][0].atotal:'0';
+  // data.naCount = (result2.length > 0) ? result2[0][0].natotal:'0';
   var result3 = await DashBoard.call_dashBoard(3,[uclass,mcpid,cpid]);
-  data.ospTotalCount = (result3.length > 1) ? result3[0][0]:{total:0,atotal:0,natotal:0};
-  data.ospTotalCountList = (result3.length > 1) ? result3[1]:[];
+  data.naTotalCount = (result3.length > 4) ? {atotal:Number(result3[0][0].atotal)+Number(result3[2][0].atotal),dtotal:Number(result3[0][0].dtotal)+Number(result3[2][0].dtotal),natotal:Number(result3[0][0].natotal)+Number(result3[2][0].natotal)}:{atotal:'0',dtotal:'0',natotal:'0'};
+  data.totalCount = (result3.length > 4) ? {total:Number(result3[1][0].total)+Number(result3[3][0].total),atotal:Number(result3[1][0].atotal)+Number(result3[3][0].atotal),natotal:Number(result3[1][0].natotal)+Number(result3[3][0].natotal)}:{total:'0',atotal:'0',natotal:'0'};
+  // data.ospTotalCountList = (result3.length > 1) ? result3[1]:[];
 
   return data;
 }
