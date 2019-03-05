@@ -52,6 +52,15 @@ var cp = {
     }
     return result;
   },
+  selectMCPID: async function(param) {
+    var sql = 'select cp_mcp from cp_list where cp_id = ?';
+    var info = await getResult(sql,param);
+    var result;
+    if(info.length > 0){
+      result = info[0].cp_mcp;
+    }
+    return result;
+  },
   insert: async function(param) {
     var pValue = Object.values(param);
     var sql = insertSqlSetting(Object.keys(param));

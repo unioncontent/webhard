@@ -60,27 +60,45 @@
                 <tbody>
                   <% for(var i=0; i < list.length; i++) { %>
                   <tr>
-                    <th><%= listCount - i - (page-1) %></th>
-                    <td><div class="edit" data-idx="<%= list[i].n_idx %>"><%= list[i].osp_open %></div></td>
-                    <td><%= list[i].osp_sname %></td>
-                    <td><%= list[i].osp_id %></td>
-                    <td><%= ((list[i].osp_tstate == "0") ? '비제휴' : '제휴') %></td>
+                    <th>
+                      <%= listCount - i - offset %>
+                    </th>
+                    <td>
+                      <div class="edit" data-idx="<%= list[i].n_idx %>">
+                        <%= list[i].osp_open %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="sname" data-idx="<%= list[i].n_idx %>">
+                        <%= list[i].osp_sname %>
+                        <div>
+                    </td>
+                    <td>
+                      <%= list[i].osp_id %>
+                    </td>
+                    <td>
+                      <%= ((list[i].osp_tstate == "0") ? '비제휴' : '제휴') %>
+                    </td>
                     <td>
                       <div class="form-radio">
                         <div class="border-checkbox-section m-t-5">
                           <div class="border-checkbox-group border-checkbox-group-default">
-                            <input class="border-checkbox mail-checkbox" type="checkbox" id="osp_mobile_0_<%=i%>" value="0" <%= ((list[i].osp_mobile == '0'|| list[i].osp_mobile == '2') ? 'checked' : '') %> onclick="return false;">
+                            <input class="border-checkbox mail-checkbox" type="checkbox" id="osp_mobile_0_<%=i%>" value="0" <%=((list[i].osp_mobile=='0' || list[i].osp_mobile=='2' ) ? 'checked' : '' ) %> onclick="return false;">
                             <label class="border-checkbox-label m-b-0" for="osp_mobile_0_<%=i%>">어플</label>
                           </div>
                           <div class="border-checkbox-group border-checkbox-group-default">
-                            <input class="border-checkbox mail-checkbox" type="checkbox" id="osp_mobile_1_<%=i%>" value="1" <%= ((list[i].osp_mobile == '1' || list[i].osp_mobile == '2') ? 'checked' : '') %> onclick="return false;">
+                            <input class="border-checkbox mail-checkbox" type="checkbox" id="osp_mobile_1_<%=i%>" value="1" <%=((list[i].osp_mobile=='1' || list[i].osp_mobile=='2' ) ? 'checked' : '' ) %> onclick="return false;">
                             <label class="border-checkbox-label m-b-0" for="osp_mobile_1_<%=i%>">웹</label>
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td><%= ((list[i].osp_tstate == "0") ? '중지' : '정상') %></td>
-                    <td><%= list[i].osp_regdate %></td>
+                    <td>
+                      <%= ((list[i].osp_tstate == "0") ? '중지' : '정상') %>
+                    </td>
+                    <td>
+                      <%= list[i].osp_regdate %>
+                    </td>
                   </tr>
                   <% }; %>
                 </tbody>
@@ -90,10 +108,10 @@
                     var pageCount = Math.ceil(listCount/limit);
                     if(pageCount > 1) {
                     %>
-                    <tr>
-                      <td colspan="8">
-                        <ul class="pagination float-right">
-                          <%
+                  <tr>
+                    <td colspan="8">
+                      <ul class="pagination float-right">
+                        <%
                             var pageSize = 5;
                             var pRCnt = parseInt(page / pageSize);
                             if(page % pageSize == 0){
@@ -101,53 +119,53 @@
                             }
                             if(page > 5) {
                           %>
-                            <li class="page-item">
-                              <a class="page-link" data-value="1" aria-label="Previous">
-                                <i class="ti-angle-double-left f-12"></i>
-                                <span aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                            </li>
-                            <li class="page-item">
-                              <a class="page-link" data-value=="<%=(pRCnt * pageSize)%>" aria-label="Previous">
-                                <i class="ti-angle-left f-12"></i>
-                                <span aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                            </li>
-                          <% } %>
-                          <% for(var index=pRCnt * pageSize + 1;index<(pRCnt + 1)*pageSize + 1;index++){%>
-                            <li class= "<%=(page == index) ? 'active' : ''%> page-item">
-                              <a class="page-link" data-value="<%=index%>" >
-                                <%= index %>
-                              </a>
-                            </li>
-                          <%
+                        <li class="page-item">
+                          <a class="page-link" data-value="1" aria-label="Previous">
+                            <i class="ti-angle-double-left f-12"></i>
+                            <span aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                        </li>
+                        <li class="page-item">
+                          <a class="page-link" data-value=="<%=(pRCnt * pageSize)%>" aria-label="Previous">
+                            <i class="ti-angle-left f-12"></i>
+                            <span aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                        </li>
+                        <% } %>
+                        <% for(var index=pRCnt * pageSize + 1;index<(pRCnt + 1)*pageSize + 1;index++){%>
+                        <li class="<%=(page == index) ? 'active' : ''%> page-item">
+                          <a class="page-link" data-value="<%=index%>">
+                            <%= index %>
+                          </a>
+                        </li>
+                        <%
                               if(index == pageCount) {
                                 break;
                               }
                             }
                           %>
-                          <% if((pRCnt + 1) * pageSize < pageCount) { %>
-                            <li class="page-item">
-                              <a class="page-link" data-value="<%=(pRCnt + 1)*pageSize+1%>" aria-label="Next">
-                                <i class="ti-angle-right f-12"></i>
-                                <span aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </li>
-                            <li class="page-item">
-                              <a class="page-link" data-value="<%=pageCount%>" aria-label="Next">
-                                <i class="ti-angle-double-right f-12"></i>
-                                <span aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </li>
-                          <% } %>
-                        </ul>
-                      </td>
-                    </tr>
-                    <% } %>
+                        <% if((pRCnt + 1) * pageSize < pageCount) { %>
+                        <li class="page-item">
+                          <a class="page-link" data-value="<%=(pRCnt + 1)*pageSize+1%>" aria-label="Next">
+                            <i class="ti-angle-right f-12"></i>
+                            <span aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        </li>
+                        <li class="page-item">
+                          <a class="page-link" data-value="<%=pageCount%>" aria-label="Next">
+                            <i class="ti-angle-double-right f-12"></i>
+                            <span aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        </li>
+                        <% } %>
+                      </ul>
+                    </td>
+                  </tr>
+                  <% } %>
                 </tfoot>
               </table>
             </div>
@@ -158,7 +176,7 @@
         </div>
       </div>
       <!-- Modal start-->
-      <div class='modal fade' id='edit-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+      <div class='modal fade' id='edit-Modal' aria-hidden="true" tabindex="-1" role="dialog">
         <div class='modal-dialog modal-lg' role='document'>
           <div class='modal-content'>
             <div class='modal-header'>
@@ -220,6 +238,13 @@
                             </td>
                           </tr>
                           <tr>
+                            <th class="b-r-1 text-left">통신판매</th>
+                            <td>
+                              <input class="form-control input-sm" id="osp_mnum" type="text">
+                              <input id="o_osp_mnum" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
                             <th class="b-r-1 text-left">부가통신사업자</th>
                             <td>
                               <input class="form-control input-sm" id="osp_scnum" type="text">
@@ -229,7 +254,7 @@
                           <tr>
                             <th class="b-r-1 text-left">* 제휴현황</th>
                             <td>
-                              <div class="form-radio text-left" id = "osp_tstate">
+                              <div class="form-radio text-left" id="osp_tstate">
                                 <div class="radio radiofill radio-default radio-inline m-t-5">
                                   <label class="m-b-0">
                                     <input type="radio" value="1" name="osp_tstate" checked>
@@ -293,6 +318,13 @@
                             <td>
                               <input class="form-control input-sm" id="osp_tel" type="text">
                               <input id="o_osp_tel" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">FAX(숫자만)</th>
+                            <td>
+                              <input class="form-control input-sm" id="osp_fax" type="text">
+                              <input id="o_osp_fax" type="hidden" value="">
                             </td>
                           </tr>
                           <tr>
@@ -369,6 +401,142 @@
         </div>
       </div>
       <!-- Modal end-->
+      <!-- Modal start-->
+      <div class='modal fade' id='detail-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title" id="company-name"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <div class="row">
+                <div class="col-md-6 col-xl-4">
+                  <div class="card counter-card-3">
+                    <div class="card-block-big">
+                      <div>
+                        <h3>2.91M</h3>
+                        <p>Total Visits<span class="f-right text-default">
+                            <i class="icofont icofont-arrow-down"></i>6.92%
+                          </span></p>
+                        <div class="progress ">
+                          <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <i class="icofont icofont-upload"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                  <div class="card counter-card-3">
+                    <div class="card-block-big">
+                      <div>
+                        <h3>10,500</h3>
+                        <p>Global Rank
+                          <span class="f-right text-default">
+                            <i class="icofont icofont-arrow-down"></i>
+                            22.34%
+                          </span></p>
+                        <div class="progress ">
+                          <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <i class="icofont icofont-upload"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                  <div class="card counter-card-3">
+                    <div class="card-block-big">
+                      <div>
+                        <h3>118</h3>
+                        <p>Country Rank
+                          <span class="f-right text-default">
+                            <i class="icofont icofont-arrow-down"></i>
+                            22.34%
+                          </span></p>
+                        <div class="progress ">
+                          <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <i class="icofont icofont-upload"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <table class="table table-sm">
+                      <colgroup>
+                        <col width="30%" />
+                        <col width="70%" />
+                      </colgroup>
+                      <tbody>
+                        <tr>
+                          <th>대표</th>
+                          <td>
+                            <p id="osp_ceoname"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>사업자등록번호</th>
+                          <td>
+                            <p id="osp_cnum"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>통신판매</th>
+                          <td>
+                            <p id="osp_mnum"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>부가통신사업등록번호</th>
+                          <td>
+                            <p id="osp_scnum"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>주소</th>
+                          <td>
+                            <p id="osp_addrs"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>이메일</th>
+                          <td>
+                            <p id="osp_email"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>TEL</th>
+                          <td>
+                            <p id="osp_tel"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>FAX</th>
+                          <td>
+                            <p id="osp_fax"></p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div id="chart1" class="col-md-12"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary mobtn" data-dismiss='modal' aria-label='Close' type="button">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
     </div>
   </div>
 </div>
@@ -378,6 +546,10 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
 <!-- alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
 <!-- custom -->
 <link rel="stylesheet" href="/pages/osp/style.css">
 <script type="text/javascript" src="/pages/osp/script2.js"></script>

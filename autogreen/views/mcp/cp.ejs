@@ -60,7 +60,7 @@
                 <tbody>
                   <% for(var i=0; i < list.length; i++) { %>
                   <tr>
-                    <th><%= listCount - i - (page-1) %></th>
+                    <th><%= listCount - i - offset %></th>
                     <td><div class="edit" data-idx="<%= list[i].n_idx %>"><%= list[i].cp_cname %></div></td>
                     <td><%= list[i].cp_id %></td>
                     <td><%= (list[i].cp_class == 'm') ? 'MCP':'CP' %></td>
@@ -149,7 +149,7 @@
         </div>
       </div>
       <!-- Modal start-->
-      <div class='modal fade' id='edit-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+      <div class='modal fade' id='edit-Modal'  aria-hidden="true" tabindex="-1" role="dialog">
         <div class='modal-dialog modal-lg' role='document'>
           <div class='modal-content'>
             <div class='modal-header'>

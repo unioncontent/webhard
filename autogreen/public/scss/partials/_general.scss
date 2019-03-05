@@ -989,11 +989,11 @@ a.mytooltip {
     margin-bottom: 20px;
 }
 
-@media (min-width: 768px) {
-    .img-container {
-        min-height: 516px;
-    }
-}
+// @media (min-width: 768px) {
+//     .img-container {
+//         min-height: 516px;
+//     }
+// }
 
 .img-container > img {
     max-width: 100%;
@@ -1077,21 +1077,21 @@ a.mytooltip {
     white-space: nowrap;
 }
 
-@media (max-width: 400px) {
-    .btn-group-crop {
-        margin-right: -15px!important;
-        > .btn {
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-        .docs-tooltip {
-            margin-left: -5px;
-            margin-right: -5px;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-    }
-}
+// @media (max-width: 400px) {
+//     .btn-group-crop {
+//         margin-right: -15px!important;
+//         > .btn {
+//             padding-left: 5px;
+//             padding-right: 5px;
+//         }
+//         .docs-tooltip {
+//             margin-left: -5px;
+//             margin-right: -5px;
+//             padding-left: 5px;
+//             padding-right: 5px;
+//         }
+//     }
+// }
 
 .docs-options .dropdown-menu {
     width: 100%;
@@ -3757,23 +3757,23 @@ table.matrics-table tr:first-child td {
     padding-right: 20px;
 }
 
-@media (min-width: 400px){
-  .select-mleft{
-    margin-left: 0px;
-  }
-}
-
-@media (min-width: 768px){
-  .select-mleft{
-    margin-left: 15px;
-  }
-}
-
-@media (min-width: 1200px){
-  .select-mleft{
-    margin-left: 15px;
-  }
-}
+// @media (min-width: 400px){
+//   .select-mleft{
+//     margin-left: 0px;
+//   }
+// }
+//
+// @media (min-width: 768px){
+//   .select-mleft{
+//     margin-left: 15px;
+//   }
+// }
+//
+// @media (min-width: 1200px){
+//   .select-mleft{
+//     margin-left: 15px;
+//   }
+// }
 
 .select-mleft ~.col-md-6 .row{
   float: right;
@@ -3799,86 +3799,86 @@ select.form-control-inverse,.search-select{
   overflow:hidden;
 }
 
-@media only screen and (min-width: 320px){
-  .col-md-5{
-    max-width: auto;
-    position: inherit;
-    right: auto;
-  }
-  .input-time{
-    max-width: auto;
-    position: inherit;
-    right: auto;
-  }
-}
-
-@media only screen and (min-width: 360px){
-  .time{
-    margin-left: 0px;
-  }
-}
-
-@media only screen and (min-width: 576px){
-  .btn-select > input{
-    min-width: 48px;
-  }
-}
-
-@media only screen and (min-width: 412px) {
-  .input-time .time{
-    padding-right: 15px;
-    margin-left: 0;
-  }
-}
-
-@media only screen and (min-width: 600px){
-  .btn-select > input{
-    min-width: 180px;
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  .press-setting{
-    max-width: 635px;
-  }
-  .monitoring-setting{
-    max-width: 683px;
-  }
-}
-
-@media only screen and (min-width: 1025px){
-  .btn-group{
-    padding-left: 0px;
-  }
-}
-
-@media (min-width: 1260px){
-  .col-md-5{
-    max-width: 538px;
-    position: absolute;
-    right: 24px;
-  }
-  .input-time{
-    max-width: 739px;
-    position: absolute;
-    right: 24px;
-  }
-  .input-time .time{
-    padding-right: 0;
-    margin-left: 0;
-  }
-}
-
-@media only screen and (min-width: 1354px) {
-  .btn-group{
-    padding-right: 15px;
-  }
-}
-
-@media only screen and (min-width: 1700px) {
-  .btn-group{
-    padding-right: 8px;
-  }
-}
+// @media only screen and (min-width: 320px){
+//   .col-md-5{
+//     max-width: auto;
+//     position: inherit;
+//     right: auto;
+//   }
+//   .input-time{
+//     max-width: auto;
+//     position: inherit;
+//     right: auto;
+//   }
+// }
+//
+// @media only screen and (min-width: 360px){
+//   .time{
+//     margin-left: 0px;
+//   }
+// }
+//
+// @media only screen and (min-width: 576px){
+//   .btn-select > input{
+//     min-width: 48px;
+//   }
+// }
+//
+// @media only screen and (min-width: 412px) {
+//   .input-time .time{
+//     padding-right: 15px;
+//     margin-left: 0;
+//   }
+// }
+//
+// @media only screen and (min-width: 600px){
+//   .btn-select > input{
+//     min-width: 180px;
+//   }
+// }
+//
+// @media only screen and (min-width: 768px) {
+//   .press-setting{
+//     max-width: 635px;
+//   }
+//   .monitoring-setting{
+//     max-width: 683px;
+//   }
+// }
+//
+// @media only screen and (min-width: 1025px){
+//   .btn-group{
+//     padding-left: 0px;
+//   }
+// }
+//
+// @media (min-width: 1260px){
+//   .col-md-5{
+//     max-width: 538px;
+//     position: absolute;
+//     right: 24px;
+//   }
+//   .input-time{
+//     max-width: 739px;
+//     position: absolute;
+//     right: 24px;
+//   }
+//   .input-time .time{
+//     padding-right: 0;
+//     margin-left: 0;
+//   }
+// }
+//
+// @media only screen and (min-width: 1354px) {
+//   .btn-group{
+//     padding-right: 15px;
+//   }
+// }
+//
+// @media only screen and (min-width: 1700px) {
+//   .btn-group{
+//     padding-right: 8px;
+//   }
+// }
 
 /*====== Session Timeout css ends ======= */

@@ -60,9 +60,9 @@
                 <tbody>
                   <% for(var i=0; i < list.length; i++) { %>
                   <tr>
-                    <th><%= list.length - i %></th>
-                    <td><%= list[i].cnt_title %></td>
-                    <td><%= list[i].cnt_id %></td>
+                    <th><%= listCount - i - offset %></th>
+                    <td><div class="title_nobr"><%= list[i].cnt_title %></div></td>
+                    <td><div class="cnt_nobr"><%= list[i].cnt_id %></div></td>
                     <td><%= list[i].TCount %></td>
                     <td><%= list[i].DCount %></td>
                     <td>
@@ -130,10 +130,10 @@
                     </td>
                     <td class="text-center">
     								  <div class="btn-group btn-group-md text-center" style="padding-right: 0; display: inline-block;">
-                        <button type="button" class="btn-delete btn btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;" data-kidx="<%= list[i].k_L_idx %>">
+                        <button type="button" class="btn-delete btn btn-sm btn-danger waves-effect waves-light alert-confirm1" style="margin-right: 5px;" data-kidx="<%= list[i].k_L_idx %>">
         								  <span class="far fa-trash-alt"></span>
         								</button>
-      							    <button type="button" class="btn-edit btn btn-primary waves-effect waves-light" data-kidx="<%= list[i].cnt_idx %>">
+      							    <button type="button" class="btn-edit btn btn-sm btn-primary waves-effect waves-light" data-kidx="<%= list[i].cnt_idx %>">
         								  <span class="far fa-edit"></span>
         								</button>
     								  </div>
@@ -148,7 +148,7 @@
                     if(pageCount > 1) {
                     %>
                     <tr>
-                      <td colspan="8">
+                      <td colspan="9">
                         <ul class="pagination float-right">
                           <%
                             var pageSize = 5;
@@ -212,7 +212,7 @@
         </div>
       </div>
       <!-- Modal start-->
-      <div class='modal fade' id='keyword-Modal' data-backdrop="static" data-keyboard="false" role="dialog">
+      <div class='modal fade' id='keyword-Modal'  aria-hidden="true" tabindex="-1" role="dialog">
         <div class='modal-dialog modal-lg' role='document'>
           <div class='modal-content'>
             <div class='modal-header'>

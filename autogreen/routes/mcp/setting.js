@@ -28,7 +28,7 @@ router.get('/:pType',isAuthenticated2,async function(req, res, next) {
     data = await getCPListPageData(req.query,req.user);
   }
   else{
-    data = await getMailListPageData(req.query);
+    data = await getMailListPageData(req.query,req.user);
     data.ospList = await osp.selectOSPList();
     if(req.user.U_class == 'm'){
       data.cpList = await contents.getCPList({mcp:req.user.U_id});
@@ -49,7 +49,7 @@ router.post('/:pType/getNextPage',isAuthenticated,async function(req, res, next)
     data = await getCPListPageData(req.body,req.user);
   }
   else{
-    data = await getMailListPageData(req.body);
+    data = await getMailListPageData(req.body,req.user);
   }
   res.send({state:true,result:data});
 });
@@ -73,7 +73,7 @@ async function getOSPListPageData(param){
   }
   if (parseInt(currentPage) > 0) {
     searchParam[0] = (currentPage - 1) * limit
-    data['offset'] = searchParam[1];
+    data['offset'] = searchParam[0];
   }
   if (typeof param.tstate !== 'undefined') {
     searchBody['tstate'] = param.tstate;
@@ -114,7 +114,7 @@ async function getCPListPageData(param,user){
   }
   if (parseInt(currentPage) > 0) {
     searchParam[0] = (currentPage - 1) * limit
-    data['offset'] = searchParam[1];
+    data['offset'] = searchParam[0];
   }
   if (typeof param.class !== 'undefined') {
     searchBody['class'] = param.class;
@@ -141,10 +141,11 @@ async function getCPListPageData(param,user){
   return data;
 }
 
-async function getMailListPageData(param){
+async function getMailListPageData(param,user){
   var data = {
     list:[],
     listCount:{total:0},
+    cp:(user.U_class == 'c') ?  user.U_id:'',
     page:1
   };
   var limit = 20;
@@ -157,11 +158,13 @@ async function getMailListPageData(param){
   }
   if (parseInt(currentPage) > 0) {
     searchParam[0] = (currentPage - 1) * limit
-    data['offset'] = searchParam[1];
+    data['offset'] = searchParam[0];
   }
   if (typeof param.cp !== 'undefined') {
     searchBody['cp'] = param.cp;
     data['cp'] = param.cp;
+  } else if(data['cp'] != '') {
+    searchBody['cp'] = data.cp;
   }
   if (typeof param.state !== 'undefined') {
     searchBody['state'] = param.state;
@@ -197,8 +200,11 @@ router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
     res.send({state:false});
     return false;
   }
-  req.user.U_logo = req.body.cp_logo;
-  console.log('req.user.U_logo:',req.user.U_logo);
+  if(req.body.idx == req.user.n_idx){
+    req.user.U_logo = req.body.cp_logo;
+    console.log('req.user:',req.user);
+    console.log('req.user.U_logo:',req.user.U_logo);
+  }
   res.send({state:true,result:data});
 });
 
@@ -306,8 +312,8 @@ router.post('/file_delete',async function (req, res) {
   // res.send(true);
   // 'C:/gitProject/webhard/autogreen/public/images/company'
   // 'C:/Users/user/Documents/webhard/autogreen/'
-  // console.log('C:/gitProject/webhard/autogreen/public/'+req.body.path);
-  fs.unlink('D:/webhard/autogreen/public/'+req.body.path, async function (err) {
+  console.log('C:/gitProject/webhard/autogreen/public/'+req.body.path);
+  fs.unlink('C:/gitProject/webhard/autogreen/public/'+req.body.path, async function (err) {
     if (err){
       console.log(err);
       res.status(500).send(err);

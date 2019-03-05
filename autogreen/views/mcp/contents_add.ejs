@@ -26,7 +26,7 @@
               <% if(userCLASS == 'a'){ %>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 관리사(MCP)</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <select name="select" class="form-control" id="selectMCP">
                     <option value="">선택</option>
                     <% for(var i=0; i < mcpList.length; i++) {%>
@@ -39,7 +39,7 @@
               <% } %>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 저작권사(CP)</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <select name="select" class="form-control" id="selectCP">
                     <option value="">선택</option>
                     <% if(userCLASS == 'm'){
@@ -53,28 +53,28 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 제목</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_title" type="text" class="form-control" placeholder="제목">
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">영문제목</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_title_eng" type="text" class="form-control" placeholder="영문제목">
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">제작/감독</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_director" type="text" class="form-control" placeholder="동명 제목의 영화나 방송물을 구분을 위한 키">
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">제작국가</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <select name="select" class="form-control" id="cnt_nat">
                     <%
                     for(var i=0; i < country.length; i++) {
@@ -88,7 +88,7 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">카테고리</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <select name="select" class="form-control" id="cnt_cate">
                     <option value="0">미분류</option>
                     <option value="1">영화</option>
@@ -103,21 +103,21 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">CPID</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_cpid" type="text" class="form-control" placeholder="CP사에서 정한 콘텐츠ID">
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">저작권만료기간</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_period" type="text" class="form-control" value="2999-12-31"/>
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 관리상태</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <div id="state" class="form-radio">
                     <div class="radio radiofill radio-inverse radio-inline">
                       <label>
@@ -137,7 +137,7 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 관리현황</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <div id="method" class="form-radio">
                     <div class="radio radiofill radio-inverse radio-inline">
                       <label>
@@ -157,7 +157,7 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 관리방법</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <div id="apply" class="form-radio">
                     <div class="radio radiofill radio-inverse radio-inline">
                       <label>
@@ -189,7 +189,7 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 메일발송</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <div id="mailing" class="form-radio">
                     <div class="radio radiofill radio-inverse radio-inline">
                       <label>
@@ -209,32 +209,32 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">* 판매금액</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_price" type="number" class="form-control" placeholder="0">
                   <span class='messages'><p class='text-danger error'></p></span>
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">HASH 값</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_hash" type="text" class="form-control">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">뮤레카 HASH값</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_mureka" type="text" class="form-control">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">아컴스튜디오 HASH값</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="cnt_acom" type="text" class="form-control">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">기본키워드</label>
-                <div class="col-sm-9">
+                <div class="col-sm-5">
                   <input id="k_title" type="text" class="form-control">
                 </div>
               </div>
@@ -315,7 +315,7 @@
                 <h4 class="sub-title m-b-10">upload</h4>
                   <div class="form-group row">
                     <div class="col-sm-10">
-                      <form action="/cnts/add/upload" id="uploadFrm" method="post" enctype="multipart/form-data">
+                      <form action="http://61.82.113.197:8090/cnts/add/upload" id="uploadFrm" method="post" enctype="multipart/form-data">
                         <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
                       </form>
                     </div>

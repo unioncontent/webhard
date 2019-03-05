@@ -17,9 +17,9 @@ var Keyword = {
     return await getResult(sql,[item,item,param.idx,param.idx]);
   },
   selectCntList: async function(body,param){
-    var sql = 'select a.n_idx,a.cnt_mcp, a.cnt_cp, FORMAT(IF(a.CCount is null,0,a.CCount),0) as CCount,FORMAT(IF(k.TCount is null,0,k.TCount),0) as TCount, FORMAT(IF(k.DCount is null,0,k.DCount),0) as DCount from (SELECT n_idx,cnt_mcp,cnt_cp,count(*) as CCount FROM cnt_l_list group by cnt_cp) as a\
-    left join (SELECT k_cp,count(IF(k_key=\'1\',1,null)) as TCount,count(IF(k_key=\'0\',1,null)) as DCount FROM k_word group by k_cp) as k\
-    on a.cnt_cp = k.k_cp where a.n_idx is not null';
+    var sql = 'select a.n_idx,a.cnt_mcp, a.cnt_cp, FORMAT(IF(a.CCount is null,0,a.CCount),0) as CCount,FORMAT(IF(k.TCount is null,0,k.TCount),0) as TCount, FORMAT(IF(k.DCount is null,0,k.DCount),0) as DCount from (SELECT n_idx,cnt_mcp,cnt_cp,count(*) as CCount FROM cnt_l_list group by cnt_mcp,cnt_cp) as a\
+    left join (SELECT k_mcp,k_cp,count(IF(k_key=\'1\',1,null)) as TCount,count(IF(k_key=\'0\',1,null)) as DCount FROM k_word group by k_mcp,k_cp) as k\
+    on a.cnt_mcp = k.k_mcp and a.cnt_cp = k.k_cp where a.n_idx is not null';
     if('cp' in body){
       sql += ' and a.cnt_cp = \''+body['cp']+'\'';
     }
@@ -30,9 +30,9 @@ var Keyword = {
     return await getResult(sql,param);
   },
   selectCntListCount: async function(body){
-    var sql = 'select  count(*) as total from (SELECT n_idx,cnt_mcp,cnt_cp,count(*) as CCount FROM cnt_l_list group by cnt_cp) as a\
-    left join (SELECT k_cp,FORMAT(count(IF(k_key=\'1\',1,null)),0) as TCount,FORMAT(count(IF(k_key=\'0\',1,null)),0) as DCount FROM k_word group by k_cp) as k\
-    on a.cnt_cp = k.k_cp where a.n_idx is not null';
+    var sql = 'select count(*) as total from (SELECT n_idx,cnt_mcp,cnt_cp,count(*) as CCount FROM cnt_l_list group by cnt_mcp,cnt_cp) as a\
+    left join (SELECT k_mcp,k_cp,count(IF(k_key=\'1\',1,null)) as TCount,count(IF(k_key=\'0\',1,null)) as DCount FROM k_word group by k_mcp,k_cp) as k\
+    on a.cnt_mcp = k.k_mcp and a.cnt_cp = k.k_cp where a.n_idx is not null';
     if('cp' in body){
       sql += ' and a.cnt_cp = \''+body['cp']+'\'';
     }

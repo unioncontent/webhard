@@ -38,7 +38,7 @@ var osp = {
     }
   },
   selectOSPInfo: async function(param) {
-    var sql = 'select n_idx, osp_id, osp_pw, osp_sname, DATE_FORMAT(osp_open, \'%Y-%m-%d\') AS osp_open, osp_cname, osp_cnum, osp_scnum, osp_tstate, osp_ceoname, osp_pname, osp_url, osp_durl, osp_img, osp_addrs, osp_tel, osp_email, osp_mobile, osp_mobile_url, osp_state, DATE_FORMAT(osp_regdate, \'%Y-%m-%d %H:%i:%s\') AS osp_regdate';
+    var sql = 'select n_idx, osp_id, osp_pw, osp_sname, DATE_FORMAT(osp_open, \'%Y-%m-%d\') AS osp_open, osp_cname, osp_cnum,osp_mnum, osp_scnum, osp_tstate, osp_ceoname, osp_pname, osp_url, osp_durl, osp_img, osp_addrs, osp_fax,osp_tel, osp_email, osp_mobile, osp_mobile_url, osp_state, DATE_FORMAT(osp_regdate, \'%Y-%m-%d %H:%i:%s\') AS osp_regdate';
     sql += ' from osp_o_list where n_idx = ?';
     var info = await getResult(sql,param);
     var result;

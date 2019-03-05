@@ -40,7 +40,7 @@
     "mysql": "^2.15.0",
     "node-datetime": "^2.1.0",
     "node-zip": "^1.1.1",
-    "npm": "^6.4.1",
+    "npm": "^6.8.0",
     "officegen": "^0.4.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",

@@ -70,23 +70,14 @@
                     <th width="5%">관리사</th>
                     <th width="5%">저작권</th>
                     <th width="15%">제목</th>
-                    <th width="15%">영문제목</th>
-                    <th width="5%">제작/감독</th>
-                    <th width="5%">제작국가</th>
                     <th width="5%">카테고리</th>
-                    <th width="5%">CPID</th>
-                    <th width="5%">저작권기간</th>
                     <th width="5%">
                       관리상태
-                      <div id="key-toolbar" class="btn-toolbar btn-primary btn-toolbar-primary"><i class="fa fa-cog"></i></div>
+                      <!-- <div id="key-toolbar" class="btn-toolbar btn-primary btn-toolbar-primary"><i class="fa fa-cog"></i></div> -->
                     </th>
                     <th width="5%">관리현황</th>
                     <th width="5%">관리방법</th>
                     <th width="5%">메일발송</th>
-                    <th width="5%">판매금액</th>
-                    <th width="5%">Hash</th>
-                    <th width="5%">뮤레카</th>
-                    <th width="5%">아컴</th>
                     <th width="1%">수정</th>
                     <th width="1%">삭제</th>
                   </tr>
@@ -94,30 +85,31 @@
                 <tbody>
                   <% for(var i=0; i < list.length; i++) { %>
                   <tr>
-                    <th><%= listCount - i - (page-1) %></th>
-                    <td><%= list[i].cnt_id %></td>
+                    <th><%= listCount - i - offset %></th>
+                    <td><div class="cntid"><%= list[i].cnt_id %></div></td>
                     <td><%= list[i].mcp %></td>
                     <td><%= list[i].cp %></td>
-                    <td><div class="title_nobr"><%= list[i].cnt_title %></div></td>
-                    <td><div class="title_nobr"><%= list[i].cnt_eng_title %></div></td>
-                    <td><%= list[i].cnt_director %></td>
-                    <td>
+                    <td><div class="title_nobr cnt" data-idx = "<%= list[i].n_idx %>"><%= list[i].cnt_title %></div></td>
+                    <!-- <td>
                       <select name="select" class="form-control" id="selectNat" style="min-width: 94px;">
                         <%
                         var nat = list[i].cnt_nat;
+                        if(nat == null || nat == '') {
+                      %>
+                        <option value="-1">없음</option>
+                      <% }
                         for(var j=0; j < country.length; j++) {
                           var str = country[j].replace('\r','');
-                          if(nat == null || nat == '') {
+                          if(str == '' || str==' '){
+                            continue;
+                          }
                         %>
-                          <option value="-1">없음</option>
-                        <% }else{%>
                           <option value="<%=str%>" <%=((str == nat )?'selected':'')%>><%=str%></option>
                         <%
                           }
-                        };
                         %>
                       </select>
-                    </td>
+                    </td> -->
                     <td>
                       <select name="select" class="form-control" id="selectCate" style="min-width: 98px;">
                         <option value="0"<%=((null == list[i].cnt_cate  || '' == list[i].cnt_cate)?'selected':'')%>>미분류</option>
@@ -129,8 +121,6 @@
                         <option value="6"<%=(("6" == list[i].cnt_cate )?'selected':'')%>>이미지</option>
                       </select>
                     </td>
-                    <td><%= list[i].cnt_cpid %></td>
-                    <td><%= list[i].cnt_period %></td>
                     <td>
                       <select name="select" class="col form-control m-b-0 m-l-0 f-left select-left" id="selectState" style="min-width: 94px;">
                         <% if(list[i].k_state == null) { %>
@@ -173,10 +163,6 @@
                         <% } %>
                       </select>
                     </td>
-                    <td><%= list[i].cnt_price %></td>
-                    <td><%= list[i].cnt_hash %></td>
-                    <td><%= list[i].cnt_mureka %></td>
-                    <td><%= list[i].cnt_acom %></td>
                     <td class="text-center">
                       <button type="button" data-idx = "<%= list[i].n_idx %>" class="btn-update tabledit-edit-button btn btn-primary waves-effect waves-light text-center">
                         <span class="far fa-edit"></span>
@@ -260,11 +246,231 @@
           </div>
         </div>
       </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='cnt-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-lg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">콘텐츠 수정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <div class="table-responsive">
+                      <table class="table" id='modal-cnt'>
+                        <colgroup>
+                          <col width="30%" />
+                          <col width="70%" />
+                        </colgroup>
+                        <tbody>
+                          <tr>
+                            <th class="b-r-1 text-left">저작권사(CP)</th>
+                            <td>
+                              <select name="select" class="form-control" id="cnt_cp">
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">콘텐츠ID(CID)</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_id" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">제목</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_title" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">영문제목</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_eng_title" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">감독</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_director" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">나라</th>
+                            <td>
+                              <select name="select" class="form-control" id="cnt_nat">
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">카테고리</th>
+                            <td>
+                              <select name="select" class="form-control" id="cnt_cate">
+                                <option value="0">미분류</option>
+                                <option value="1">영화</option>
+                                <option value="2">드라마</option>
+                                <option value="3">방송</option>
+                                <option value="4">음악</option>
+                                <option value="5">문서</option>
+                                <option value="6">이미지</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">CPID</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_cpid" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">저작권만료기간</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_period" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">금액</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_price" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리상태</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_state">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_state" class="k_state">
+                                    <i class="helper"></i>관리중
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_state" class="k_state">
+                                    <i class="helper"></i>중단
+                                  </label>
+                                </div>
+                                <input id="o_k_state" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리현황</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_method">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_method" class="k_method">
+                                    <i class="helper"></i>자동
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_method" class="k_method">
+                                    <i class="helper"></i>수동
+                                  </label>
+                                </div>
+                                <input id="o_k_method" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리방법</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_apply">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="D" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>삭제/차단요청
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="T" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>제휴전환요청
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="C" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>채증
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="L" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>보류
+                                  </label>
+                                </div>
+                                <input id="o_k_apply" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">HASH값</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_hash" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">뮤레카 HASH값</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_mureka" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">아컴스튜디오 HASH값</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_acom" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">메일발송</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_mailing">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_mailing" class="k_mailing">
+                                    <i class="helper"></i>발송
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_mailing" class="k_mailing">
+                                    <i class="helper"></i>발송안함
+                                  </label>
+                                </div>
+                                <input id="o_k_mailing" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-update-m btn btn-warning m-b-0" data-idx="" type="button">수정</button>
+              <button class="btn-delete-m btn btn-danger m-b-0" data-idx="" type="button">삭제</button>
+              <button class="btn btn-secondary btn-close" type="button">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
     </div>
   </div>
 </div>
-<link href="/css/jquery.toolbar.css" rel="stylesheet" />
-<script src="/js/jquery.toolbar.js"></script>
+<!-- Bootstrap daterangepicker js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- alert -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 <!-- custom -->
 <link rel="stylesheet" href="/pages/contents/style.css">

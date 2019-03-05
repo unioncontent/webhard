@@ -47,6 +47,11 @@ var Contents = {
     var result = await getResult(sql,param);
     return result[0];
   },
+  selectInfo: async function(param) {
+    var sql = "select * from cnts_all_view where n_idx = ?";
+    var result = await getResult(sql,param);
+    return result[0];
+  },
   getMCPList: async function(param) {
     var sql = "select * from cp_list where cp_state = 1 and cp_class=?";
     return await getResult(sql,param);
@@ -61,6 +66,10 @@ var Contents = {
     if('mcp' in param){
       sql += 'and cp_mcp = ?';
       value.push(param.mcp);
+    }
+    else if('cp' in param){
+      sql += 'and cp_id = ?';
+      value.push(param.cp);
     }
     return await getResult(sql,value);
   },
@@ -93,8 +102,31 @@ var Contents = {
     return await getResult(sql,pVal);
   },
   getCPlistID: async function(param){
-    var sql = 'select cp_id from cp_list where (cp_class=\'m\' and cp_id=?) || (cp_class=\'c\' and cp_id=?) order by field(cp_class,\'m\',\'c\')';
+    var sql = 'select cp_id from cp_list where (cp_class=\'m\' and cp_cname=?) || (cp_class=\'c\' and cp_cname=?)';
     return await getResult(sql,param);
+  },
+  update: async function(item){
+    var sql = 'UPDATE cnt_l_list SET\
+    `cnt_id` = ?,\
+    `cnt_cp` = ?,\
+    `cnt_title` = ?,\
+    `cnt_eng_title` = ?,\
+    `cnt_director` = ?,\
+    `cnt_nat` = ?,\
+    `cnt_cate` = ?,\
+    `cnt_cpid` = ?,\
+    `cnt_period` = ?,\
+    `cnt_price` = ?,\
+    `cnt_hash` = ?,\
+    `cnt_mureka` = ?,\
+    `cnt_acom` = ?\
+    WHERE `n_idx` = ?';
+    var param = Object.values(item);
+    return await getResult(sql,param);
+  },
+  updateCate: async function(item){
+    var sql = 'UPDATE cnt_l_list SET `cnt_cate` = ? WHERE `n_idx` = ?';
+    return await getResult(sql,[item['cnt_cate'],item['n_idx']]);
   }
 }
 
