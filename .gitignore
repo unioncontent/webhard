@@ -1,4 +1,5 @@
 autogreen/bin/www
+autogreen/db/
 autogreen/main-seoengine/
 autogreen/uploads/
 autogreen/node_modules/
