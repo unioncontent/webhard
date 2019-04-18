@@ -1,0 +1,128 @@
+.main-body .page-wrapper .page-header{
+  margin-bottom: 10px;
+}
+/* card */
+/* .card-type-w1{
+  width: auto;
+} */
+@media (max-width: 1903px)
+{
+  .card-type-w1 {
+    width: 422px;
+  }
+  .card-type-w2{
+    width: 578px;
+  }
+}
+@media (min-width: 1910px)
+{
+  .card-type-w1 {
+    width: auto;
+  }
+  .card-type-w2{
+    width: auto;
+  }
+}
+#cntsCount3-1,#cntsCount3-2,#cntsCount3-3{
+  color: #f63a00;
+}
+#ospCount1,#cntsCount1,.text_green{
+  color: #23a353;
+}
+.text_red{
+  color: #e5469c;
+}
+.text_blue{
+  color : #2e80c5;
+}
+.f5{
+  font-size: 5px;
+}
+/* 공지사항 */
+#view-Modal p {
+  margin:0;
+  text-align: left;
+}
+#view-Modal .file-name:hover{
+  color:blue;
+}
+.view:hover{
+  font-weight: bold;
+}
+#notice-more,.view{
+  text-decoration: underline;
+  cursor: default;
+  margin-top: 0;
+}
+#notice-more{
+  float: right;
+}
+#notice-more a{
+  font-size: 12px;
+}
+#view-Modal #view_uploadFileList{
+  text-align: left;
+}
+/* chart */
+#notice .edit:hover,
+#notice .view:hover{
+  font-weight: bold;
+}
+.chart-group{
+  padding: 20px;
+  background: white;
+  /* height: 438px; */
+}
+/* #chart1{
+  min-width: 1000px;
+} */
+/* 테이블 */
+#list i{
+  font-size: 16px;
+}
+#list a{
+  font-size: 12px;
+  font-weight: 400;
+}
+#list a:hover{
+  font-weight: 400;
+  text-decoration: underline;
+}
+#list .btn-site{
+  font-size: 12px;
+  height: 26px;
+  vertical-align: middle;
+  line-height: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.table td,.table th{
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+/* loader */
+.preloader1{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* a태그 */
+.mtag{
+  color: #807373;
+}
+.mtag:hover{
+  text-decoration: underline;
+  /* font-weight: bold; */
+}
+/* 그래프 */
+.highcharts-container{
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background: white;
+}

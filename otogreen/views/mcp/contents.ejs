@@ -1,0 +1,1088 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>콘텐츠 관리</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-xs-12" id="contents-setting">
+          <button class="btn btn-inverse btn-square btn-add f-left  m-r-5">신규등록</button>
+          <button class="btn btn-inverse btn-square btn-keywords f-left ">키워드 설정</button>
+          <input type="hidden" id="user_class" value="<%=userCLASS%>">
+          <% if(userCLASS == 'c'){ %>
+            <input type="hidden" id="user_mcp" value="<%=userMCP%>">
+          <% } %>
+          <input type="hidden" id="user_id" value="<%=userID%>">
+          <button  id="searchBtn" class="btn btn-default btn-square btn-search f-right ">검색</button>
+          <div class="col-12 col-xs-3 f-right m-r-5 input-search">
+            <input type="text" class="form-control p-t-10 form-control-default search-text" id="searchInput">
+          </div>
+          <select id="selectSearchType" name="select" class="col-xs-1 form-control form-control-default m-r-5 m-b-10 f-right search-select">
+            <option value="t">제목</option>
+            <option value="c">cp관리ID</option>
+          </select>
+          <% if(userCLASS != 'c'){ %>
+            <select name="select" class="col-xs-1 form-control form-control-default m-b-10 m-r-5 p-r-5 f-right" id="selectCP">
+                <option value=''>CP사선택</option>
+            <% if(userCLASS == 'm' || (userCLASS == 'a' && mcp != '' && mcp != null)){
+              for(var i=0; i < cpList.length; i++) {%>
+                <option value="<%=cpList[i].cp_id%>" <%=((cp == cpList[i].cp_id)?'seleted':'')%>><%=cpList[i].cp_cname%></option>
+                <% };
+              } %>
+            </select>
+            <% } %>
+          <% if(userCLASS == 'a'){ %>
+          <select name="select" class="col-xs-1 form-control form-control-default m-b-10 m-r-5 p-r-5 f-right" id="selectMCP" style="min-width: 122px;">
+            <option value=''>MCP사선택</option>
+            <% for(var i=0; i < mcpList.length; i++) {%>
+              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+          <% } %>
+          <!-- <button class="btn btn-warning alert-excel f-left  m-l-15 m-b-10">
+            <i class="fas fa-download"></i>EXCEL
+          </button> -->
+        </div>
+        <div class="col-xs-12" id="card-table">
+          <div class="row">
+            <div class="col-xs-3 card" style="border-right: 1px solid #b6b6b6;">
+              <div class="card-type-1 card-type-w1">
+                <div class="title">전체콘텐츠</div>
+                <div class="body col-xs-12 total-body">
+                  총 <span class="span-total"><%=statistics.total%></span>개
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-3 card">
+              <div class="card-type-1 card-type-w1">
+                <div class="title">관리상태</div>
+                <div class="body col-xs-12">
+                  <div class="state-body">
+                    <span class="i-tag"><i class="fas fa-clipboard-list"></i></span>
+                    <div class="p-group">
+                      <p class="text-green">● 관리중 : <span class="span-total"><%=statistics.ytotal%></span>개</p>
+                      <p class="text-orange">관리중지 : <span class="span-total"><%=statistics.ntotal%></span>개</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-3 card">
+              <div class="card-type-1 card-type-w1">
+                <div class="title">관리형태</div>
+                <div class="body col-xs-12">
+                  <div class="state-body">
+                    <span class="i-tag"><i class="fas fa-filter"></i></span>
+                    <div class="p-group">
+                      <p class="text-green">● 자동관리 : <span class="span-total"><%=statistics.atotal%></span>개</p>
+                      <p class="text-orange">수동관리 : <span class="span-total"><%=statistics.mtotal%></span>개</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-3 card" style="border-right: 0;">
+              <div class="card-type-1 card-type-w1 b-r-0">
+                <div class="title">메일발송</div>
+                <div class="body col-xs-12">
+                  <div class="state-body">
+                    <span class="i-tag"><i class="far fa-envelope"></i></span>
+                    <div class="p-group">
+                      <p class="text-green">● 발송관리 : <span class="span-total"><%=statistics.mytotal%></span>개</p>
+                      <p class="text-orange">발송중지 : <span class="span-total"><%=statistics.mntotal%></span>개</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 title-div m-t-20">
+          <h5>콘텐츠 관리 현황</h5>
+        </div>
+        <div class="col-xs-12">
+          <div class="card">
+            <div class="card-block table-border-style  table-responsive">
+              <div class="preloader3 loader-block">
+                <div class="circ1 loader-primary"></div>
+                <div class="circ2 loader-primary"></div>
+                <div class="circ3 loader-primary"></div>
+                <div class="circ4 loader-primary"></div>
+              </div>
+              <table class="table" id="listTable">
+                <thead>
+                  <tr>
+                    <th width="1%">NO</th>
+                    <th width="5%">CID</th>
+                    <th width="5%">관리사</th>
+                    <th width="15%">제목</th>
+                    <th width="5%">관리상태</th>
+                    <th width="5%">관리형태</th>
+                    <th width="5%">관리방법</th>
+                    <th width="5%">메일발송</th>
+                    <th width="5%">등록일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i < list.length; i++) { %>
+                  <tr>
+                    <th><%= listCount - i - offset %></th>
+                    <td><div class="cntid"><%= list[i].cnt_id %></div></td>
+                    <td><%= list[i].mcp %></td>
+                    <td><div class="title_nobr cnt" data-idx = "<%= list[i].n_idx %>"><%= list[i].cnt_title %></div></td>
+                    <td>
+                      <% if(list[i].k_state == null){ %>
+                        없음
+                      <% } else if(list[i].k_state == '1'){ %>
+                        <span class="text-green">● 관리중</span>
+                      <% } else{ %>
+                        <span class="text-orange">관리중지</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if(list[i].k_state == null){ %>
+                        없음
+                      <% } else if(list[i].k_method == '1'){ %>
+                        <span class="text-green">● 자동</span>
+                      <% } else{ %>
+                        <span class="text-orange">수동</span>
+                      <% } %>
+                    </td>
+                    <td><%= (list[i].k_state == null) ? '없음' : '' %>
+                        <% if(list[i].k_apply == 'D') { %>
+                          <span class="text-red">삭제/차단</span>
+                        <% }else if(list[i].k_apply == 'T') {%>
+                          <span class="text-green">● 제휴</span>
+                        <% }else if(list[i].k_apply == 'C') {%>
+                          <span class="text-orange">채증</span>
+                        <% }else if(list[i].k_apply == 'L') {%>
+                          <span class="text-gray">보류</span>
+                        <% } %>
+                    </td>
+                    <td>
+                      <% if(list[i].k_mailing == null || list[i].k_mailing == ''){%>
+                        없음
+                      <% } else if(list[i].k_mailing == '1') { %>
+                        <span class="text-green">● 발송</span>
+                      <% } else{ %>
+                        <span class="text-orange">발송안함</span>
+                      <% } %>
+                      </td>
+                    <td><%=list[i].cnt_regdate%></td>
+                  </tr>
+                  <% } %>
+                </tbody>
+                <tfoot>
+                  <%
+                    var limit = 20;
+                    var pageCount = Math.ceil(listCount/limit);
+                    if(pageCount > 1) {
+                    %>
+                    <tr class="footable-paging">
+                      <td colspan="9">
+                        <ul class="pagination">
+                          <%
+                            var pageSize = 5;
+                            var pRCnt = parseInt(page / pageSize);
+                            if(page % pageSize == 0){
+                              pRCnt = parseInt(page / pageSize) - 1;
+                            }
+                            if(page > 5) {
+                          %>
+                            <li class="page-item">
+                              <a class="page-link" data-value="1" aria-label="Previous">
+                                <i class="ti-angle-double-left f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" data-value=="<%=(pRCnt * pageSize)%>" aria-label="Previous">
+                                <i class="ti-angle-left f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                            </li>
+                          <% } %>
+                          <% for(var index=pRCnt * pageSize + 1;index<(pRCnt + 1)*pageSize + 1;index++){%>
+                            <li class= "<%=(page == index) ? 'active' : ''%> page-item">
+                              <a class="page-link" data-value="<%=index%>" >
+                                <%= index %>
+                              </a>
+                            </li>
+                          <%
+                              if(index == pageCount) {
+                                break;
+                              }
+                            }
+                          %>
+                          <% if((pRCnt + 1) * pageSize < pageCount) { %>
+                            <li class="page-item">
+                              <a class="page-link" data-value="<%=(pRCnt + 1)*pageSize+1%>" aria-label="Next">
+                                <i class="ti-angle-right f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" data-value="<%=pageCount%>" aria-label="Next">
+                                <i class="ti-angle-double-right f-12"></i>
+                                <span aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </li>
+                          <% } %>
+                        </ul>
+                      </td>
+                    </tr>
+                    <% } %>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='cnt-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-xlg' role='document' id='cntPage'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">콘텐츠 수정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body p-t-0'>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <div class="table-responsive">
+                      <table class="table" id='modal-cnt'>
+                        <colgroup>
+                          <col width="30%" />
+                          <col width="70%" />
+                        </colgroup>
+                        <tbody>
+                          <% if(userCLASS != 'c'){ %>
+                          <tr>
+                            <th class="b-r-1 text-left">저작권사(CP)</th>
+                            <td>
+                              <select name="select" class="form-control" id="cnt_cp">
+                              </select>
+                            </td>
+                          </tr>
+                          <% } %>
+                          <tr>
+                            <th class="b-r-1 text-left">콘텐츠ID(CID)</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_id" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">시리즈</th>
+                            <td>
+                              <div class="border-checkbox-section f-left" style="height: 25px;width: 35px;">
+                                <div class="border-checkbox-group border-checkbox-group-default" style="max-height: 25px;">
+                                  <input class="border-checkbox list-checkbox" type="checkbox" id="checkbox_s_e">
+                                  <label class="border-checkbox-label" for="checkbox_s_e"></label>
+                                </div>
+                              </div>
+                              <button class="btn-series btn btn-warning m-b-0 f-left" data-cidx="" type="button">수정</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">제목</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_title" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">영문제목</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_eng_title" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">감독</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_director" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">나라</th>
+                            <td>
+                              <select name="select" class="form-control" id="cnt_nat">
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">카테고리</th>
+                            <td>
+                              <select name="select" class="form-control" id="cnt_cate">
+                                <option value="0">미분류</option>
+                                <option value="1">영화</option>
+                                <option value="2">드라마</option>
+                                <option value="3">방송</option>
+                                <option value="4">음악</option>
+                                <option value="5">문서</option>
+                                <option value="6">이미지</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">CPID</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_cpid" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">저작권만료기간</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_period" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">금액</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_price" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리상태</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_state">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_state" class="k_state">
+                                    <i class="helper"></i>관리중
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_state" class="k_state">
+                                    <i class="helper"></i>중단
+                                  </label>
+                                </div>
+                                <input id="o_k_state" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리현황</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_method">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_method" class="k_method">
+                                    <i class="helper"></i>자동
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_method" class="k_method">
+                                    <i class="helper"></i>수동
+                                  </label>
+                                </div>
+                                <input id="o_k_method" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리방법</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_apply">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="D" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>삭제/차단요청
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="T" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>제휴전환요청
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="C" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>채증
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="L" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>보류
+                                  </label>
+                                </div>
+                                <input id="o_k_apply" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">HASH값</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_hash" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">뮤레카 HASH값</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_mureka" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">아컴스튜디오 HASH값</th>
+                            <td>
+                              <input class="form-control input-sm" id="cnt_acom" type="text">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">메일발송</th>
+                            <td>
+                              <div class="form-radio text-left" id="k_mailing">
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_mailing" class="k_mailing">
+                                    <i class="helper"></i>발송
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-default radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_mailing" class="k_mailing">
+                                    <i class="helper"></i>발송안함
+                                  </label>
+                                </div>
+                                <input id="o_k_mailing" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-update-m btn btn-warning m-b-0" data-idx="" type="button">수정</button>
+              <button class="btn-delete-m btn btn-danger m-b-0" data-idx="" type="button">삭제</button>
+            </div>
+          </div>
+        </div>
+        <div class='modal-dialog modal-xxlg' role='document' id='cntSeriesDetailPage'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">시리즈 수정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <input id="cntIdx_c" type="hidden"/>
+              <div class="card">
+                <div class="card-block table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-columned table-striped" id='modal-sList'>
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>키워드1</th>
+                          <th>키워드2</th>
+                          <th>키워드3</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr id='inputKey'>
+                          <th scope="row" class="centerTh">입력</th>
+                          <td>
+                            <input type="text" class="form-control" id="chk1">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td>
+                            <input type="text" class="form-control" id="chk2">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td>
+                            <input type="text" class="form-control" id="chk3">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="fas fa-plus" style="margin-right:0"></i></button></td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-warning btn-after">뒤로가기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+      <!-- Modal start-->
+      <div class='modal fade' id='add-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-xlg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">신규등록</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body p-t-0'>
+              <div class="col-xs-12">
+                <% if(userCLASS == 'a'){ %>
+                  <div class="form-group row">
+                    <label class="col-xs-3 col-form-label">* 관리사(MCP)</label>
+                    <div class="col-xs-9">
+                      <select name="select" class="form-control" id="selectMCP">
+                        <option value="">선택</option>
+                        <% for(var i=0; i < mcpList.length; i++) {%>
+                          <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+                          <% }; %>
+                        </select>
+                        <span class='messages'><p class='text-danger error'></p></span>
+                    </div>
+                  </div>
+                <% } %>
+                <% if(userCLASS != 'c'){ %>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 저작권사(CP)</label>
+                  <div class="col-xs-9">
+                    <select name="select" class="form-control" id="selectCP">
+                      <option value="">선택</option>
+                      <% if(userCLASS == 'm'){
+                        for(var i=0; i < cpList.length; i++) {%>
+                          <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+                          <% }
+                        } %>
+                    </select>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <% } %>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 제목</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_title" type="text" class="form-control" placeholder="제목">
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">시리즈</label>
+                  <div class="col-xs-9">
+                    <div class="border-checkbox-section">
+                      <div class="border-checkbox-group border-checkbox-group-default" style="max-height: 25px;">
+                        <input class="border-checkbox list-checkbox" type="checkbox" id="checkbox_s">
+                        <label class="border-checkbox-label" for="checkbox_s"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row" id="series-info">
+                  <label class="col-xs-3 col-form-label">시리즈 정보</label>
+                  <div class="col-xs-9">
+                    <div class="row">
+                      <div class="col-xs-4">
+                        <input id="cnt_s_chk1" type="text" class="form-control" placeholder="키워드1">
+                        <span class='messages'><p class='text-danger error'></p></span>
+                      </div>
+                      <div class="col-xs-4">
+                        <input id="cnt_s_chk2" type="text" class="form-control" placeholder="키워드2">
+                        <span class='messages'><p class='text-danger error'></p></span>
+                      </div>
+                      <div class="col-xs-4">
+                        <input id="cnt_s_chk3" type="text" class="form-control" placeholder="키워드3">
+                        <span class='messages'><p class='text-danger error'></p></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">영문제목</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_eng_title" type="text" class="form-control" placeholder="영문제목">
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">제작/감독</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_director" type="text" class="form-control" placeholder="동명 제목의 영화나 방송물을 구분을 위한 키">
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">제작국가</label>
+                  <div class="col-xs-9">
+                    <select name="select" class="form-control" id="cnt_nat">
+                      <%
+                      for(var i=0; i < country.length; i++) {
+                        var str = country[i].replace('\r','');
+                        %>
+                        <option value="<%=str%>" <%=((str == '한국')?'selected':'')%>><%=str%></option>
+                      <% }; %>
+                    </select>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">카테고리</label>
+                  <div class="col-xs-9">
+                    <select name="select" class="form-control" id="cnt_cate">
+                      <option value="0">미분류</option>
+                      <option value="1">영화</option>
+                      <option value="2">드라마</option>
+                      <option value="3">방송</option>
+                      <option value="4">음악</option>
+                      <option value="5">문서</option>
+                      <option value="6">이미지</option>
+                    </select>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">CPID</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_cpid" type="text" class="form-control" placeholder="CP사에서 정한 콘텐츠ID">
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">저작권만료기간</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_period" type="text" class="form-control" value="2999-12-31"/>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 관리상태</label>
+                  <div class="col-xs-9">
+                    <div id="state" class="form-radio">
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="1" name="k_state">
+                          <i class="helper"></i>관리중
+                        </label>
+                      </div>
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="0" name="k_state" checked>
+                          <i class="helper"></i>중단
+                        </label>
+                      </div>
+                    </div>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 관리현황</label>
+                  <div class="col-xs-9">
+                    <div id="method" class="form-radio">
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="1" name="k_method">
+                          <i class="helper"></i>자동
+                        </label>
+                      </div>
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="0" name="k_method" checked>
+                          <i class="helper"></i>수동
+                        </label>
+                      </div>
+                    </div>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 관리방법</label>
+                  <div class="col-xs-9">
+                    <div id="apply" class="form-radio">
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="D" name="k_apply">
+                          <i class="helper"></i>삭제/차단요청
+                        </label>
+                      </div>
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="T" name="k_apply">
+                          <i class="helper"></i>제휴전환요청
+                        </label>
+                      </div>
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="C" name="k_apply">
+                          <i class="helper"></i>채증
+                        </label>
+                      </div>
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="L" name="k_apply" checked>
+                          <i class="helper"></i>보류
+                        </label>
+                      </div>
+                    </div>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 메일발송</label>
+                  <div class="col-xs-9">
+                    <div id="mailing" class="form-radio">
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="1" name="k_mailing">
+                          <i class="helper"></i>발송
+                        </label>
+                      </div>
+                      <div class="radio radiofill radio-inverse radio-inline">
+                        <label>
+                          <input type="radio" value="0" name="k_mailing" checked>
+                          <i class="helper"></i>발송안함
+                        </label>
+                      </div>
+                    </div>
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">* 판매금액</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_price" type="number" class="form-control" placeholder="0">
+                    <span class='messages'><p class='text-danger error'></p></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">HASH 값</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_hash" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">뮤레카 HASH값</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_mureka" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">아컴스튜디오 HASH값</label>
+                  <div class="col-xs-9">
+                    <input id="cnt_acom" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">기본키워드</label>
+                  <div class="col-xs-9">
+                    <input id="k_title" type="text" class="form-control">
+                  </div>
+                </div>
+                <hr>
+                <div class="form-group row">
+                  <label class="col-xs-3 col-form-label">엑셀등록</label>
+                  <div class="col-xs-7 p-l-15">
+                    <form action="http://61.82.113.197:3000/cnts/add/upload" id="uploadFrm" method="post" enctype="multipart/form-data">
+                      <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
+                    </form>
+                  </div>
+                  <div class="col-xs-2">
+                    <button id="insertBtn2" class="btn btn-default" style="height: 100%;">등록</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="insertBtn" type="submit" class="f-right btn btn-inverse m-b-0">등록</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+      <!-- Modal start-->
+      <div class='modal fade' id='kwd-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-xxlg' role='document' id='kwdPage'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">키워드 설정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body p-t-0'>
+              <div class="row">
+                <div class="col-xs-12">
+                  <% if(userCLASS == 'a'){ %>
+                  <select name="select" class="col-xs-1 form-control form-control-inverse m-b-10 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
+                    <option value=''>MCP사선택</option>
+                    <% for(var i=0; i < mcpList.length; i++) {%>
+                      <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+                    <% }; %>
+                  </select>
+                  <% } %>
+                  <% if(userCLASS == 'm'){ %>
+                  <select name="select" class="col-xs-1 form-control form-control-inverse m-b-10 m-l-5 p-r-5 f-left" id="selectCP">
+                    <option value=''>CP사선택</option>
+                      <% for(var i=0; i < cpList.length; i++) {%>
+                        <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+                      <% }%>
+                  </select>
+                  <%} %>
+                </div>
+                <div class="col-xs-12">
+                  <div class="card">
+                    <div class="card-block table-border-style  table-responsive">
+                      <div class="preloader3 loader-block">
+                        <div class="circ1 loader-primary"></div>
+                        <div class="circ2 loader-primary"></div>
+                        <div class="circ3 loader-primary"></div>
+                        <div class="circ4 loader-primary"></div>
+                      </div>
+                      <table class="table" id="listTable-kwd">
+                        <thead>
+                          <tr>
+                            <th width="1%">NO</th>
+                            <th width="7%">MCP</th>
+                            <th width="7%">CP</th>
+                            <th width="5%">등록콘텐츠</th>
+                            <th width="5%">검색키워드</th>
+                            <th width="5%">제외키워드</th>
+                            <th width="5%">수정</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='modal-dialog modal-xxlg' role='document' id='kwdInfoPage'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">키워드 설정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body p-t-0'>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="col-xs-6 f-right" style="padding: 0;">
+                    <input type="text" class="f-left form-control m-r-5 p-t-10 form-control-inverse search-text" id="searchInput-kwd" style="width: 359px;">
+                    <button  id="searchBtn-kwd" class="btn btn-inverse btn-square btn-search f-right ">검색</button>
+                  </div>
+                  <select id="selectSearchType-kwd" name="select" class="col-xs-1 form-control form-control-inverse m-r-5 m-b-10 f-right search-select">
+                    <option value="t">제목</option>
+                    <option value="cid">콘텐츠ID</option>
+                  </select>
+                </div>
+                <div class="col-xs-12">
+                  <div class="card">
+                    <div class="card-block table-border-style  table-responsive">
+                      <div class="preloader3 loader-block">
+                        <div class="circ1 loader-primary"></div>
+                        <div class="circ2 loader-primary"></div>
+                        <div class="circ3 loader-primary"></div>
+                        <div class="circ4 loader-primary"></div>
+                      </div>
+                      <table class="table" id="listTable-info">
+                        <thead>
+                          <tr>
+                            <th width="1%">NO</th>
+                            <th width="7%">콘텐츠제목</th>
+                            <th width="7%">콘텐츠ID(CID)</th>
+                            <th width="5%">검색키워드</th>
+                            <th width="5%">제외키워드</th>
+                            <th width="5%">상태</th>
+                            <th width="5%">관리현황</th>
+                            <th width="5%">관리방법</th>
+                            <th width="5%" style="min-width:100px">키워드수정</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-warning btn-after">뒤로가기</button>
+            </div>
+          </div>
+        </div>
+        <div class='modal-dialog modal-xxlg' role='document' id='kwdInfoDetailPage'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">콘텐츠 수정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <div class="table-responsive">
+                      <table class="table table-sm" id='modal-cnt'>
+                        <tbody>
+                          <input id="cntIdx_m" type="hidden"/>
+                          <input id="cp_id" type="hidden"/>
+                          <input id="mcp_id" type="hidden"/>
+                          <tr>
+                            <th class="b-r-1 text-left" width="30%">콘텐츠 제목</th>
+                            <td id="m_title" class="text-left"></td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">상태</th>
+                            <td>
+                              <div class="form-radio text-left">
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_state" class="k_state">
+                                    <i class="helper"></i>정상
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_state" class="k_state">
+                                    <i class="helper"></i>중지
+                                  </label>
+                                </div>
+                                <input name="oK_state" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리현황</th>
+                            <td>
+                              <div class="form-radio text-left">
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="1" name="k_method" class="k_method">
+                                    <i class="helper"></i>자동
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="0" name="k_method" class="k_method">
+                                    <i class="helper"></i>수동
+                                  </label>
+                                </div>
+                                <input name="oK_method" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">관리방법</th>
+                            <td>
+                              <div class="form-radio text-left">
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="D" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>삭제/차단
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="T" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>제휴
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="C" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>채증
+                                  </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                  <label>
+                                    <input type="radio" value="L" name="k_apply" class="k_apply">
+                                    <i class="helper"></i>보류
+                                  </label>
+                                </div>
+                                <input name="oK_apply" value="" type="hidden" class="form-control">
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block table-border-style">
+                  <div class="table-responsive">
+                    <table class="table table-columned table-striped" id='modal-cntList'>
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>포함검색어</th>
+                          <th>제외검색어</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr id='inputKey'>
+                          <th scope="row" class="centerTh">입력</th>
+                          <td>
+                            <input type="text" class="form-control" id="pSearch">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td>
+                            <input type="text" class="form-control" id="dSearch">
+                            <span class="messages"><p class="text-danger error m-b-0"></p></span>
+                          </td>
+                          <td><button class="btn btn-success btn-sm" id="insertKeywordBtn"><i class="fas fa-plus" style="margin-right:0"></i></button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-warning btn-after">뒤로가기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+    </div>
+  </div>
+</div>
+<!-- Bootstrap daterangepicker js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- custom -->
+<link rel="stylesheet" href="/pages/contents/style.css">
+<script type="text/javascript" src="/pages/contents/add.js"></script>
+<script type="text/javascript" src="/pages/keyword/info-modal.js"></script>
+<script type="text/javascript" src="/pages/keyword/script-modal.js"></script>
+<script type="text/javascript" src="/pages/contents/series-modal.js"></script>
+<script type="text/javascript" src="/pages/contents/script.js"></script>

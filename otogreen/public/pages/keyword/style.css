@@ -1,0 +1,31 @@
+.table td, .table th{
+  text-align:  center;
+  vertical-align: middle;
+}
+.table td{
+  font-size: 15px;
+}
+/* 글줄임 */
+.title_nobr,.cnt_nobr{
+  width: 221px;
+  white-space: initial;
+}
+.cnt_nobr{
+  width: 123px;
+  margin: 0 auto;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* kwd */
+#kwdInfoPage,#kwdInfoDetailPage{
+  display: none;
+}

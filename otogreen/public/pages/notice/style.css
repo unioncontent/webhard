@@ -1,0 +1,64 @@
+.b-r-1{
+  border-right:2px solid #e6e6e6;
+}
+/* 파일 업로드 */
+.file-name{
+  width: 282px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.file-list{
+  height: auto;
+  min-height: 36px;
+}
+#uploadFileList {
+  margin-top: 3px;
+}
+#uploadFileList li{
+  width: 100%;
+  display: flow-root;
+}
+#uploadFileList li i.text-danger{
+  margin-top: 3px;
+}
+input.upload {
+  display:none;
+  position: relative;
+}
+#btn-update,#btn-add{
+  display: none;
+}
+#btn-update{
+  margin-right: 0px;
+}
+.edit{
+  text-decoration:underline;
+}
+.edit:hover,.view:hover{
+  font-weight: bold;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  /* width: 500px; */
+  /* margin: auto; */
+  /* max-width: 100%; */
+  z-index: 10000;
+}
+/* 모달 radio */
+.form-radio label{
+  margin-bottom: 0px;
+}
+#view-Modal #modal-cnt p{
+  margin:0;
+}
+#view-Modal .file-name:hover{
+  color:blue;
+}

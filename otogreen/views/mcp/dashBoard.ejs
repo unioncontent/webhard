@@ -1,0 +1,393 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <div class="title-div">
+          <h4>대시보드( 24시간 기준 )</h4>
+        </div>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <input type="hidden" id="user_class" value="<%=userCLASS%>">
+            <input type="hidden" id="user_id" value="<%=userID%>">
+            <% if(userCLASS == 'a' || userCLASS == 'm'){ %>
+            <select name="select" class="col-xs-1 select-mini m-b-10 m-l-5 p-l-5 f-right" id="selectCP">
+              <option value=''>CP사선택</option>
+              <% for(var i=0; i < cpList.length; i++) {%>
+                <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+              <% }; %>
+            </select>
+            <% } %>
+            <% if(userCLASS == 'a'){ %>
+            <select name="select" class="col-xs-1 select-mini m-b-10 p-l-5 f-right" id="selectMCP">
+              <option value=''>MCP사선택</option>
+              <% for(var i=0; i < mcpList.length; i++) {%>
+                <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+              <% }; %>
+            </select>
+            <% } %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="preloader1 loader-block">
+          <svg id="loader2" viewBox="0 0 100 100">
+            <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+          </svg>
+        </div>
+        <div class="col-xs-12">
+          <div class="row">
+            <!-- OSP 현황 card -->
+            <div class="p-9 col-xs-4 card-type-w1">
+              <div class="card">
+                <div class="card-type-1">
+                  <div class="title">osp현황</div>
+                  <div class="body col-xs-12">
+                    <div class="row">
+                      <div class="col-xs-6 b-item">
+                        <p class="p-title">전체</p>
+                        <p class="p-body text-green" id="ospCount1"><%=ospCount%></p>
+                      </div>
+                      <div class="col-xs-6 b-item">
+                        <p class="p-title">제휴사/비제휴사</p>
+                        <p class="p-body"id="ospCount2"><%=ospACount%> / <%=ospNACount%></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 검출상세현황 -->
+            <div class="p-9 p-l-0 col-xs-4 card-type-w2">
+              <div class="card">
+                <%
+                function numberWithCommas(x) {
+                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+
+                var nDate = new Date();
+                var yDate = new Date();
+                yDate.setDate(nDate.getDate() - 1);
+                var nStr = nDate.getFullYear()+'-'+((nDate.getMonth() < 10) ? '0'+(nDate.getMonth()+1) : (nDate.getMonth()+1))+nDate.getDate();
+                var yStr = yDate.getFullYear()+'-'+((yDate.getMonth() < 10) ? '0'+(yDate.getMonth()+1) : (yDate.getMonth()+1))+yDate.getDate();
+                %>
+                <div class="card-type-1">
+                  <div class="title">검출상세현황</div>
+                  <div class="body col-xs-12">
+                    <div class="row">
+                      <div class="col-xs-4 b-item">
+                        <p class="p-title">전체검출건<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-content="제휴(PC/Mobile) + 비 제휴(PC/Mobile) 합산 건"></i></p>
+                        <p class="p-body text-green" id="cntsCount1"><%=numberWithCommas(totalCount.total)%></p>
+                      </div>
+                      <div class="col-xs-4 b-item">
+                        <p class="p-title">제휴검출건<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-content="전체 검출건 중 제휴로 분류된 건"></i></p>
+                        <p class="p-body" id="cntsCount2"><%=numberWithCommas(totalCount.atotal)%></p>
+                      </div>
+                      <div class="col-xs-4 b-item">
+                        <p class="p-title">비제휴검출건<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-content="전체 검출건 중 비제휴로 분류된 건"></i></p>
+                        <p class="p-body" id="cntsCount3"><%=numberWithCommas(totalCount.natotal)%></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 비제휴모니터링 -->
+            <div class="p-9 p-l-0 col-xs-4 card-type-w2">
+            <div class="card">
+              <div class="card-type-1 card-na">
+                <div class="title">비제휴모니터링</div>
+                <div class="body col-xs-12">
+                  <div class="row">
+                    <div class="col-xs-4 b-item">
+                      <p class="p-title">제휴전환건<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="비 제휴 검출건 중 2차, 3차 재검증 시,<br/>제휴 전환된 건"></i></p>
+                      <p class="p-body" id="cntsCount3-1"><%=numberWithCommas(naTotalCount.atotal)%></p>
+                    </div>
+                    <div class="col-xs-4 b-item">
+                      <p class="p-title">삭제건<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="비 제휴 검출건 중 2차, 3차 재검증 시,<br/> 삭제 처리된 건"></i></p>
+                      <p class="p-body" id="cntsCount3-2"><%=numberWithCommas(naTotalCount.dtotal)%></p>
+                    </div>
+                    <div class="col-xs-4 b-item">
+                      <p class="p-title">비제휴잔류<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="비 제휴 검출건 중 2차, 3차 재검증 시에도<br/> 비 제휴 유지 건"></i></p>
+                      <p class="p-body" id="cntsCount3-3"><%=numberWithCommas(naTotalCount.natotal)%></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <!-- 일별 제휴/비제휴 그래프 -->
+        <div class="col-xs-12 title-div m-t-30">
+          <h5>상황별 그래프 통계</h5>
+        </div>
+        <div class="col-xs-12">
+          <div class="col-xs-12 chart-group">
+            <div class="row">
+              <div class="col-xs-4 m-t-20" style="min-height: 316px;">
+                <div class="card">
+                  <div class="card-header" style="padding: 0;padding-bottom: 5px;">
+                    <span  id="notice-more"><a href="/notice">더보기</a></span>
+                </div>
+                  <div class="card-block table-border-style">
+                    <div class="table-responsive">
+                      <table class="table" id="notice">
+                        <thead>
+                          <tr>
+                            <th width="1%">NO</th>
+                            <th width="30%">제목</th>
+                            <th width="5%">작성자</th>
+                            <th width="5%">등록일</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% for(var i=0; i < notice.length; i++) { %>
+                          <tr>
+                            <th><%= (i+1) %></th>
+                            <td class="text-left"><div data-idx="<%= notice[i].n_idx %>" class="view" data-idx="<%= notice[i].n_idx %>"><%= notice[i].title %></div></td>
+                            <td><%= notice[i].writer %></td>
+                            <td><%= notice[i].regdate %></td>
+                          </tr>
+                          <% }; %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="chart1" class="col-xs-8"></div>
+            </div>
+          </div>
+        </div>
+        <!-- osp사 리스트 -->
+        <div class="col-xs-12 title-div m-t-30">
+          <h5>사이트 모니터링 현황</h5>
+        </div>
+        <div class="col-xs-12">
+          <div class="card">
+            <div class="card-block table-border-style">
+              <div class="table-responsive">
+                <table class="table" id="list">
+                  <thead>
+                    <tr>
+                      <th width="5%">NO</th>
+                      <th width="6%">회사명</th>
+                      <th width="3%">사이트</th>
+                      <th width="3%">대표</th>
+                      <th width="5%">URL</th>
+                      <th width="5%">제휴/비제휴</th>
+                      <th width="5%">플랫폼</th>
+                      <th width="5%">개설일</th>
+                      <th width="5%">사이트분석</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(var i=0; i < osplist.length; i++) { %>
+                    <tr>
+                      <td><%=(i+1)%></td>
+                      <td class="text-left"><%=osplist[i].osp_cname%></td>
+                      <td><%=osplist[i].osp_sname%></td>
+                      <td><%=osplist[i].osp_ceoname%></td>
+                      <td  class="text-left"><a target="_blank" href="<%=osplist[i].osp_url%>"><%=osplist[i].osp_url%></a></th>
+                      <td>
+                        <%if(osplist[i].osp_tstate == '1'){%>
+                          <div class="circle circle-tstate"><span>제휴</span></div>
+                        <%}else{%>
+                          <div class="circle circle-tstate circle-tstate-an"><span>비제휴</span></div>
+                        <%}%>
+                      </td>
+                      <td>
+                        <div class="circle-group">
+                        <%if(osplist[i].osp_mobile != ''){
+                          if((osplist[i].osp_mobile == 1 || osplist[i].osp_mobile == 2)){%>
+                          <div class="circle circle-platform"><span>PC</span></div>
+                          <%} if(osplist[i].osp_mobile == 2 || osplist[i].osp_mobile == 0){%>
+                          <div class="circle circle-platform"><span>Mobile</span></div>
+                          <%}
+                        }%>
+                        </div>
+                      </td>
+                      <td><%=osplist[i].o_date%></td>
+                      <td><button type="button" class="btn-site btn btn-md btn-default" data-idx="<%=osplist[i].n_idx%>">사이트분석</button></td>
+                    </tr>
+                    <% }; %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal start-->
+    <div class='modal fade' id='detail-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+      <div class='modal-dialog modal-xlg' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class="modal-title">
+              <div class="modal-title-div">
+                 <span id="company-name"></span>
+              </div>
+              <div class="modal-title-date">
+                <span></span>
+              </div>
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i class="ti-close"></i></span>
+            </button>
+          </div>
+          <div class='modal-body'>
+            <div class="col-xs-12">
+              <div class='card' id="card-div">
+                <div class="card-block">
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <div class="col-xs-4" style="max-width: 30%;">
+                        <div class="card counter-card-3">
+                          <div class="card-block-big">
+                            <div class="f-left">
+                              <h3>Total Visits</h3>
+                              <p class="text_green" id="result1">0</p>
+                              <p class="text_green" id="result_p1">▲ 0%</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="bar"></div>
+                      <div class="col-xs-4">
+                        <div class="card counter-card-3">
+                          <div class="card-block-big">
+                            <div class="f-left">
+                              <h3>Global Rank<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-content="Global Rank" data-original-title="" title=""></i></h3>
+                              <p class="text_red" id="result2">▲ 0</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="bar"></div>
+                      <div class="col-xs-4">
+                        <div class="card counter-card-3">
+                          <div class="card-block-big" style="padding-right: 0px;">
+                            <div class="f-left">
+                              <h3>Country Rank (Korea)<i class="far fa-question-circle" data-container="body" data-toggle="popover" data-placement="top" data-content="Country Rank (Korea)" data-original-title="" title=""></i></h3>
+                              <p class="text_blue" id="result3">▲ 0</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="site-info">
+                    <h5><i class="fas fa-list p-l-5 p-r-5"></i>회사정보</h5>
+                    <ul>
+                      <li>대표 : <span id="osp_ceoname"></span></li>
+                      <li>사업자등록번호 : <span id="osp_cnum"></span></li>
+                      <li>통신판매 : <span id="osp_mnum"></span></li>
+                      <li>부가통신사업등록번호 : <span id="osp_scnum"></span></li>
+                      <li>주소 : <span id="osp_addrs"></span></li>
+                      <li>이메일 : <span id="osp_email"></span></li>
+                      <li>TEL : <span id="osp_tel"></span></li>
+                      <li>FAX : <span id="osp_fax"></span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 text-center modal-title" id="chart-m">
+              <div class="modal-title-div">
+                 <span>Total Visits<i class="far fa-question-circle p-l-10" data-container="#chart-m" data-toggle="popover" data-placement="top" data-content="Total Visits" data-original-title="" title=""></i></span>
+              </div>
+              <div class="modal-title-date">
+                <span>On desktop & mobile web, in the last 6months</span>
+              </div>
+            </div>
+            <div id="chart-m-1" class="col-xs-12"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal end-->
+    <!-- Modal start-->
+    <div class='modal fade' id='view-Modal' aria-hidden="true" tabindex="-1" role="dialog">
+      <div class='modal-dialog modal-lg' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class="modal-title">공지사항</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i class="ti-close"></i></span>
+            </button>
+          </div>
+          <div class='modal-body p-t-0'>
+            <div class='card'>
+              <div class="card-block table-border-style">
+                <div class="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table" id='modal-cnt'>
+                      <colgroup>
+                        <col width="20%" />
+                        <col width="80%" />
+                      </colgroup>
+                      <tbody>
+                        <tr>
+                          <th class="b-r-1 text-left">글쓴이</th>
+                          <td>
+                            <p id="view_writer"></p>
+                          </td>
+                        </tr>
+                        <tr id="regdate_tr">
+                          <th class="b-r-1 text-left">등록일</th>
+                          <td>
+                            <p id="view_regdate"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="b-r-1 text-left">제목</th>
+                          <td>
+                            <p id="view_title"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="b-r-1 text-left">내용</th>
+                          <td>
+                            <p id="view_content"></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="b-r-1 text-left">첨부파일</th>
+                          <td>
+                            <ul id="view_uploadFileList">
+                            </ul>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal end-->
+  </div>
+</div>
+<input type="hidden" id="dayArr" value="<%=JSON.stringify(dayResultlist)%>">
+<input type="hidden" id="dayArr_m" value="<%=JSON.stringify(dayResultlist_m)%>">
+<!-- morris -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<!-- custom -->
+<link rel="stylesheet" href="/pages/dashboard/style.css">
+<link rel="stylesheet" href="/pages/osp/style_osp_modal.css">
+<script type="text/javascript" src="/pages/dashboard/script.js"></script>
+<script type="text/javascript" src="/pages/osp/script_osp_modal.js"></script>

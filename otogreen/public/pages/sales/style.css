@@ -1,0 +1,87 @@
+/* add css start*/
+.name{
+  max-width: 349px;
+  word-break: break-all;
+  white-space: normal;
+}
+/* add css end*/
+/* 달력 */
+.dateTitle{
+  padding: 6px 0px 6px 0px;
+  font-size: 12px;
+}
+.tui-datepicker{
+  z-index: 1;
+}
+.tui-datetime-input-end.tui-datepicker-input.tui-datetime-input.tui-has-focus.form-control.form-control-inverse.f-right{
+  border: 1px solid #34495e;
+  border-radius: 0px;
+  border-left: 0px;
+}
+.tui-datetime-input-start.tui-datepicker-input.tui-datetime-input.tui-has-focus.form-control.form-control-inverse.f-right{
+  border: 1px solid #34495e;
+  border-radius: 0px;
+  border-right: 0px;
+}
+.example{
+  font-size: 12px;
+}
+.example td,.example th{
+  border: 1px solid;
+  /* border-top: 1px solid black; */
+}
+.cancel{
+  cursor: pointer;
+}
+/* js css start*/
+.filelists{
+  font-size: 13px;
+}
+/* 날짜 선택 */
+#reportrange{
+  min-width: 233px;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* chart */
+#chart1{
+  padding: 0;
+  background: white;
+  border: 1px solid #34495e;
+  border-radius: 2px;
+}
+/* 통계 */
+#totalTable {
+  table-layout: fixed;
+  border-right: 0;
+}
+#totalTable td,#totalTable th{
+  text-align: center;
+}
+.btn-excel{
+  border-color: #16763a;
+  border-radius: 0px;
+  background-color: white;
+  color: #16763a;
+  width: 70px;
+  height: 38px;
+  padding: 5px 15px;
+}
+.table.example td, .table.example th {
+  padding: .6rem;
+}
+.table td,.table th{
+  text-align: center;
+}
+#listTable .btn-detail i{
+  margin-right: 0;
+}

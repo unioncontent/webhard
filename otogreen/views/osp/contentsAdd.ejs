@@ -1,0 +1,349 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>콘텐츠등록</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
+          <li class="breadcrumb-item"><a href="/contents/add">콘텐츠등록</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* CP사명</label>
+                <div class="col-sm-5">
+                  <input name="CP_name" id="CP_name" type="text" class="form-control" placeholder="CP사명">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 제목</label>
+                <div class="col-sm-5">
+                  <input name="CP_title" id="CP_title" type="text" class="form-control" placeholder="대표제목">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">영문제목</label>
+                <div class="col-sm-5">
+                  <input name="CP_title_eng" id="CP_title_eng" type="text" class="form-control" placeholder="영어제목">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <%if (userSite != 'test'){%>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* OSP관리ID</label>
+                <div class="col-sm-5">
+                  <input name="OSP_id" id="OSP_id" type="text" class="form-control" value="<%=userID.replace('_admin','')%>" disabled>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <%}%>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 관리방법</label>
+                <div class="col-sm-5">
+                  <div id="method" class="form-radio">
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" value="1" name="K_method">
+                        <i class="helper"></i>자동
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" value="0" name="K_method">
+                        <i class="helper"></i>수동
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">* 관리현황</label>
+                <div class="col-sm-5">
+                  <div id="apply" class="form-radio">
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" value="D" name="K_apply">
+                        <i class="helper"></i>삭제
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" value="T" name="K_apply">
+                        <i class="helper"></i>제휴
+                      </label>
+                    </div>
+                    <div class="radio radio-inline">
+                      <label>
+                        <input type="radio" value="P" name="K_apply">
+                        <i class="helper"></i>보류
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">DELAY 시간(분)</label>
+                <div class="col-sm-5">
+                  <input name="delay_time" id="delay_time" type="number" class="form-control" placeholder="0">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">금액</label>
+                <div class="col-sm-5">
+                  <input name="CP_price" id="CP_price" type="number" class="form-control" step="500" placeholder="0">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">HASH 값</label>
+                <div class="col-sm-5">
+                  <input name="CP_hash" id="CP_hash" type="text" class="form-control" placeholder="HASH 값">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">기본검색어</label>
+                <div class="col-sm-5">
+                  <input name="keyword" id="keyword" type="text" class="form-control" placeholder="기본검색어(없으면 자동으로 제목이 기본검색어가 됩니다)">
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-10">
+                    <button id="insertBtn" type="submit" class="btn btn-inverse m-b-0">등록</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h5>일괄등록</h5>
+            </div>
+            <div class="card-block">
+              <div class="m-b-20  col-sm-12">
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                    <h4 class="sub-title m-b-10">upload</h4>
+                    <form action="/contents/add/upload" id="uploadFrm" method="post" enctype="multipart/form-data">
+                      <div class="form-group row">
+                        <div class="col-sm-9">
+                          <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                          <button id="insertBtn2" type="submit" class="btn btn-inverse m-b-0 p-b-10 p-t-10">등록</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <div class="inline-order-list m-t-0">
+                      <h4 class="sub-title">example</h4>
+                      <p class="text-muted">
+                        ※ 엑셀 1행 생략불가, method값 = 자동:1/수동:0 , apply값 = 삭제:D/제휴:T/보류:P
+                      </p>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr class="text-uppercase border-bottom-inverse">
+                            <th class="text-center">#</th>
+                            <th class="text-center">A</th>
+                            <th class="text-center">B</th>
+                            <th class="text-center">C</th>
+                            <th class="text-center">D</th>
+                            <th class="text-center">E</th>
+                            <th class="text-center">F</th>
+                            <th class="text-center">G</th>
+                            <th class="text-center">H</th>
+                            <th class="text-center">I</th>
+                          </tr>
+                        </thead>
+                        <tbody class="text-center">
+                          <tr class="table-danger border-bottom-inverse">
+                            <th scope="row">1</th>
+                            <td>cpId</td>
+                            <td>title</td>
+                            <td>engtitle</td>
+                            <td>ospid</td>
+                            <td>method</td>
+                            <td>apply</td>
+                            <td>hash</td>
+                            <td>price</td>
+                            <td>keyword</td>
+                          </tr>
+                          <tr class="border-bottom-inverse">
+                            <th>2</th>
+                            <td>MBC</td>
+                            <td>무도</td>
+                            <td class="text-muted">IC<br/>(생략가능)</td>
+                            <td><%=userNAME%></td>
+                            <td>0</td>
+                            <td>P</td>
+                            <td class="text-muted">sd###<br/>(생략가능)</td>
+                            <td class="text-muted">10000<br/>(생략가능)</td>
+                            <td class="text-muted">무한도전<br/>(생략가능)</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+table.table-columned th, table.table-columned td,
+.table td, .table th{
+  border: 1px solid #34495e;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+  var url = new URL(window.location.href);
+  var msg = url.searchParams.get("msg");
+  var upload = url.searchParams.get("upload");
+  var excelNum = 0;
+  if(upload || msg){
+    history.pushState(null, null,location.href.split('?')[0]);
+  }
+  if(upload == 'true'){
+    alert('일괄등록 성공했습니다.');
+  }
+  else if(upload == 'false'){
+    console.log(msg);
+    if(msg){
+      excelNum = String(Number(msg.split('_')[0])+1);
+      msg = msg.split('_')[1];
+    }
+    var errorMsg = '일괄등록 실패했습니다.\n';
+    if(msg == 'ExcelHeaderError'){
+      errorMsg += '엑셀 1열에 내용이 틀렸습니다.\n다시 확인해주세요.';
+    }
+    else if(msg == 'IdError'){
+      errorMsg += 'MCP 또는 CP의 이름이 맞는지 다시 확인해주세요.';
+    }
+    else if(msg == 'NoFileError'){
+      errorMsg += '해당 파일의 상태를 확인해주세요.';
+    }
+    else if(msg == 'ExcelSysError'){
+      errorMsg += '시스템에 문제가 생겼습니다.\n나중에 다시 시도해주세요.';
+    }
+    else{
+      errorMsg += '다시 시도해주세요.';
+    }
+    alert(errorMsg);
+  }
+});
+$("#insertBtn").on("click",function(){
+  var check=true;
+  var param = {
+    'CP_name': $('input[name=CP_name]').val(),
+    'CP_title': $("input[name=CP_title]").val(),
+    'CP_title_eng': $("input[name=CP_title_eng]").val(),
+    'OSP_id': $('input[name=OSP_id]').val(),
+    'K_method': $("input:radio[name=K_method]:checked").val(),
+    'K_apply': $("input:radio[name=K_apply]:checked").val(),
+    'delay_time': '0',
+    'CP_hash': '',
+    'CP_price': '0',
+    'keyword': $("input[name=CP_title]").val()
+  };
+  if($("#CP_name").val() == ""){
+    check = requiredMessage("CP_name","CP사명을 입력해주세요.");
+  }
+  if($("#CP_title").val() == ""){
+    check = requiredMessage("CP_title","대표제목를 입력해주세요.");
+  }
+  if($("input:radio[name=K_method]:checked").val() == ""){
+    check = requiredMessage("method","관리방법을 선택해주세요.");
+  }
+  if($("input:radio[name=K_apply]:checked").val() == ""){
+    check = requiredMessage("apply","관리현황을 선택해주세요.");
+  }
+  $.ajax({
+    url: './add/cpCheck',
+    type: 'post',
+    data : {'CP_name': $('input[name=CP_name]').val()},
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      check = requiredMessage("CP_name","해당 CP사가 없습니다.");
+    },
+    success:function(data){
+      if(data){
+        param['U_id_c'] = data[0].U_id;
+        insertContents(param);
+      }
+      else{
+        check = requiredMessage("CP_name","해당 CP사가 없습니다.");
+      }
+    }
+  });
+});
+function insertContents(param){
+  if($("#delay_time").val() != ""){
+    param.delay_time = $("#delay_time").val();
+  }
+  if($("#CP_hash").val() != ""){
+    param.CP_hash = $("#CP_hash").val();
+  }
+  if($("#CP_price").val() != ""){
+    param.CP_price = $("#CP_price").val();
+  }
+  if($("#keyword").val() != ""){
+    param.keyword = $("#keyword").val();
+  }
+  $.ajax({
+    url: './add',
+    type: 'post',
+    data : param,
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+      alert(request.responseText);
+    },
+    success:function(data){
+      alert('등록되었습니다.');
+      window.location.reload();
+    }
+  });
+}
+
+$("input, select").on("focus",function(){
+  $(this).removeClass("form-control-danger");
+  $(this).siblings().children("p").text("");
+});
+
+function requiredMessage(target,msg){
+  $("#"+target).siblings().children().text(msg);
+  $("#"+target).addClass("form-control-danger");
+  return false;
+}
+
+$("#insertBtn2").on("click",function(){
+  if($('input[type=file]').val()==""){
+    alert('파일을 선택해주세요.');
+    return false;
+  }
+  $("#uploadFrm").submit();
+});
+</script>
