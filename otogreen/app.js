@@ -1,15 +1,18 @@
-var  express = require('express');
-var  path = require('path');
-var  favicon = require('serve-favicon');
-var  logger = require('morgan');
-var  expressLayouts = require('express-ejs-layouts');
-var  cookieParser = require('cookie-parser');
-var  session = require('express-session');
-var  passport = require('passport');
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+// 추가
+var expressLayouts = require('express-ejs-layouts');
+var session = require('express-session');
+var passport = require('passport');
 var  flash = require('connect-flash');
-var  bodyParser = require('body-parser');
+const logger = require('morgan');
+const winston = require('./winston/config');
 
 var  app = express();
+app.use(logger('dev', { stream: winston.stream}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 // DB module
@@ -8,7 +9,7 @@ var mailing = require('../models/mailing.js');
 var keyword = require('../models/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('setting 로그인확인:',req.isAuthenticated());
+  logger.info('setting 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -39,7 +40,7 @@ router.get('/:pType',isAuthenticated2,async function(req, res, next) {
       data.cpList = await contents.getMCPList('c');
     }
   }
-  res.render('mcp/'+req.params.pType,data);
+  res.render(''+req.params.pType,data);
 });
 
 router.post('/:pType/getNextPage',isAuthenticated,async function(req, res, next) {
@@ -92,7 +93,7 @@ async function getOSPListPageData(param){
     data['listCount'] = await osp.selectViewCount(searchBody,searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -138,7 +139,7 @@ async function getCPListPageData(param,user){
     data['listCount'] = await cp.selectViewCount(searchBody,searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -188,13 +189,13 @@ async function getMailListPageData(param,user){
     data['listCount'] = await mailing.selectViewCount(searchBody,searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
 
 router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
-  console.log('/:pType/update');
+  logger.info('/:pType/update');
   var data;
   if(req.params.pType == 'osp'){
     data = await osp.update(req.body);
@@ -218,8 +219,8 @@ router.post('/:pType/update',isAuthenticated,async function(req, res, next) {
   }
   if(req.body.idx == req.user.n_idx){
     req.user.U_logo = req.body.cp_logo;
-    console.log('req.user:',req.user);
-    console.log('req.user.U_logo:',req.user.U_logo);
+    logger.info('req.user:',req.user);
+    logger.info('req.user.U_logo:',req.user.U_logo);
   }
   res.send({state:true,result:data});
 });
@@ -252,7 +253,7 @@ router.post('/:pType/delete',isAuthenticated,async function(req, res, next) {
     }
     if(data.length == 0) throw new Error('deleteError');
   } catch (e) {
-    console.log(e);
+    logger.info(e);
     res.send({state:false});
     return false;
   }
@@ -274,7 +275,7 @@ router.post('/:pType/getInfo',isAuthenticated,async function(req, res, next) {
 });
 
 router.get('/:pType/add',isAuthenticated,async function(req, res, next) {
-  res.render('mcp/'+req.params.pType+'_add');
+  res.render(''+req.params.pType+'_add');
 });
 
 router.post('/:pType/add',isAuthenticated,async function(req, res, next) {
@@ -331,17 +332,17 @@ router.post('/file_delete',async function (req, res) {
   // res.send(true);
   // 'C:/gitProject/webhard/autogreen/public/images/company'
   // 'C:/Users/user/Documents/webhard/autogreen/'
-  console.log('C:/gitProject/webhard/autogreen/public/'+req.body.path);
+  logger.info('C:/gitProject/webhard/autogreen/public/'+req.body.path);
   fs.unlink('C:/gitProject/webhard/autogreen/public/'+req.body.path, async function (err) {
     if (err){
-      console.log(err);
+      logger.info(err);
       res.status(500).send(err);
       return false;
     }
-    console.log('successfully deleted');
+    logger.info('successfully deleted');
     var result = await cp.updateWhereId({cp_logo:'',id:req.body.id});
     req.user.U_logo = '';
-    console.log('result : ',result);
+    logger.info('result : ',result);
     res.send(true);
   });
 });

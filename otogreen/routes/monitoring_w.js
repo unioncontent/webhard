@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
@@ -9,7 +10,7 @@ var monitoring = require('../models/monitoring.js');
 var monitoring_all = require('../models/monitoring_all.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('monitoring_w 로그인확인:',req.isAuthenticated());
+  logger.info('monitoring_w 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -19,7 +20,7 @@ var isAuthenticated = function (req, res, next) {
 //모니터링 업무
 router.get('/',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.query,req.user);
-  res.render('mcp/monitoring_work',data);
+  res.render('monitoring_work',data);
 });
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.body,req.user);
@@ -30,7 +31,7 @@ router.post('/delete',isAuthenticated,async function(req, res, next) {
     var list = JSON.parse(req.body.list);
     await asyncForEach(list, async (item, index, array) => {
       // 키워드 필터링 리스트
-      console.log(item);
+      logger.info(item);
       // 키워드 필터링 상세 리스트
       // result = await monitoring.delete('cnt_f'+table_type+'_detail',{'f_idx':item.idx});
       // if(!('protocol41' in result)){
@@ -57,7 +58,7 @@ router.post('/delete',isAuthenticated,async function(req, res, next) {
     });
     res.send(true);
   } catch(e){
-    console.log('/delete ERROR:',e);
+    logger.info('/delete ERROR:',e);
     res.status(500).send(e);
   }
 });
@@ -82,7 +83,7 @@ router.post('/getInfo',isAuthenticated,async function(req, res, next) {
   res.send(result);
 });
 router.post('/imageCancel',isAuthenticated,async function(req, res, next) {
-  console.log('imageCancel:',req.body);
+  logger.info('imageCancel:',req.body);
   var result = await monitoring.udpateImg(req.body.type,[req.body.num,req.body.url]);
   if(!('protocol41' in result)){
     res.status(500);
@@ -193,7 +194,7 @@ async function getListPageData(param,user){
     }
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -201,7 +202,7 @@ async function getListPageData(param,user){
 //모니터링 현황
 router.get('/all',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData_all(req.query,req.user);
-  res.render('mcp/monitoring_all',data);
+  res.render('monitoring_all',data);
 });
 router.post('/all/updateMChk',isAuthenticated,async function(req, res, next) {
   var result = await monitoring.updateMChk(((req.body.pType == 'm')?req.body.pType+'_':''),[req.body.chk,req.body.idx]);
@@ -215,7 +216,7 @@ router.post('/all/mchk',isAuthenticated,async function(req, res, next) {
   try{
     var list = JSON.parse(req.body.list);
     await asyncForEach(list, async (item, index, array) => {
-      console.log(item);
+      logger.info(item);
       // 키워드 필터링 리스트 - cnt_f_mchk
       result = await monitoring.updateMChk(((item.pType=='')?'':item.pType+'_'),[item.idx]);
       if(!('protocol41' in result)){
@@ -225,7 +226,7 @@ router.post('/all/mchk',isAuthenticated,async function(req, res, next) {
     });
     res.send(true);
   } catch(e){
-    console.log('/mchk ERROR:',e);
+    logger.info('/mchk ERROR:',e);
     res.status(500).send(e);
   }
 });
@@ -257,7 +258,7 @@ async function getListPageData_all(param,user){
   var searchParam = [0,limit];
   var searchBody = {sDate:data.sDate,eDate:data.eDate};
   var currentPage = 1;
-  console.log('all : ',param);
+  logger.info('all : ',param);
   if (typeof param.page !== 'undefined') {
     currentPage = param.page;
     data['page'] = currentPage;
@@ -335,7 +336,7 @@ async function getListPageData_all(param,user){
     }
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }

@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var xl = require('excel4node');
 var moment = require('moment');
@@ -33,7 +34,7 @@ router.get('/:type',isAuthenticated,async function(req, res, next) {
       data.cpList = [];
     }
   }
-  res.render('mcp/monitoring',data);
+  res.render('monitoring',data);
 });
 
 router.post('/:type/getNextPage',isAuthenticated,async function(req, res, next) {

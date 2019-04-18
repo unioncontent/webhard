@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 // DB module
@@ -6,7 +7,7 @@ var statistics = require('../models/statistics.js');
 var keyword = require('../models/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('statistics 로그인확인:',req.isAuthenticated());
+  logger.info('statistics 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -22,7 +23,7 @@ router.get('/',isAuthenticated,async function(req, res, next) {
     data.mcpList = await contents.getMCPList('m');
     data.cpList = [];
   }
-  res.render('mcp/statistics',data);
+  res.render('statistics',data);
 });
 
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
@@ -51,7 +52,7 @@ async function getListPageData(param,user){
     sDate: start,
     eDate: end
   };
-  console.log('param',param);
+  logger.info('param',param);
   var limit = 20;
   var searchParam = ['0','',data.mcp,data.cp,'a.osp_sname',data.sDate,data.eDate,0,limit,''];
   var currentPage = 1;
@@ -99,16 +100,16 @@ async function getListPageData(param,user){
     searchParam[1] = 'c';
   }
   try{
-    console.log('searchParam : ',searchParam);
+    logger.info('searchParam : ',searchParam);
     var result = await statistics.call_stats(searchParam);
     // if(data['osp'] == 'bondisk'){
-    //   console.log('result :',result);
+    //   logger.info('result :',result);
     // }
     data['list'] = (result.length > 0) ? result[0] : [];
     data['listCount'] = (result.length > 1) ? result[1][0].total : [];
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -138,7 +139,7 @@ async function getListPageData_ALL(param,user){
     sDate: start,
     eDate: end
   };
-  console.log('param',param);
+  logger.info('param',param);
   var limit = 10;
   var searchBody = {type:'p'};
   var searchParam = [0,limit];
@@ -206,7 +207,7 @@ async function getListPageData_ALL(param,user){
     data['listCount'] = await statistics.selectTableCount(searchBody,searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }

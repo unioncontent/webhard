@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 var xl = require('excel4node');
@@ -10,7 +11,7 @@ var sales = require('../models/sales.js');
 var contents = require('../models/contents.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('sales 로그인확인:',req.isAuthenticated());
+  logger.info('sales 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -29,7 +30,7 @@ router.get('/',isAuthenticated,async function(req, res, next) {
       data.cpList = await contents.getCPList({mcp:req.query.mcp});
     }
   }
-  res.render('mcp/sales',data);
+  res.render('sales',data);
 });
 
 router.post('/detail',isAuthenticated,async function(req, res, next) {
@@ -103,7 +104,7 @@ async function getListPageData(param,user){
     data['totalResult'] = result[2][0];
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -178,7 +179,7 @@ router.get('/excel',async function(req, res) {
   var filepath = aDir+filename;
   wb.write(filepath,function(err,stats){
     if(err){
-      console.log(err);
+      logger.info(err);
     }
     else{
       res.setHeader("Content-Type", "application/x-msdownload");
@@ -186,8 +187,8 @@ router.get('/excel',async function(req, res) {
 
       var filestream = fs.createReadStream(filepath);
       fs.unlink(filepath,function(err){
-        if(err) return console.log(err);
-        console.log('file deleted successfully');
+        if(err) return logger.info(err);
+        logger.info('file deleted successfully');
       });
       filestream.pipe(res);
     }
@@ -215,7 +216,7 @@ router.get('/add',isAuthenticated,async function(req, res, next) {
       data.cpList = await contents.getCPList({mcp:req.query.mcp});
     }
   }
-  res.render('mcp/sales_add',data);
+  res.render('sales_add',data);
 });
 
 router.post('/excelAdd',isAuthenticated,async function(req, res, next) {
@@ -224,7 +225,7 @@ router.post('/excelAdd',isAuthenticated,async function(req, res, next) {
   }
   var result = JSON.parse(req.body.data);
   var values = [].map.call(result,async function(item,index) {
-    var mcpArr = item['MCP/CP'].split('/');
+    var mcpArr = item['CP'].split('/');
     var mcp = mcpArr[0];
     var cp = ((mcpArr.length > 1) ? mcpArr[1] : '');
 
@@ -232,13 +233,13 @@ router.post('/excelAdd',isAuthenticated,async function(req, res, next) {
     // return [mcp,cp,item['OSP'],item['콘텐츠코드'],item['콘텐츠제목'],item['총매출금액'],item['총판매건'],item['MG'],item['요율'],item['정산매출'],item['정산날짜']];
   });
   var result = await sales.insertExcel(values);
-  console.log('insertExcel:',result);
+  logger.info('insertExcel:',result);
   res.send({status: true});
 });
 
 router.post('/add',isAuthenticated,async function(req, res, next) {
   var result = await sales.insert(req.body);
-  console.log('insert:',result);
+  logger.info('insert:',result);
   res.send({status: true});
 });
 

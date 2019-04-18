@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
@@ -6,7 +7,7 @@ var contents = require('../models/contents.js');
 var keyword = require('../models/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('keyword 로그인확인:',req.isAuthenticated());
+  logger.info('keyword 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -22,7 +23,7 @@ router.get('/',isAuthenticated,async function(req, res, next) {
     data.mcpList = await contents.getMCPList('m');
     data.cpList = [];
   }
-  res.render('mcp/keyword',data);
+  res.render('keyword',data);
 });
 
 router.post('/delete',isAuthenticated,async function(req, res, next) {
@@ -36,7 +37,7 @@ router.post('/delete',isAuthenticated,async function(req, res, next) {
 
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
   try{
-    console.log(req.body,req.user);
+    logger.info(req.body,req.user);
     var data = await getListPageData(req.body,req.user);
     res.send({status:true,result:data});
   } catch(e){
@@ -76,19 +77,19 @@ async function getListPageData(param,user){
     searchBody['mcp'] = data.mcp;
   }
   try{
-    console.log(searchBody,searchParam);
+    logger.info(searchBody,searchParam);
     data['list'] = await keyword.selectCntList(searchBody,searchParam);
     data['listCount'] = await keyword.selectCntListCount(searchBody);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
 
 router.get('/info',isAuthenticated,async function(req, res, next) {
   var data = await getInfoListPageData(req.query);
-  res.render('mcp/keyword_info',data);
+  res.render('keyword_info',data);
 });
 router.post('/info/getKwd',isAuthenticated,async function(req, res, next) {
   try{
@@ -109,7 +110,7 @@ router.post('/info/insert',isAuthenticated,async function(req, res, next) {
         }
         return;
       }
-      console.log(item,param);
+      logger.info(item,param);
       param.k_key = '1';
       if(index == 1){
         param.k_key = '0';
@@ -191,7 +192,7 @@ async function getInfoListPageData(param){
     data['listCount'] = await keyword.selectKwdListCount(searchBody);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }

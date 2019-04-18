@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 var xl = require('excel4node');
@@ -9,7 +10,7 @@ var osp = require('../models/osp.js');
 var calculate = require('../models/calculate.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('calculate 로그인확인:',req.isAuthenticated());
+  logger.info('calculate 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -22,7 +23,7 @@ router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
 });
 
 router.post('/getOSPNextPage',isAuthenticated,async function(req, res, next) {
-  console.log('getOSPNextPage');
+  logger.info('getOSPNextPage');
   var data = await getOSPListPageData(req.body);
   data.ospList = await osp.selectOSPList_m(2);
   res.send({status:true,result:data});
@@ -69,13 +70,13 @@ async function getListPageData(param){
     data.ospList = await osp.selectOSPList_m(2);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
 
 async function getOSPListPageData(param){
-  console.log('getOSPListPageData');
+  logger.info('getOSPListPageData');
   var data = {
     list:[],
     listCount:{total:0},
@@ -100,7 +101,7 @@ async function getOSPListPageData(param){
     data['listCount'] = await calculate.acc_very_osp_view_count(searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -144,14 +145,14 @@ router.get('/excel',async function(req, res) {
   ws.cell(1,5).string('구매/빌링').style(tStyle);
   ws.cell(1,6).string('결과').style(tStyle);
   var row = 0;
-  console.log('list[list].length :',list['list'].length);
+  logger.info('list[list].length :',list['list'].length);
   await asyncForEach(list['list'], async (item, index, array) => {
     row = index+2;
     var perNum = Math.round(Number(item.billCount) / Number(item.buyCount) * 100);
-    console.log(Number(item.billCount));
-    console.log(Number(item.buyCount));
-    console.log(Number(item.billCount) / Number(item.buyCount) * 100);
-    console.log(perNum);
+    logger.info(Number(item.billCount));
+    logger.info(Number(item.buyCount));
+    logger.info(Number(item.billCount) / Number(item.buyCount) * 100);
+    logger.info(perNum);
     ws.cell(row,1).string((index+1).toString());
     ws.cell(row,2).string(((item.osp_sname == null)? item.ACC_OSP_ID:item.osp_sname));
     ws.cell(row,3).string(item.ACC_Keyword);
@@ -166,7 +167,7 @@ router.get('/excel',async function(req, res) {
   var filepath = aDir+filename;
   wb.write(filepath,function(err,stats){
     if(err){
-      console.log(err);
+      logger.info(err);
     }
     else{
       res.setHeader("Content-Type", "application/x-msdownload");
@@ -174,8 +175,8 @@ router.get('/excel',async function(req, res) {
 
       var filestream = fs.createReadStream(filepath);
       fs.unlink(filepath,function(err){
-        if(err) return console.log(err);
-        console.log('file deleted successfully');
+        if(err) return logger.info(err);
+        logger.info('file deleted successfully');
       });
       filestream.pipe(res);
     }
@@ -221,7 +222,7 @@ router.get('/excel2',async function(req, res) {
   ws.cell(1,7).string('빌링정보').style(tStyle);
   ws.cell(1,8).string('상태').style(tStyle);
   var row = 0;
-  console.log('list[list].length :',list['list'].length);
+  logger.info('list[list].length :',list['list'].length);
   await asyncForEach(list['list'], async (item, index, array) => {
     row = index+2;
     var perNum = Math.round(item.billCount / item.buyCount * 100);
@@ -241,7 +242,7 @@ router.get('/excel2',async function(req, res) {
   var filepath = aDir+filename;
   wb.write(filepath,function(err,stats){
     if(err){
-      console.log(err);
+      logger.info(err);
     }
     else{
       res.setHeader("Content-Type", "application/x-msdownload");
@@ -249,8 +250,8 @@ router.get('/excel2',async function(req, res) {
 
       var filestream = fs.createReadStream(filepath);
       fs.unlink(filepath,function(err){
-        if(err) return console.log(err);
-        console.log('file deleted successfully');
+        if(err) return logger.info(err);
+        logger.info('file deleted successfully');
       });
       filestream.pipe(res);
     }

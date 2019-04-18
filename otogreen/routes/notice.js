@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var datetime = require('node-datetime');
 var router = express.Router();
@@ -5,7 +6,7 @@ var router = express.Router();
 var notice = require('../models/notice.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('notice 로그인확인:',req.isAuthenticated());
+  logger.info('notice 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
@@ -14,12 +15,12 @@ var isAuthenticated = function (req, res, next) {
 
 router.get('/',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.query,req.user);
-  res.render('mcp/notice',data);
+  res.render('notice',data);
 });
 
 // 첨부파일 다운로드
 // router.get('/download/:date/:fileName',async function(req, res) {
-//   // console.log('/download/:date/:fileName = ',req.params);
+//   // logger.info('/download/:date/:fileName = ',req.params);
 //   var filePath = __dirname.replace('\\routes\\mcp','') +'/public/uploads/'+req.params.date;
 //   var fs = require('fs');
 //   var fileListLength = fs.readdirSync(filePath).length;
@@ -96,7 +97,7 @@ async function getListPageData(param,user){
     data['listCount'] = await notice.selectTableCount(searchBody,searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -142,7 +143,7 @@ async function mkdirsFun (directory) {
   try {
     await fs_extra.ensureDir(directory)
     return directory;
-    console.log('success!')
+    logger.info('success!')
   } catch (err) {
     console.error(err)
   }
@@ -185,7 +186,7 @@ async function mkdirsFun (directory) {
 //   // res.send(true);
 //   fs.unlink(aPath+req.body.path, function (err) {
 //     if (err) throw err;
-//     console.log('successfully deleted');
+//     logger.info('successfully deleted');
 //     res.send(true);
 //   });
 // });

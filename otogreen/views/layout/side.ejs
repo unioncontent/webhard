@@ -1,21 +1,6 @@
 <!-- left menu start -->
 <nav class="pcoded-navbar" pcoded-header-position="relative">
   <div class="pcoded-inner-navbar main-menu">
-    <%if (userSite != 'autogreen'){%>
-    <div class="">
-      <div class="main-menu-header">
-        <div class="user-details">
-          <span id="more-details">
-            <% if(userLogo == '' || userLogo == null || (userID == 'under')){%>
-              <%=userNAME%>
-            <%} else {%>
-              <img class="img-cLogo" src="http://61.82.113.197:8090/<%=userLogo%>"/>
-            <%}%>
-          </span>
-        </div>
-      </div>
-    </div>
-    <%}%>
     <ul class="pcoded-item pcoded-left-item">
       <li class="dashBoard">
         <a href="/">
@@ -24,242 +9,94 @@
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
-      <%if (userSite != 'autogreen'){%>
-      <li class="period" style="display:none">
-        <a href="/period">
-          <span class="pcoded-micon"><i class="ti-bar-chart-alt"></i></span>
-          <span class="pcoded-mtext">통계</span>
-          <span class="pcoded-mcaret"></span>
-        </a>
-      </li>
-      <li class="pcoded-hasmenu contents">
-        <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
+      <li class="cnts">
+        <a href="/cnts">
           <span class="pcoded-micon"><i class="ti-video-clapper"></i></span>
-          <span class="pcoded-mtext">콘텐츠관리</span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">콘텐츠관리</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li class="statistics">
+        <a href="/statistics">
+          <span class="pcoded-micon"><i class="fas fa-desktop"></i></span>
+          <span class="pcoded-mtext">모니터링현황</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <% if(userID == 'under'){%>
+      <li class="pcoded-hasmenu sales">
+        <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
+          <span class="pcoded-micon"><i class="fas fa-won-sign"></i></span>
+          <span class="pcoded-mtext">매출통계</span>
           <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
           <li>
-            <%
-              if (userCLASS != 'c'){
-            %>
-            <a href="/contents/add" data-i18n="nav.advance-components.draggable">
+            <a href="/sales/add" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">콘텐츠등록</span>
+              <span class="pcoded-mtext">매출등록</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%}%>
           <li>
-            <a href="/contents" data-i18n="nav.advance-components.draggable">
+            <a href="/sales" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">콘텐츠리스트</span>
+              <span class="pcoded-mtext">매출통계현황</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
-          <%if (userSite != 'autogreen' && userCLASS == 'a'){%>
+        </ul>
+      </li>
+      <%}%>
+      <li class="pcoded-hasmenu setting">
+        <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
+          <span class="pcoded-micon"><i class="fas fa-user"></i></span>
+          <span class="pcoded-mtext">관리사설정</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
           <li>
-            <a href="/keyword" data-i18n="nav.advance-components.grid-stack">
+            <a href="/setting/osp" data-i18n="nav.advance-components.draggable">
               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">키워드설정</span>
+              <span class="pcoded-mtext">OSP사현황</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li>
+            <a href="/setting/cp" data-i18n="nav.advance-components.draggable">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext">CP사현황</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <%if(userCLASS != 'c'){%>
+          <li>
+            <a href="/setting/mailing" data-i18n="nav.advance-components.grid-stack">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext">메일링설정</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
           <%}%>
         </ul>
       </li>
-      <%}%>
-      <%if (userSite == 'autogreen'){%>
-        <li class="cnts">
-          <a href="/cnts">
-            <span class="pcoded-micon"><i class="ti-video-clapper"></i></span>
-            <span class="pcoded-mtext" data-i18n="nav.dash.main">콘텐츠관리</span>
-            <span class="pcoded-mcaret"></span>
+      <li class="notice">
+        <a href="/notice">
+          <span class="pcoded-micon"><i class="ti-volume"></i></span>
+          <span class="pcoded-mtext">공지사항</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li>
+        <div style="border-top: 1px solid #1f3339;width: 209px;margin: auto;margin-top: 7px;margin-bottom: 7px;"></div>
+        <button class="btn btn-s-search btn-c-search"><i class="far fa-copyright"></i><span>저작권검색</span></button>
+        <button class="btn btn-s-search btn-c2-search" style="margin-top: 0px;"><i class="fas fa-won-sign"></i><span>정산검증</span></button>
+        <% if(userID == 'union'){%>
+          <a href="/monitoring_w" style="padding: 0;margin: 0;height: 55px;">
+            <button class="btn btn-s-search btn-c3-search" style="margin-top: 0px;"><i class="fas fa-edit"></i><span>모니터링업무</span></button>
           </a>
-        </li>
-        <li class="statistics">
-          <a href="/statistics">
-            <span class="pcoded-micon"><i class="fas fa-desktop"></i></span>
-            <span class="pcoded-mtext">모니터링현황</span>
-            <span class="pcoded-mcaret"></span>
-          </a>
-        </li>
-        <!-- <li class="pcoded-hasmenu monitoring statistics">
-          <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
-            <span class="pcoded-micon"><i class="fas fa-desktop"></i></span>
-            <span class="pcoded-mtext">모니터링현황</span>
-            <span class="pcoded-mcaret"></span>
-          </a>
-          <ul class="pcoded-submenu">
-            <li>
-              <a href="/monitoring/nalliance" data-i18n="nav.advance-components.draggable">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">비제휴사현황</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-            <li>
-              <a href="/monitoring/alliance" data-i18n="nav.advance-components.draggable">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">제휴사현황</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-            <li>
-              <a href="/statistics" data-i18n="nav.advance-components.grid-stack">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">통계현황</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-          </ul>
-        </li> -->
-        <% if(userID == 'under'){%>
-        <li class="pcoded-hasmenu sales">
-          <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
-            <span class="pcoded-micon"><i class="fas fa-won-sign"></i></span>
-            <span class="pcoded-mtext">매출통계</span>
-            <span class="pcoded-mcaret"></span>
-          </a>
-          <ul class="pcoded-submenu">
-            <li>
-              <a href="/sales/add" data-i18n="nav.advance-components.draggable">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">매출등록</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-            <li>
-              <a href="/sales" data-i18n="nav.advance-components.draggable">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">매출통계현황</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-          </ul>
-        </li>
         <%}%>
-        <li class="pcoded-hasmenu setting">
-          <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
-            <span class="pcoded-micon"><i class="fas fa-user"></i></span>
-            <span class="pcoded-mtext">관리사설정</span>
-            <span class="pcoded-mcaret"></span>
-          </a>
-          <ul class="pcoded-submenu">
-            <li>
-              <a href="/setting/osp" data-i18n="nav.advance-components.draggable">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">OSP사현황</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-            <li>
-              <a href="/setting/cp" data-i18n="nav.advance-components.draggable">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">CP사현황</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-            <%if(userCLASS != 'c'){%>
-            <li>
-              <a href="/setting/mailing" data-i18n="nav.advance-components.grid-stack">
-                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                <span class="pcoded-mtext">메일링설정</span>
-                <span class="pcoded-mcaret"></span>
-              </a>
-            </li>
-            <%}%>
-          </ul>
-        </li>
-        <li class="notice">
-          <a href="/notice">
-            <span class="pcoded-micon"><i class="ti-volume"></i></span>
-            <span class="pcoded-mtext">공지사항</span>
-            <span class="pcoded-mcaret"></span>
-          </a>
-        </li>
-        <li>
-          <div style="border-top: 1px solid #1f3339;width: 209px;margin: auto;margin-top: 7px;margin-bottom: 7px;"></div>
-          <button class="btn btn-s-search btn-c-search"><i class="far fa-copyright"></i><span>저작권검색</span></button>
-          <button class="btn btn-s-search btn-c2-search" style="margin-top: 0px;"><i class="fas fa-won-sign"></i><span>정산검증</span></button>
-          <% if(userID == 'union'){%>
-            <a href="/monitoring_w" style="padding: 0;margin: 0;height: 55px;">
-              <button class="btn btn-s-search btn-c3-search" style="margin-top: 0px;"><i class="fas fa-edit"></i><span>모니터링업무</span></button>
-            </a>
-          <%}%>
-        </li>
-      <%}%>
-      <%if (userSite != 'autogreen'){%>
-      <li class="pcoded-hasmenu filtering">
-        <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
-          <span class="pcoded-micon"><i class="ti-filter"></i></span>
-          <span class="pcoded-mtext">필터링현황</span>
-          <span class="pcoded-mcaret"></span>
-        </a>
-        <ul class="pcoded-submenu">
-          <li >
-            <a href="/filtering/auto" data-i18n="nav.advance-components.draggable">
-              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">자동처리현황</span>
-              <span class="pcoded-mcaret"></span>
-            </a>
-          </li>
-          <li>
-            <a href="/filtering/manual" data-i18n="nav.advance-components.draggable">
-              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">수동처리현황</span>
-              <span class="pcoded-mcaret"></span>
-            </a>
-          </li>
-          <li >
-            <a href="/filtering" data-i18n="nav.advance-components.draggable">
-              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">전체리스트</span>
-              <span class="pcoded-mcaret"></span>
-            </a>
-          </li>
-        </ul>
       </li>
-      <li class="manual">
-        <a href="/manual" data-i18n="nav.advance-components.main">
-          <span class="pcoded-micon"><i class="ti-pencil-alt"></i></span>
-          <span class="pcoded-mtext">수동처리</span>
-          <span class="pcoded-mcaret"></span>
-        </a>
-      </li>
-      <%if (userCLASS == 'a'){%>
-      <li class="pcoded-hasmenu user">
-        <a href="javascript:void(0)" data-i18n="nav.advance-components.main">
-          <span class="pcoded-micon"><i class="ti-user"></i></span>
-          <span class="pcoded-mtext">거래처관리</span>
-          <span class="pcoded-mcaret"></span>
-        </a>
-        <ul class="pcoded-submenu">
-          <li class="">
-            <a href="/user/add" data-i18n="nav.advance-components.draggable">
-              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">거래처등록</span>
-              <span class="pcoded-mcaret"></span>
-            </a>
-          </li>
-          <li class="">
-            <a href="/user" data-i18n="nav.advance-components.draggable">
-              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-              <span class="pcoded-mtext">거래처리스트</span>
-              <span class="pcoded-mcaret"></span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <%}%>
-      <li class="delay">
-        <a href="/delay">
-          <span class="pcoded-micon"><i class="ti-time"></i></span>
-          <span class="pcoded-mtext" data-i18n="nav.dash.main">Delay리스트</span>
-          <span class="pcoded-mcaret"></span>
-        </a>
-      </li>
-      <%}%>
     </ul>
 
     <% if(userID == 'under'){%>

@@ -1,3 +1,4 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
@@ -6,12 +7,13 @@ var contents = require('../models/contents.js');
 var keyword = require('../models/keyword.js');
 
 var isAuthenticated = function (req, res, next) {
-  console.log('contents 로그인확인:',req.isAuthenticated());
+  logger.info('contents 로그인확인:',req.isAuthenticated());
   if (req.isAuthenticated()){
     return next();
   }
   res.redirect('/login');
 };
+
 router.get('/',isAuthenticated,async function(req, res, next) {
   var data = await getListPageData(req.query,req.user);
   if(req.user.U_class == 'm'){
@@ -23,7 +25,7 @@ router.get('/',isAuthenticated,async function(req, res, next) {
       data.cpList = await contents.getCPList({mcp:req.query.mcp});
     }
   }
-  res.render('mcp/contents',data);
+  res.render('contents',data);
 });
 
 router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
@@ -37,7 +39,8 @@ router.post('/getNextPage',isAuthenticated,async function(req, res, next) {
 
 router.post('/info',isAuthenticated,async function(req, res, next) {
   try{
-    var array = fs.readFileSync('/home/hosting_users/otogreen/apps/otogreen_oto/public/file/country.txt').toString().split("\n");
+    var array = [];
+    // fs.readFileSync('/home/hosting_users/otogreen/apps/otogreen_oto/public/file/country.txt').toString().split("\n");
     var result = await contents.selectInfo(req.body.n_idx);
     var param = {};
     if(req.user.U_class == 'c'){
@@ -104,7 +107,8 @@ router.post('/updateCnt',isAuthenticated,async function(req, res, next) {
 });
 
 async function getListPageData(param,user){
-  var array = fs.readFileSync('/home/hosting_users/otogreen/apps/otogreen_oto/public/file/country.txt').toString().split("\n");
+  var array = [];
+  // fs.readFileSync('/home/hosting_users/otogreen/apps/otogreen_oto/public/file/country.txt').toString().split("\n");
   var data = {
     list:[],
     listCount:{total:0},
@@ -154,7 +158,7 @@ async function getListPageData(param,user){
     }
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
@@ -201,13 +205,14 @@ async function getCntListPageData(param){
     data['osp'] = await contents.selectBackupOSPCount(searchBody,searchParam);
   }
   catch(e){
-    console.log(e);
+    logger.info(e);
   }
   return data;
 }
 
 router.get('/add',isAuthenticated,async function(req, res, next) {
-  var array = fs.readFileSync('/home/hosting_users/otogreen/apps/otogreen_oto/public/file/country.txt').toString().split("\n");
+  var array = [];
+  // fs.readFileSync('/home/hosting_users/otogreen/apps/otogreen_oto/public/file/country.txt').toString().split("\n");
   var data = {
     country: array
   };
@@ -218,13 +223,13 @@ router.get('/add',isAuthenticated,async function(req, res, next) {
     data.mcpList = await contents.getMCPList('m');
     data.cpList = [];
   }
-  res.render('mcp/contents_add',data);
+  res.render('contents_add',data);
 });
 
 router.post('/add/getCP',isAuthenticated,async function(req, res, next) {
-  console.log('/add/getCP');
+  logger.info('/add/getCP');
   try{
-    console.log(req.body);
+    logger.info(req.body);
     var data = await contents.getCPList(req.body);
     res.send({status:true,result:data});
   } catch(e){

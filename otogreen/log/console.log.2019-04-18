@@ -1,0 +1,62 @@
+2019-04-18 13:09:22 [INFO] - call dashboard1('a','','');
+2019-04-18 13:09:22 [INFO] - call dashboard3('a','','');
+2019-04-18 13:09:24 [INFO] - a
+2019-04-18 13:09:24 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:10:35 [INFO] - call dashboard1('a','','');
+2019-04-18 13:10:36 [INFO] - call dashboard3('a','','');
+2019-04-18 13:10:37 [INFO] - a
+2019-04-18 13:10:37 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:10:40 [INFO] - contents 로그인확인:
+2019-04-18 13:11:54 [INFO] - contents 로그인확인:
+2019-04-18 13:12:44 [INFO] - notice 로그인확인:
+2019-04-18 13:12:44 [INFO] - SELECT n_idx, writer, title, content, file, type,    DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s') AS regdate FROM notice where n_idx is not null  order by n_idx desc limit 0,20;
+2019-04-18 13:12:44 [INFO] - select count(*) as total from notice where n_idx is not null;
+2019-04-18 13:12:47 [INFO] - SELECT * FROM mailling_view where n_idx is not null  order by osp_sname asc,n_idx desc limit 0,20;
+2019-04-18 13:12:47 [INFO] - select count(*) as total from mailling_view where n_idx is not null ;
+2019-04-18 13:12:47 [INFO] - select n_idx,osp_id,osp_sname from osp_o_list order by osp_sname;
+2019-04-18 13:12:47 [INFO] - select * from cp_list where cp_state = 1 and cp_class='c';
+2019-04-18 13:12:48 [INFO] - SELECT n_idx, cp_id, if(cp_cname is null,'',cp_cname) as cp_cname, cp_class, cp_state, if(cp_mcp is null,'-1',cp_mcp) as cp_mcp, cp_mail,    DATE_FORMAT(cp_regdate, '%Y-%m-%d %H:%i:%s') AS cp_regdate FROM cp_list where n_idx is not null  and (cp_class != 'a' and cp_class != 't') order by n_idx desc limit 0,20;
+2019-04-18 13:12:48 [INFO] - select count(*) as total from cp_list where n_idx is not null ;
+2019-04-18 13:12:51 [INFO] - SELECT n_idx, osp_id, DATE_FORMAT(osp_open, '%Y-%m-%d') AS osp_open,     if(osp_sname is null,'',osp_sname) as osp_sname, osp_tstate, osp_state, if(osp_mobile is null,'-1',osp_mobile) as osp_mobile,    DATE_FORMAT(osp_regdate, '%Y-%m-%d %H:%i:%s') AS osp_regdate FROM osp_o_list where n_idx is not null  order by osp_regdate desc limit 0,20;
+2019-04-18 13:12:51 [INFO] - select count(*) as total from osp_o_list where n_idx is not null ;
+2019-04-18 13:12:53 [INFO] - statistics 로그인확인:
+2019-04-18 13:12:53 [INFO] - param
+2019-04-18 13:12:53 [INFO] - searchParam : 
+2019-04-18 13:12:53 [INFO] - call stats('0','', '', '', 'a.osp_sname', '2019-04-18 00:00:00', '2019-04-18 23:59:59', 0, 20, '');
+2019-04-18 13:12:55 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:12:55 [INFO] - call monitoring('1','','','2019-04-18 00:00:00','2019-04-18 23:59:59',0,20,'','','1','m_');
+2019-04-18 13:12:59 [INFO] - contents 로그인확인:
+2019-04-18 13:13:21 [INFO] - contents 로그인확인:
+2019-04-18 13:15:21 [INFO] - contents 로그인확인:
+2019-04-18 13:17:05 [INFO] - contents 로그인확인:
+2019-04-18 13:18:00 [INFO] - statistics 로그인확인:
+2019-04-18 13:18:00 [INFO] - param
+2019-04-18 13:18:00 [INFO] - searchParam : 
+2019-04-18 13:18:00 [INFO] - call stats('0','', '', '', 'a.osp_sname', '2019-04-18 00:00:00', '2019-04-18 23:59:59', 0, 20, '');
+2019-04-18 13:18:02 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:18:02 [INFO] - call monitoring('1','','','2019-04-18 00:00:00','2019-04-18 23:59:59',0,20,'','','1','m_');
+2019-04-18 13:18:05 [INFO] - contents 로그인확인:
+2019-04-18 13:18:29 [INFO] - contents 로그인확인:
+2019-04-18 13:20:29 [INFO] - contents 로그인확인:
+2019-04-18 13:22:29 [INFO] - contents 로그인확인:
+2019-04-18 13:23:14 [INFO] - contents 로그인확인:
+2019-04-18 13:23:36 [INFO] - call dashboard1('a','','');
+2019-04-18 13:23:37 [INFO] - call dashboard3('a','','');
+2019-04-18 13:23:38 [INFO] - a
+2019-04-18 13:23:38 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:35:16 [INFO] - call dashboard1('a','','');
+2019-04-18 13:35:17 [INFO] - call dashboard3('a','','');
+2019-04-18 13:35:18 [INFO] - a
+2019-04-18 13:35:18 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:35:21 [INFO] - contents 로그인확인:
+2019-04-18 13:35:37 [INFO] - contents 로그인확인:
+2019-04-18 13:36:38 [INFO] - contents 로그인확인:
+2019-04-18 13:36:44 [INFO] - call dashboard1('a','','');
+2019-04-18 13:36:45 [INFO] - call dashboard3('a','','');
+2019-04-18 13:36:46 [INFO] - a
+2019-04-18 13:36:46 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';
+2019-04-18 13:36:49 [INFO] - contents 로그인확인:
+2019-04-18 13:36:49 [INFO] - select * from cnts_all_view where search is not null order by cnt_regdate_o desc,n_idx desc limit 0,20;
+2019-04-18 13:36:49 [INFO] - select count(*) as total from cnts_all_view where search is not null ;
+2019-04-18 13:36:49 [INFO] - select format(count(*),0) as total, format(count(if(k_state = 1,1,null)),0) as ytotal,format(count(if(k_state = 0,1,null)),0) as ntotal,    format(count(if(k_method = 1,1,null)),0) as atotal,format(count(if(k_method = 0,1,null)),0) as mtotal,    format(count(if(k_mailing = 1,1,null)),0) as mytotal,format(count(if(k_mailing = 0,1,null)),0) as mntotal    from cnts_all_view where search is not null ;
+2019-04-18 13:36:50 [INFO] - select * from cp_list where cp_state = 1 and cp_class='m';

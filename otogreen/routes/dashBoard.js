@@ -1,13 +1,13 @@
+const logger = require('../winston/config_f.js');
 var express = require('express');
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var LocalStrategy = require('passport-local').Strategy;
 var router = express.Router();
 // DB module
-var contents = require('../models/mcp/contents.js');
-var User = require('../models/osp/user.js');
+var contents = require('../models/contents.js');
 var DashBoard = require('../models/dashBoard.js');
-var Cp = require('../models/mcp/cp.js');
+var Cp = require('../models/cp.js');
 
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated())
@@ -54,7 +54,7 @@ router.get('/',isAuthenticated,async function(req, res, next) {
       cid = req.user.U_id;
     }
     var data = await getResultStats(req.user.U_class,mid,cid);
-    console.log(req.user.U_class);
+    logger.info(req.user.U_class);
     if(req.user.U_class == 'm'){
       data.cpList = await contents.getCPList({mcp:mid});
     }
@@ -62,12 +62,12 @@ router.get('/',isAuthenticated,async function(req, res, next) {
       data.mcpList = await contents.getMCPList('m');
       data.cpList = [];
     }
-    res.render('mcp/dashBoard',data);
+    res.render('dashBoard',data);
   }
 });
 
 router.post('/dashBoard/setting',isAuthenticated,async function(req, res, next){
-  console.log(req.body);
+  logger.info(req.body);
   if(req.user.U_class == 'm'){
     req.body.mid = req.user.U_id;
   }
@@ -140,7 +140,7 @@ async function getResultStats(uclass,mcpid,cpid){
 }
 
 router.post('/get24DataList', async function(req, res, next) {
-  console.log('get24DataList');
+  logger.info('get24DataList');
   var result = await DashBoard.get24DataList(global.osp);
   res.send(result);
 });
