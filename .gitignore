@@ -14,3 +14,10 @@ otogreen/uploads/
 otogreen/node_modules/
 otogreen/package.json
 otogreen/package-lock.json
+imgCapture/web.js
+imgCapture/db/
+imgCapture/node_modules/
+imgCapture/log/
+imgCapture/history_logs/
+imgCapture/package.json
+imgCapture/package-lock.json
