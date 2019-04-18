@@ -1,0 +1,45 @@
+<!-- top menu start -->
+<nav class="navbar header-navbar pcoded-header" header-theme="theme4">
+  <div class="navbar-wrapper">
+    <div class="navbar-logo">
+      <a class="mobile-menu" id="mobile-collapse" href="#!">
+        <i class="ti-menu"></i>
+      </a>
+      <a href="/" style="position: absolute;left: 17px;">
+        <%if (userSite == 'test'){%>
+          <span style="font-size: 24px;font-weight: bold;">Stop-Penalty</span>
+        <%}else{%>
+          <img class="img-fluid" src="/images/main_logo.png" alt="Theme-Logo"/>
+        <%}%>
+      </a>
+      <a class="mobile-options">
+        <i class="ti-more"></i>
+      </a>
+    </div>
+    <div class="navbar-container container-fluid">
+      <div>
+        <ul class="nav-left">
+          <li>
+            <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+          </li>
+        </ul>
+        <ul class="nav-right">
+          <li style="padding: 9.5px 10px;line-height: 3;">
+            <% if(userLogo == '' || userLogo == null ){%>
+              <%=userNAME%>
+            <%} else {%>
+              <img class="img-cLogo" src="http://61.82.113.197:8090/<%=userLogo%>"/>
+            <%}%>
+          </li>
+          <li class="user-profile header-notification">
+            <form id='logoutForm'method="post">
+              <a href="/logout" style="padding-left: 0px;">
+                <i class="ti-layout-sidebar-left" style="margin-left: 0px;"></i> Logout
+              </a>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

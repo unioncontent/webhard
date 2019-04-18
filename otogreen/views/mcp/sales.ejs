@@ -1,0 +1,346 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>매출통계현황</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">매출통계</a></li>
+          <li class="breadcrumb-item"><a href="/sales/add">매출통계현황</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <input type="hidden" id="user_class" value="<%=userCLASS%>">
+          <input type="hidden" id="user_id" value="<%=userID%>">
+          <input type="hidden" id="sDate" value="<%=sDate%>">
+          <input type="hidden" id="eDate" value="<%=eDate%>">
+          <% if(userCLASS == 'a'){ %>
+          <select name="select" class="col-xs-1 form-control form-control-inverse m-b-10 m-r-5 p-r-5 f-left" id="selectMCP" style="min-width: 122px;">
+            <option value=''>MCP사선택</option>
+            <% for(var i=0; i < mcpList.length; i++) {%>
+              <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+            <% }; %>
+          </select>
+          <% } %>
+          <% if(userCLASS != 'c'){ %>
+          <select name="select" class="col-xs-1 form-control form-control-inverse m-b-10 m-r-5 p-r-5 f-left" id="selectCP">
+            <option value=''>CP사선택</option>
+            <% if(userCLASS == 'm' || (userCLASS == 'a' && mcp != '' && mcp != null)){
+              for(var i=0; i < cpList.length; i++) {%>
+                <option value="<%=cpList[i].cp_id%>" <%=((cp == cpList[i].cp_id)?'seleted':'')%>><%=cpList[i].cp_cname%></option>
+                <% };
+              } %>
+          </select>
+          <% } %>
+          <select name="select" class="col-xs-1 form-control form-control-inverse m-b-10  m-r-5 p-r-5 f-left" id="selectOSP" style="min-width: 122px;">
+            <option value=''>OSP사선택</option>
+            <% for(var i=0; i < ospList.length; i++) {%>
+              <option value="<%=ospList[i].osp_id%>"><%=ospList[i].osp_sname%></option>
+            <% }; %>
+          </select>
+          <button class="btn btn-excel f-left">
+            <i class="far fa-file-excel"></i>엑셀
+          </button>
+          <div class="tui-datetime-input-end tui-datepicker-input tui-datetime-input tui-has-focus form-control form-control-inverse f-right" style="height: 38px;">
+              <span class="dateTitle">끝:</span>
+              <input type="text" id="datepicker-input-end" aria-label="Year-Month" style="width: 105px;">
+              <span class="tui-ico-date"></span>
+          </div>
+          <div class="datepicker-cell f-right" id="datepicker-month-end"  style="margin-top: 38px;"></div>
+          <div class="tui-datetime-input-start tui-datepicker-input tui-datetime-input tui-has-focus form-control form-control-inverse f-right" style="height: 38px;">
+              <span class="dateTitle">시작:</span>
+              <input type="text" id="datepicker-input-start" aria-label="Year-Month" style="width: 105px;">
+              <span class="tui-ico-date"></span>
+          </div>
+          <div class="datepicker-cell f-right" id="datepicker-month-start"  style="margin-top: 38px;"></div>
+          <!-- <div id="reportrange" class="col-xs-2 form-control form-control-inverse f-right">
+            <i class="glyphicon glyphicon-calendar far fa-calendar-alt"></i>
+            <span></span>
+            <i class="f-right fa fa-angle-down" style="font-size: 17px;"></i>
+          </div> -->
+        </div>
+        <div class="col-xs-12">
+          <input type="hidden" id="graph" value="<%=graph%>">
+          <div id="chart1" class="col-xs-12"></div>
+        </div>
+        <div class="col-xs-12 m-t-10">
+          <div class="col-xs-4 f-right p-r-0">
+            <div class="card m-b-0">
+              <div class="card-block table-border-style  table-responsive">
+                <div class="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table" id="totalTable">
+                      <thead>
+                        <tr>
+                          <th>총매출</th>
+                          <th>총판매건</th>
+                          <th>MG</th>
+                          <th>정산매출</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td id="s_total_money"><%=totalResult.s_total_money%></td>
+                          <td id="s_total_sales"><%=totalResult.s_total_sales%></td>
+                          <td id="s_mg"><%=totalResult.s_mg%></td>
+                          <td id="s_settlement_money"><%=totalResult.s_settlement_money%></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 m-t-10">
+          <div class="card">
+            <div class="card-block table-border-style  table-responsive">
+              <div class="preloader3 loader-block">
+                <div class="circ1 loader-primary"></div>
+                <div class="circ2 loader-primary"></div>
+                <div class="circ3 loader-primary"></div>
+                <div class="circ4 loader-primary"></div>
+              </div>
+              <table class="table" id="listTable">
+                <thead>
+                  <tr>
+                    <th width="1%">NO</th>
+                    <th width="5%">정산일</th>
+                    <th width="5%">OSP</th>
+                    <th width="5%">총매출</th>
+                    <th width="5%">정산매출</th>
+                    <th width="5%">총판매건</th>
+                    <th width="5%">MG</th>
+                    <th width="5%">요율</th>
+                    <th width="1%">상세보기</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%for(var i=0; i < list.length; i++) { %>
+                  <tr>
+                    <th><%= i + 1 %></th>
+                    <td><%= ((sDate == eDate) ? sDate:(sDate+' ~ '+eDate)) %></td>
+                    <td><%= list[i].s_osp %></td>
+                    <td><%= list[i].s_total_money %></td>
+                    <td><%= list[i].s_settlement_money %></td>
+                    <td><%= list[i].s_total_sales %></td>
+                    <td><%= ((list[i].s_mg == null)?'':list[i].s_mg) %></td>
+                    <td><%= ((list[i].s_rate == null)?'':list[i].s_rate) %></td>
+                    <td class="text-center">
+                      <button type="button" class="btn-detail tabledit-edit-button btn btn-default waves-effect waves-light text-center" data-osp="<%= list[i].s_osp %>">
+                        <i class="fas fa-info"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <% } %>
+                </tbody>
+                <tfoot></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal start-->
+      <div class='modal fade' id='detail-Modal'  aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-xlg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">상세현황</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body row'>
+              <div class="col-xs-12 m-t-10">
+                <table class="table" id="listTable_m">
+                    <thead>
+                      <tr>
+                        <th width="1%">NO</th>
+                        <th width="5%">정산일</th>
+                        <th width="5%">OSP</th>
+                        <th width="5%">총판매건</th>
+                        <th width="5%">총매출</th>
+                        <th width="5%">MG</th>
+                        <th width="5%">요율</th>
+                        <th width="5%">정산매출</th>
+                        <th width="5%"></th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                  </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-excel btn-m-excel"><i class="far fa-file-excel"></i>엑셀</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+      <!-- Modal start-->
+      <div class='modal fade' id='edit-Modal'  aria-hidden="true" tabindex="-1" role="dialog">
+        <div class='modal-dialog modal-xlg' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class="modal-title">정산수정</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <input id="osp_em" type="hidden" value="">
+              <input id="idx_em" type="hidden" value="">
+              <div class='card'>
+                <div class="card-block table-border-style">
+                  <div class="table-border-style">
+                    <div class="table-responsive">
+                      <table class="table" id='modal-cnt'>
+                        <colgroup>
+                          <col width="30%" />
+                          <col width="70%" />
+                        </colgroup>
+                        <tbody>
+                          <% if(userCLASS == 'a'){ %>
+                          <tr>
+                            <th class="b-r-1 text-left">관리사(MCP)</th>
+                            <td>
+                                <select name="select" class="form-control" id="selectMCP_em">
+                                  <option value="">선택</option>
+                                  <% for(var i=0; i < mcpList.length; i++) {%>
+                                    <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+                                  <% }; %>
+                                </select>
+                                <input id="o_s_mcp" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <% } %>
+                          <tr>
+                            <th class="b-r-1 text-left">저작권사(CP)</th>
+                            <td>
+                              <select name="select" class="form-control" id="selectCP_em">
+                                <option value="">선택</option>
+                                <% if(userCLASS == 'm'){
+                                    for(var i=0; i < cpList.length; i++) {%>
+                                      <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+                                <% }
+                                  } %>
+                              </select>
+                              <input id="o_s_cp" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">OSP</th>
+                            <td>
+                              <select name="select" class="form-control" id="selectOSP_em">
+                                <option value="">선택</option>
+                                <% for(var i=0; i < ospList.length; i++) {%>
+                                  <option value="<%=ospList[i].osp_id%>"><%=ospList[i].osp_sname%></option>
+                                <% }; %>
+                              </select>
+                              <input id="o_s_osp" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">총매출금액</th>
+                            <td>
+                              <input class="form-control input-sm" id="s_total_money_em" type="text">
+                              <input id="o_s_total_money" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">총판매건</th>
+                            <td>
+                              <input class="form-control input-sm" id="s_total_sales_em" type="text">
+                              <input id="o_s_total_sales" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">MG</th>
+                            <td>
+                              <input class="form-control input-sm" id="s_mg_em" type="text">
+                              <input id="o_s_mg" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">요율</th>
+                            <td>
+                              <input class="form-control input-sm" id="s_rate_em" type="text">
+                              <input id="o_s_rate" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">정산매출</th>
+                            <td>
+                              <input class="form-control input-sm" id="s_settlement_money_em" type="text">
+                              <input id="o_s_settlement_money" type="hidden" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="b-r-1 text-left">정산일</th>
+                            <td>
+                              <div class="col-xs-12">
+                                <div class="row">
+                                  <div class="col-xs-5 p-l-0">
+                                    <select name="select" class="form-control" id="selectYear_em">
+                                      <%
+                                      var today = new Date();
+                                      var mm = today.getMonth()+1;
+                                      var yyyy = today.getFullYear();
+                                      for(var i=(yyyy+30); i > (yyyy-30); i--){
+                                      %>
+                                      <option value="<%=i%>"><%=i%></option>
+                                      <%}%>
+                                    </select>
+                                  </div>
+                                  <div class="col-xs-5 p-l-0">
+                                    <select name="select" class="form-control" id="selectMonth_em">
+                                      <%for(var i=1; i < 13; i++){%>
+                                      <option value="<%=((i < 10)?('0'+i):i)%>"><%=i%></option>
+                                      <%}%>
+                                    </select>
+                                  </div>
+                                  <span class='messages'><p class='text-danger error'></p></span>
+                                </div>
+                              </div>
+                              <input id="o_s_total_money" type="hidden" value="">
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-update-em btn btn-warning m-b-0" data-idx="" type="button">수정</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<!-- chart -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script type="text/javascript" src="/pages/sales/chart.js"></script>
+<!-- custom -->
+<link rel="stylesheet" href="/pages/sales/style.css">
+<script type="text/javascript" src="/pages/sales/script.js"></script>

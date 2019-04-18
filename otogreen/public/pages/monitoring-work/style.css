@@ -1,0 +1,243 @@
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* 상태 */
+.ss-group{
+  min-width: 90px;
+  height: 27px;
+  padding: 0;
+}
+.ss-group span{
+  float: left;
+  margin-top: 4px;
+  margin-right: 5px;
+}
+/* 좌측 */
+#searchInput{
+  height: 38px;
+}
+#searchBtn{
+  top: 11px;
+}
+/* 제목 마우스 오버시 */
+.info-open:hover{
+  text-decoration: underline;
+  cursor:default;
+}
+/* 검출일 */
+.dateArr{
+  font-size: 12px;
+}
+/* table */
+.table td, .table th{
+  text-align:  center;
+  vertical-align: middle;
+}
+.table thead th {
+  vertical-align: middle;
+}
+/* 체크박스 */
+.border-checkbox-section{
+  display: inline-block;
+  height: 25px;
+}
+.border-checkbox-section .border-checkbox-group .border-checkbox-label{
+  margin-right: 0;
+  margin: 0;
+  height: 24px;
+  line-height: 25px;
+  padding-left: 25px;
+}
+.checkbox-span{
+  vertical-align: super;
+}
+/* 줄임 */
+.info-open,.reduction,.writer {
+  width: 205px;
+  cursor: default;
+  margin: 0 auto;
+  white-space: initial;
+  word-break: break-all;
+}
+.reduction {
+  width: 100px;
+}
+.writer {
+  width: 58px;
+}
+#listTable td.info-td{
+  text-align: left;
+}
+#listTable .footable-paging .pagination{
+  min-height: 33px;
+}
+/* 우측 */
+#resultDetail .card-header-right {
+  border-radius: 0 0 5px 5px;
+  right: 0;
+  top: 0;
+  background: #f6f7f7;
+  border: 1px solid #dee2e6;
+  display: inline-block;
+  float: right;
+  padding: 6px 0;
+  position: absolute;
+}
+#resultDetail .card-header-right i {
+    margin: 0 20px;
+    cursor: pointer;
+}
+#resultDetail .card-header-right i.fas.fa-chevron-up {
+  display: none;
+}
+/* table */
+#modal-cntList {
+  width: 564px;
+  display: block;
+}
+#modal-cntList tbody{
+  display: block;
+  /* 이미지 없고 */
+  max-height: 318px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#modal-cntList th:nth-of-type(1) {
+  width: 67px;
+}
+#modal-cntList th:nth-of-type(2),
+#modal-cntList th:nth-of-type(3),
+#modal-cntList td:nth-of-type(1),
+#modal-cntList td:nth-of-type(2){
+  width: 222px;
+}
+#modal-cntList th:nth-of-type(4){
+  width: 53px;
+}
+#modal-cnt p#cnt_num a {
+  text-decoration: underline;
+  cursor: default;
+}
+/* 이미지 */
+#modal-cnt p {
+  margin: 0;
+  font-size: 12px;
+  width: 355px;
+  white-space: normal;
+  word-break: break-all;
+}
+.lightbox-img {
+  border: 1px solid #e8e8e8;
+}
+.info-td i.text-muted {
+  display: inherit;
+  float: left;
+  height: 21px;
+  padding-top: 5px;
+  margin-right: 5px;
+}
+.col-right{
+  border-top: 1px solid black;
+  padding-left: 0;
+  padding-right: 0;
+}
+.col-right>.col-xs-12{
+  background: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.col-right h6{
+  font-size: 13px;
+  text-align: center;
+}
+#img-list {
+    width: 514px;
+    margin: 0px auto;
+}
+#img-list .col-img-item{
+  width: 168px;
+  /* min-height: 182px; */
+}
+#img-list .col-img-item:first-child{
+  margin-left: 3px;
+  margin-right: 2px;
+}
+#img-list .col-img-item:nth-child(2){
+  margin-right: 2px;
+}
+#img-list .col-img-item:last-child{
+  margin-right: -13px;
+}
+/* 글줄임 */
+.title_nobr,.cnt_nobr{
+  width: 221px;
+  white-space: initial;
+}
+.cnt_nobr{
+  width: 123px;
+  margin: 0 auto;
+}
+#resultList .card-header {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+/* 좌측게시물 */
+#resultList select {
+  padding-left: 5px;
+}
+/* select */
+#resultList select.table-select{
+  min-width: 59px;
+  max-height: 27px;
+  padding: 2px 0px 2px 0px;
+}
+/* button */
+.btn-bottom{
+  height: 33px;
+  position: absolute;
+  bottom: 0;
+  right: 12px;
+  padding-top: 7px;
+}
+.btn-bottom-1{
+  left: 12px;
+}
+.table button.btn-bottom {
+  margin-bottom: 12px;
+}
+#resultDetail{
+  display: none;
+  position: fixed;
+  right: 0;
+  left: 1339px;
+}
+#resultDetail td, #resultDetail th {
+    padding: 4px;
+}
+#defaultDetail .col-xs-12{
+  text-align: center;
+  margin-top: 23%;
+}
+#defaultDetail h4{
+  font-family: 'NanumGothic';
+  font-size: 20px;
+  color: #292b2c;
+  font-weight: 400;
+}
+#cnt_fname{
+  width: 333px;
+  white-space: normal;
+  word-break: break-all;
+}
+#defaultDetail {
+  height: 285px;
+  background: white;
+}

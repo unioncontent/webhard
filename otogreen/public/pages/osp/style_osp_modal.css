@@ -1,0 +1,119 @@
+/* font */
+.text_green{
+  color: #23a353;
+}
+.text_red{
+  color: #e5469c;
+}
+.text_blue{
+  color : #2e80c5;
+}
+/* 모달 */
+#chart-m-1{
+  height: 300px;
+}
+#detail-Modal .modal-body{
+  padding-top: 0;
+}
+#detail-Modal .modal-header{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#detail-Modal .modal-title{
+  text-align: center;
+}
+#detail-Modal .modal-title-div{
+  border-bottom: 1px solid black;
+  padding: 5px;
+  padding-bottom: 15px;
+}
+#detail-Modal .modal-title-div span{
+  margin: 0px auto;
+}
+#detail-Modal .modal-title-date{
+  padding-top: 7px;
+  font-size: 12px;
+  font-weight: 100;
+}
+#detail-Modal .table-border-style p{
+  margin-bottom: 0px;
+}
+#card-div{
+  border-top: 2px solid #2c4850;
+  background-color: #fafafa;
+  border-bottom: 1px solid #dfdfdf;
+  border-bottom-style: dotted
+}
+#card-div .card-block .col-xs-12{
+  padding-left: 35px;
+  padding-right: 35px;
+}
+#card-div .card-block{
+  border-bottom: 1px solid #dcdcdc;
+}
+#card-div .table-info{
+  border-top: 1px solid #dcdcdc;
+}
+#card-div .counter-card-3{
+  background: #fafafa;
+  margin-bottom: 0;
+}
+#card-div .bar{
+  margin: 35px 0px;
+  border-right: 1px solid #e4e3e3;
+  height: 64px;
+}
+.site-info h5{
+  font-size: 16px;
+  padding-bottom: 9px;
+}
+.site-info ul{
+  list-style: unset;
+  padding-left: 22px;
+  color: #737373;
+}
+#card-div .col-xs-4{
+  padding-left: 0;
+  padding-right: 0;
+}
+#card-div .card-block-big{
+  margin: 0px auto;
+  text-align: center;
+}
+#card-div .card-block-big h3{
+  font-size: 15px;
+  font-weight: 100;
+}
+#card-div .card-block-big .f-left p{
+  font-size: 30px;
+}
+#card-div .card-block-big h3 i.fa-question-circle{
+  color: #eb4b79;
+  margin-left: 3px;
+}
+#result1{
+  margin-bottom: 0px;
+}
+#result_p1{
+  font-size: 11px !important;
+  float: right;
+}
+.site-info li {
+    margin-bottom: 5px;
+}
+.site-info h5{
+  font-size: 12px;
+}
+#chart-m{
+  padding: 0;
+}
+#chart-m .modal-title-div{
+  border-bottom: 0px;
+  padding-bottom: 0px;
+}
+#chart-m .modal-title-div i.fa-question-circle{
+  color: #eb4b79;
+}
+#chart-m .modal-title-div span {
+  font-weight: bold;
+}

@@ -1,0 +1,162 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>대시보드</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">대시보드</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-inverse">
+              <h3><%=count.totalCount || 0%></h3>
+              <span class="m-t-10">전체데이터</span>
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-primary">
+              <h3><%=count.TCount || 0%><small class="f-16"> / <%=count.TdCount || 0%></small></h3>
+              <span class="m-t-10">제휴처리<small> / 지연처리</small></span>
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-danger">
+              <h3><%=count.DCount || 0%><small class="f-16"> / <%=count.DdCount || 0%></small></h3>
+              <span class="m-t-10">삭제처리<small> / 지연처리</small></span>
+              <i class="fas fa-trash-alt"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card social-widget-card">
+            <div class="card-block-big bg-twitter">
+              <h3><%=count.PCount || 0%></h3>
+              <span class="m-t-10">보류처리</span>
+              <i class="fas fa-database"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>시간대별 처리 현황</h5>
+              <span>최근 24시간 처리 현황 그래프</span>
+              <div class="card-header-right">
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </div>
+            <div class="card-block">
+              <div id="24graph" style="height: 300px; position: relative;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>CP사별 처리 현황</h5>
+            </div>
+            <div class="card-block table-border-style">
+              <div class="table-responsive">
+                <table class="table table-cp table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="10%">저작권사</th>
+                      <th>전체데이터</th>
+                      <th>제휴처리</th>
+                      <th>삭제처리</th>
+                      <th>보류처리</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% countList.forEach(function(entry) { %>
+                      <tr>
+                        <th><%=entry.cp_name%></th>
+                        <td><%=entry.totalCount%></td>
+                        <td><%=entry.TCount%></td>
+                        <td><%=entry.DCount%></td>
+                        <td><%=entry.PCount%></td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- morris -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<style type="text/css">
+.table-cp td,.table-cp th{
+  text-align: center;
+}
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+<script type="text/javascript">
+$(window).resize(function(){
+  window.areaChart.redraw();
+});
+
+$(document).ready(function(){
+  areaChart();
+});
+
+function areaChart(){
+  $.ajax({
+    url: '../get24DataList',
+    type: 'post',
+    datatype : 'json',
+    error:function(request,status,error){
+      console.log('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error);
+    },
+    success:function(data){
+      var arr = [];
+      if(data){
+        data.forEach(function(item,idx){
+          arr.push({'date':item.date,'t':item.tTotal,'d':item.dTotal,'p':item.pTotal});
+        });
+      }
+      else{
+        arr.push({'date':0,'t':0,'d':0,'p':0});
+      }
+
+      window.areaChart = Morris.Area({
+        element: '24graph',
+        data: arr,
+        lineColors: ['#1abc9c', '#e74c3c', '#4099FF'],
+        xkey: 'date',
+        ykeys: ['t', 'd', 'p'],
+        labels: ['제휴', '삭제', '보류'],
+        pointSize: 0,
+        lineWidth: 0,
+        resize: true,
+        fillOpacity: 0.8,
+        behaveLikeLine: true,
+        hideHover: 'auto'
+      });
+    }
+  });
+}
+</script>

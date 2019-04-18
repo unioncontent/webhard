@@ -1,0 +1,379 @@
+/* print */
+@media print {
+  @page {
+        /* size: A4; */
+        margin: 0;
+        margin-top: 10px;
+    }
+  html, body {
+      width: 300mm;
+      height: 297mm;
+  }
+  .print-div .chart_point1{
+    background-color: #9dc6e5;
+    webkit-print-color-adjust:exact;
+  }
+  .print-div .chart_point2{
+    background-color: #cb9de5;
+    webkit-print-color-adjust:exact;
+  }
+  .print-div .chart_point3{
+    background-color: #bebebe;
+    webkit-print-color-adjust:exact;
+  }
+  .print-div .chart_point4{
+    background-color: #fbb7ce;
+    webkit-print-color-adjust:exact;
+  }
+  .print-div .charts__chart {
+    background-color: #7f8c8d;
+    width: 100%;
+    height: 2em;
+    margin: .5em 0;
+    webkit-print-color-adjust:exact;
+  }
+}
+/* 비제휴 상세보기 모달 */
+#info-Modal .table th{
+  border-right: 1px solid #eceeef;
+}
+#info-Modal #modal-cnt #title{
+  text-decoration: underline;
+}
+#info-Modal #modal-cnt #title:hover {
+  font-weight: bold;
+}
+#info-Modal .card .card-block p {
+  width: 537px;
+  white-space: initial;
+  line-height: 14px;
+  margin-bottom: 0;
+}
+/* 모달 이미지 */
+#info-Modal .articles h6{
+  text-align: center;
+  margin-top: 5px;
+}
+#info-Modal #modal-cnt p{
+  margin: 0;
+}
+#info-Modal p.title {
+  white-space: pre-line;
+  width: 537px;
+}
+/* 비제휴 리스트 모달 */
+#list-Modal tfoot {
+  background: white;
+}
+#list-Modal .reduction {
+  width: 87px;
+  margin-right: 10px;
+  word-break: break-all;
+  white-space: normal;
+}
+#list-Modal .info{
+  width: 349px;
+  margin-right: 10px;
+  white-space: normal;
+  word-break: break-all;
+}
+#list-Modal .info:hover{
+  text-decoration: underline;
+  cursor:default;
+}
+#list-Modal .modal-content{
+  min-height: 902px;
+}
+#list-Modal .btn-default{
+  background: white;
+  border-radius: 0px;
+  height: 38px;
+  color: #bdc3c7;
+}
+#list-Modal .btn-excel{
+  height: 38px !important;
+}
+/* table */
+.natotal{
+  cursor: default;
+  text-decoration: underline;
+}
+#listTable span.listNum{
+  text-decoration: underline;
+  cursor:default;
+}
+.title_div,.title_div_c{
+  width: 75px;
+  margin: 0px auto;
+  text-align: left;
+}
+.title_div_c{
+  width: 203px;
+}
+span.openModal,span.cnt {
+  float: left;
+  cursor: default;
+  text-decoration: underline;
+}
+span.cnt{
+  text-decoration: none;
+  word-break: break-all;
+  white-space: normal;
+  width: 203px;
+}
+.table thead th,.table tbody td{
+  vertical-align: middle;
+}
+.table td,.table th{
+  text-align: center;
+  vertical-align: middle;
+}
+#table-card{
+  margin-top: 14px;
+}
+#webhard-Modal .table tfoot{
+  background-color: white;
+}
+#colspan-na{
+  border-bottom: 1px solid #f2f2f2;
+}
+.card-table{
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 2px;
+  font-size: 12px;
+}
+.card-table .table-bordered td,.card-table .table-bordered th {
+  border: 1px solid #ccc;
+}
+.card-table .table th, .card-table .table td {
+  text-align: left;
+}
+.total-div {
+    padding: 15px 8px;
+    border-bottom: 1px solid #f8f8f8;
+}
+.total-div.total-mobile {
+    border-bottom: 0;
+}
+/* #listTable th:nth-child(3),#listTable td:nth-child(3){
+  display: none;
+} */
+/* label */
+.circle-platform {
+  padding: 1px;
+  width: 48px;
+}
+.circle-tstate{
+  display: inline-block;
+  text-align: center;
+  width: 50px;
+  padding: 1px;
+  margin-left: 5px;
+}
+#webhard-Modal .cntNum{
+  padding-top: 9px;
+  padding-right: 8px;
+}
+/* loader */
+.preloader3{
+  display: none;
+  padding-top:20%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  /* width: 1280px; */
+  z-index: 10000;
+}
+/* a태그 */
+.mtag:hover{
+  text-decoration: underline;
+  font-weight: bold;
+}
+/* 상단메뉴 */
+.top-menu{
+  margin-bottom: 14px;
+}
+/* select */
+#selectMCP, #selectCP,#selectTState{
+  min-width: 109px;
+  height: 35px;
+  padding-left: 7px;
+}
+#setting-group {
+  width: 536px;
+}
+/* button */
+.btn-select{
+  border-color: #03A9F4 !important;
+  color: #03A9F4 !important;
+}
+.btn-xgroup{
+  float: right;
+}
+.btn-xgroup button:not(.btn-excel):not(.btn-primary){
+  float: left;
+  width: 122px;
+  height: 35px;
+  margin-right: 5px;
+  border-radius: 0px;
+  border-color: #e4e6e5;
+  background-color: white;
+  color: #aaaaaa;
+}
+#resultList .btn-primary{
+  float: left;
+  margin-right: 5px;
+  border-color: #1abc9c;
+  background-color: white;
+  color: #1abc9c;
+}
+.btn-excel{
+  border-color: #16763a;
+  border-radius: 0px;
+  background-color: white;
+  color: #16763a;
+  width: 70px;
+  height: 35px;
+  padding: 5px 15px;
+}
+.btn-view{
+  width: 105px;
+  height: 35px;
+}
+/* text color */
+.text-green{
+  color: #23a353;
+}
+.text-red{
+  color: #f80000;
+}
+.text-blue{
+  color: #3299e1;
+}
+/* card */
+.div-chart{
+  padding-bottom: 21px;
+}
+.p-l-15{
+  padding-left: 15px;
+}
+.p-l-9{
+  padding-left: 9px;
+}
+.card-type-w1{
+  /* min-width: 1063px; */
+  height: 306px;
+  padding: 47px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+.card-type-w2{
+  /* min-width: 533px; */
+  height: auto;
+  padding: 0;
+}
+.charts_legend_group{
+  float: right;
+  padding-top: 5px;
+  display: inline-block;
+}
+.chart_legend {
+  float: right;
+  margin-right: 14px;
+}
+.chart_legend:first-child{
+  margin-right: 0px;
+}
+.chart_point {
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-right: 5px;
+}
+.charts_title{
+  font-size: 13px;
+}
+.chart_name{
+  font-size: 12px;
+  vertical-align: bottom;
+}
+.charts__chart{
+  margin: 0px;
+}
+.chart_point1{
+  background-color: #9dc6e5;
+}
+.chart_point2{
+  background-color: #cb9de5;
+}
+.chart_point3{
+  background-color: #bebebe;
+}
+.chart_point4{
+  background-color: #fbb7ce;
+}
+.charts{
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+}
+.chart--lg{
+  height: 35px;
+}
+#totalTable{
+  margin-bottom: 0px;
+}
+span.card-span{
+  float: left;
+  padding-left: 43px;
+}
+#webhard-Modal span.card-span{
+  padding-left: 31px;
+}
+/* 이미지 */
+#listTable3 td.info-td{
+  text-align: left;
+}
+.lightbox-img {
+  border: 1px solid #e8e8e8;
+}
+.info-td i.text-muted {
+  display: inherit;
+  float: left;
+  height: 21px;
+  padding-top: 5px;
+  margin-right: 5px;
+}
+/* 검출모달 */
+#num-Modal .reduction,
+#num-Modal .info{
+  width: 300px;
+  margin: 0 auto;
+  white-space: initial;
+  word-break: break-all;
+}
+#num-Modal .reduction {
+  width: 100px;
+}
+#num-Modal .info a{
+  font-size: 12px;
+  text-decoration: underline;
+}
+/* 검출상태 */
+#num-Modal .chkArr{
+  font-size: 12px;
+  text-align: left;
+  width: 72px;
+  margin: 0px auto;
+}
+/* 테이블 */
+#num-Modal .table td,#num-Modal .table th {
+  padding: 0.5rem;
+}
+#totalTable tbody td{
+  text-decoration: underline;
+  cursor: default;
+}

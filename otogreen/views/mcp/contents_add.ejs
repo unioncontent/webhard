@@ -1,0 +1,349 @@
+<div class="main-body">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h4>콘텐츠등록</h4>
+      </div>
+      <div class="page-header-breadcrumb">
+        <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">콘텐츠관리</a></li>
+          <li class="breadcrumb-item"><a href="/contents/add">콘텐츠등록</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="card">
+            <div class="card-block">
+              <input type="hidden" id="user_class" value="<%=userCLASS%>">
+              <input type="hidden" id="user_id" value="<%=userID%>">
+              <% if(userCLASS == 'a'){ %>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 관리사(MCP)</label>
+                <div class="col-xs-5">
+                  <select name="select" class="form-control" id="selectMCP">
+                    <option value="">선택</option>
+                    <% for(var i=0; i < mcpList.length; i++) {%>
+                      <option value="<%=mcpList[i].cp_id%>"><%=mcpList[i].cp_cname%></option>
+                    <% }; %>
+                  </select>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <% } %>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 저작권사(CP)</label>
+                <div class="col-xs-5">
+                  <select name="select" class="form-control" id="selectCP">
+                    <option value="">선택</option>
+                    <% if(userCLASS == 'm'){
+                        for(var i=0; i < cpList.length; i++) {%>
+                          <option value="<%=cpList[i].cp_id%>"><%=cpList[i].cp_cname%></option>
+                    <% }
+                      } %>
+                  </select>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 제목</label>
+                <div class="col-xs-5">
+                  <input id="cnt_title" type="text" class="form-control" placeholder="제목">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">영문제목</label>
+                <div class="col-xs-5">
+                  <input id="cnt_title_eng" type="text" class="form-control" placeholder="영문제목">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">제작/감독</label>
+                <div class="col-xs-5">
+                  <input id="cnt_director" type="text" class="form-control" placeholder="동명 제목의 영화나 방송물을 구분을 위한 키">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">제작국가</label>
+                <div class="col-xs-5">
+                  <select name="select" class="form-control" id="cnt_nat">
+                    <%
+                    for(var i=0; i < country.length; i++) {
+                      var str = country[i].replace('\r','');
+                    %>
+                      <option value="<%=str%>" <%=((str == '한국')?'selected':'')%>><%=str%></option>
+                    <% }; %>
+                  </select>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">카테고리</label>
+                <div class="col-xs-5">
+                  <select name="select" class="form-control" id="cnt_cate">
+                    <option value="0">미분류</option>
+                    <option value="1">영화</option>
+                    <option value="2">드라마</option>
+                    <option value="3">방송</option>
+                    <option value="4">음악</option>
+                    <option value="5">문서</option>
+                    <option value="6">이미지</option>
+                  </select>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">CPID</label>
+                <div class="col-xs-5">
+                  <input id="cnt_cpid" type="text" class="form-control" placeholder="CP사에서 정한 콘텐츠ID">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">저작권만료기간</label>
+                <div class="col-xs-5">
+                  <input id="cnt_period" type="text" class="form-control" value="2999-12-31"/>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 관리상태</label>
+                <div class="col-xs-5">
+                  <div id="state" class="form-radio">
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="1" name="k_state">
+                        <i class="helper"></i>관리중
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="0" name="k_state" checked>
+                        <i class="helper"></i>중단
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 관리현황</label>
+                <div class="col-xs-5">
+                  <div id="method" class="form-radio">
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="1" name="k_method">
+                        <i class="helper"></i>자동
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="0" name="k_method" checked>
+                        <i class="helper"></i>수동
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 관리방법</label>
+                <div class="col-xs-5">
+                  <div id="apply" class="form-radio">
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="D" name="k_apply">
+                        <i class="helper"></i>삭제/차단요청
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="T" name="k_apply">
+                        <i class="helper"></i>제휴전환요청
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="C" name="k_apply">
+                        <i class="helper"></i>채증
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="L" name="k_apply" checked>
+                        <i class="helper"></i>보류
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 메일발송</label>
+                <div class="col-xs-5">
+                  <div id="mailing" class="form-radio">
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="1" name="k_mailing">
+                        <i class="helper"></i>발송
+                      </label>
+                    </div>
+                    <div class="radio radiofill radio-inverse radio-inline">
+                      <label>
+                        <input type="radio" value="0" name="k_mailing" checked>
+                        <i class="helper"></i>발송안함
+                      </label>
+                    </div>
+                  </div>
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">* 판매금액</label>
+                <div class="col-xs-5">
+                  <input id="cnt_price" type="number" class="form-control" placeholder="0">
+                  <span class='messages'><p class='text-danger error'></p></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">HASH 값</label>
+                <div class="col-xs-5">
+                  <input id="cnt_hash" type="text" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">뮤레카 HASH값</label>
+                <div class="col-xs-5">
+                  <input id="cnt_mureka" type="text" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">아컴스튜디오 HASH값</label>
+                <div class="col-xs-5">
+                  <input id="cnt_acom" type="text" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-xs-3 col-form-label">기본키워드</label>
+                <div class="col-xs-5">
+                  <input id="k_title" type="text" class="form-control">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <button id="insertBtn" type="submit" class="f-right btn btn-inverse m-b-0">등록</button>
+                  <button id="excelBtn" type="submit" class="f-right m-r-10 btn btn-primary m-b-0"><i class="fas fa-file-excel"></i>엑셀대량등록</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal start-->
+      <div class="modal fade" id="cnt-Modal" data-backdrop="static" data-keyboard="false" role="dialog">
+        <div class="modal-dialog modal-xlg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">엑셀대량등록</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="ti-close"></i></span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <div class="col-lg-12">
+                <div class="inline-order-list m-t-0">
+                  <h4 class="sub-title">example</h4>
+                  <p class="text-muted">
+                    ※ 엑셀 1행 생략불가, method값 = 자동:1/수동:0 , apply값 = 삭제:D/제휴:T/보류:P
+                  </p>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr class="text-uppercase border-bottom-inverse">
+                        <th class="text-center">#</th>
+                        <th class="text-center">A</th>
+                        <th class="text-center">B</th>
+                        <th class="text-center">C</th>
+                        <th class="text-center">D</th>
+                        <th class="text-center">E</th>
+                        <th class="text-center">F</th>
+                        <th class="text-center">G</th>
+                        <th class="text-center">H</th>
+                        <th class="text-center">I</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-center">
+                      <tr class="table-danger border-bottom-inverse">
+                        <th scope="row">1</th>
+                        <td>cpId</td>
+                        <td>title</td>
+                        <td>engtitle</td>
+                        <td>ospid</td>
+                        <td>method</td>
+                        <td>apply</td>
+                        <td>hash</td>
+                        <td>price</td>
+                        <td>keyword</td>
+                      </tr>
+                      <tr class="border-bottom-inverse">
+                        <th>2</th>
+                        <td>MBC</td>
+                        <td>무도</td>
+                        <td class="text-muted">IC<br>(생략가능)</td>
+                        <td>fileham</td>
+                        <td>0</td>
+                        <td>P</td>
+                        <td class="text-muted">sd###<br>(생략가능)</td>
+                        <td class="text-muted">10000<br>(생략가능)</td>
+                        <td class="text-muted">무한도전<br>(생략가능)</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div> -->
+              <div class="col-lg-12">
+                <h4 class="sub-title m-b-10">upload</h4>
+                  <div class="form-group row">
+                    <div class="col-xs-10">
+                      <form action="http://61.82.113.197:8090/cnts/add/upload" id="uploadFrm" method="post" enctype="multipart/form-data">
+                        <input type="file" id="excel" name="excel" accept=".xls,.xlsx" class="form-control">
+                      </form>
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">취소</button>
+              <button id="insertBtn2" class="btn btn-inverse">등록</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal end-->
+    </div>
+  </div>
+</div>
+<!-- Bootstrap daterangepicker js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.27/daterangepicker.js"></script>
+<!-- custom -->
+<style type="text/css">
+  table.table-columned th, table.table-columned td,
+  .table td, .table th{
+    border: 1px solid #34495e;
+  }
+</style>
+<script type="text/javascript" src="/pages/contents/add.js"></script>
