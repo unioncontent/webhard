@@ -9,6 +9,7 @@ autogreen/public/images/company/
 autogreen/package.json
 autogreen/package-lock.json
 otogreen/bin/www
+otogreen/log/
 otogreen/db/
 otogreen/uploads/
 otogreen/node_modules/
