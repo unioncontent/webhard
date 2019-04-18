@@ -805,6 +805,7 @@ $.fn.pcodedmenu = function(settings) {
           var dt = $('#' + oid).attr("pcoded-device-type");
           console.log('-->' + dt);
           if (dt == "desktop") {
+            $('.unicc').toggle();
             var dmc = settings.onToggleVerticalMenu.desktop;
             var dm = settings.defaultVerticalMenu.desktop;
             var dn = $('#' + oid).attr("vertical-nav-type");
