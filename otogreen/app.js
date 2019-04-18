@@ -82,68 +82,41 @@ var dashBoard = require('./routes/dashBoard');
 app.use('/', dashBoard);
 app.use('/login', dashBoard);
 
-/* mcp routes */
 // 콘텐츠
-var cnt = require('./routes/mcp/contents');
+var cnt = require('./routes/contents');
 app.use('/cnts', cnt);
 // 키워드
-var kwd = require('./routes/mcp/keyword');
+var kwd = require('./routes/keyword');
 app.use('/kwd', kwd);
 
 // 모니터링현황
-var monitoring = require('./routes/mcp/monitoring');
+var monitoring = require('./routes/monitoring');
 app.use('/monitoring', monitoring);
 
 // 모니터링업무
-var monitoring_w = require('./routes/mcp/monitoring_w');
+var monitoring_w = require('./routes/monitoring_w');
 app.use('/monitoring_w', monitoring_w);
 
 // 통계
-var statistics = require('./routes/mcp/statistics');
+var statistics = require('./routes/statistics');
 app.use('/statistics', statistics);
 
 // OSP사현황,CP사현황
-var setting = require('./routes/mcp/setting');
+var setting = require('./routes/setting');
 app.use('/setting', setting);
 
 // 공지사항
-var notice = require('./routes/mcp/notice');
+var notice = require('./routes/notice');
 app.use('/notice', notice);
 
 // 매출현황
-var sales = require('./routes/mcp/sales');
+var sales = require('./routes/sales');
 app.use('/sales', sales);
 
 // 정산검증
-var calculate = require('./routes/mcp/calculate');
+var calculate = require('./routes/calculate');
 app.use('/calculate', calculate);
 
-/* osp routes */
-//엑셀
-var excel = require('./routes/osp/excel');
-// 통계
-var period = require('./routes/osp/period');
-// 콘텐츠
-var contents = require('./routes/osp/contents');
-// 키워드
-var keyword = require('./routes/osp/keyword');
-// 필터링현황
-var filtering = require('./routes/osp/filtering');
-// 수동처리
-var manual = require('./routes/osp/manual');
-// 거래처
-var user = require('./routes/osp/user');
-// 딜레이
-var delay = require('./routes/osp/delay');
-
-app.use('/excel', excel);
-app.use('/period', period);
-app.use('/contents', contents);
-app.use('/keyword', keyword);
-app.use('/filtering', filtering);
-app.use('/manual', manual);
-app.use('/user', user);
-app.use('/delay', delay);
 
 /* set error */
 app.use(function(req, res, next) {
