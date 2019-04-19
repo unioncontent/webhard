@@ -840,15 +840,16 @@ $.fn.pcodedmenu = function(settings) {
             $('.pcoded').removeClass("pcoded-toggle-animate");
           }, 250);
         });
-      } else if (settings.themelayout === "horizontal") {
-        if (totalwidth >= 768 && totalwidth <= 1024) {
-          $('#' + oid).attr("pcoded-device-type", "tablet");
-        } else if (totalwidth < 768) {
-          $('#' + oid).attr("pcoded-device-type", "phone");
-        } else {
-          $('#' + oid).attr("pcoded-device-type", "desktop");
-        }
       }
+      // else if (settings.themelayout === "horizontal") {
+      //   if (totalwidth >= 768 && totalwidth <= 1024) {
+      //     $('#' + oid).attr("pcoded-device-type", "tablet");
+      //   } else if (totalwidth < 768) {
+      //     $('#' + oid).attr("pcoded-device-type", "phone");
+      //   } else {
+      //     $('#' + oid).attr("pcoded-device-type", "desktop");
+      //   }
+      // }
     },
     Handlecomponetheight: function() {
       function setHeight() {
@@ -882,6 +883,22 @@ $.fn.pcodedmenu = function(settings) {
       function devicesize() {
         var totalwidth = $(window)[0].innerWidth;
         if (settings.themelayout === "vertical") {
+          $('#' + oid).attr("pcoded-device-type", "desktop");
+          var value = settings.defaultVerticalMenu.desktop;
+          if (value != undefined && value != "") {
+            $('#' + oid).attr("vertical-nav-type", value);
+          } else {
+            $('#' + oid).attr("vertical-nav-type", "expanded");
+          }
+
+          var ev = settings.verticalMenueffect.desktop;
+          if (ev != undefined && value != "") {
+            $('#' + oid).attr("vertical-effect", ev);
+          } else {
+            $('#' + oid).attr("vertical-effect", "shrink");
+          }
+          return false;
+
           if (totalwidth >= 768 && totalwidth <= 1024) {
 
             $('#' + oid).attr("pcoded-device-type", "tablet");
