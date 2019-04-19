@@ -10,6 +10,7 @@ autogreen/package.json
 autogreen/package-lock.json
 otogreen/bin/www
 otogreen/db/
+otogreen/log/
 otogreen/uploads/
 otogreen/node_modules/
 otogreen/package.json
