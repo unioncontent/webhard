@@ -6,12 +6,8 @@ autogreen/node_modules/
 autogreen/public/monitoring_img/
 autogreen/public/notice/
 autogreen/public/images/company/
-autogreen/package.json
-autogreen/package-lock.json
 otogreen/bin/www
 otogreen/log/
 otogreen/db/
 otogreen/uploads/
 otogreen/node_modules/
-otogreen/package.json
-otogreen/package-lock.json
