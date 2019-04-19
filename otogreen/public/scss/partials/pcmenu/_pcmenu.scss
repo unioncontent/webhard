@@ -908,7 +908,8 @@ $active-item: #ff5e3a,#0096b1,#e64056,#23a353,#1ABC9C,#967adc,#fe9375,#565a90;
         &.active > a > .pcoded-mcaret {
             background: transparent none repeat scroll 0 0;
             border-bottom: 10px solid transparent;
-            border-right: 8px solid #e9e9e9;
+            // border-right: 8px solid #e9e9e9;
+            border-right: 8px solid #f7f7f7;
             border-top: 10px solid transparent;
             display: block;
             float: right;

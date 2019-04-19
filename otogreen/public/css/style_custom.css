@@ -507,7 +507,8 @@ input.search-text{
   font-family: 굴림;
   color: #677e85;
   font-size: 12px;
-  position: fixed;
+  /* position: fixed; */
+  position: relative;
   border: 0px;
   height: 12px;
   z-index: 1050;
