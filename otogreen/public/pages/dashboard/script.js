@@ -121,8 +121,8 @@ function chart1Road(){
         align: 'left',
         verticalAlign: 'top',
         floating: true,
-        x: 90,
-        y: 45
+        x: 80,
+        y: 10
     },
     tooltip: {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: {point.y}<br/>',
