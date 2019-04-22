@@ -24,6 +24,9 @@ var DashBoard = {
 
     var result = await getResult(osp,sql);
     if(result.length > 0){
+      if(cp == undefined){
+        return result[0];
+      }
       return result;
     }
 
