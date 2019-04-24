@@ -10,9 +10,14 @@ var passport = require('passport');
 var  flash = require('connect-flash');
 const logger = require('morgan');
 const winston = require('./winston/config');
+var helmet = require('helmet');
 
 var  app = express();
 app.use(logger('dev', { stream: winston.stream}));
+// 보안
+app.use(helmet());
+app.disable('x-powered-by');
+app.use(helmet.xssFilter());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
