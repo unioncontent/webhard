@@ -1,16 +1,22 @@
-var  express = require('express');
-var  path = require('path');
-var  favicon = require('serve-favicon');
-var  logger = require('morgan');
-var  expressLayouts = require('express-ejs-layouts');
-var  cookieParser = require('cookie-parser');
-var  session = require('express-session');
-var  passport = require('passport');
-var  flash = require('connect-flash');
-var  bodyParser = require('body-parser');
-var  cors = require('cors')();
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var expressLayouts = require('express-ejs-layouts');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var passport = require('passport');
+var flash = require('connect-flash');
+var bodyParser = require('body-parser');
+var cors = require('cors')();
+var app = express();
+// 보안
+var helmet = require('helmet');
 
-var  app = express();
+// 보안
+app.use(helmet());
+app.disable('x-powered-by');
+app.use(helmet.xssFilter());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
