@@ -507,6 +507,12 @@ var storage = multer.diskStorage({
     cb(null, 'public/monitoring_img/'+today) // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
   },
   filename: function (req, file, cb) {
+    var date = datetime.create();
+    var today = date.format('Ymd');
+    var time = date.format('HMS');
+    if (fs.existsSync(aPath+'public/monitoring_img/'+today+'/'+file.originalname)) {
+      file.originalname = time+'$'+file.originalname;
+    }
     cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
   }
 });
@@ -524,6 +530,10 @@ router.post('/imageUpload', upload.single('file'), function(req, res){
     if(fileSizeInBytes == 0){
       logger.info("이미지 저장안됨");
       return res.status(500).send('img');
+    }
+    if(req.file.filename.indexOf('$') != -1){
+      var farr = req.file.filename.split('$');
+      req.file.filename = farr[1];
     }
     res.send({
       filePath : req.file.path,
